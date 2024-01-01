@@ -10,7 +10,6 @@ BoxLayout:
     MDTopAppBar:
         title: 'Login Page'
         md_bg_color: app.theme_cls.primary_color
-        specific_text_color: 1, 1, 1, 1
 
     MDScreen:
 
