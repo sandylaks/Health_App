@@ -24,10 +24,13 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .8}
             TextInput:
-                id: signup_username_field
+#                id: signup_username
                 hint_text: "Username"
 #                font_name: "MPoppins"
                 size_hint_y: .75
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
                 foreground_color: rgba(0, 0, 59, 255)
@@ -44,10 +47,13 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .71}
             TextInput:
-                id: signup_email_field
+#                id: signup_email
                 hint_text: "Email"
 #                font_name: "MPoppins"
                 size_hint_y: .75
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
                 foreground_color: rgba(0, 0, 59, 255)
@@ -64,10 +70,13 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .62}
             TextInput:
-                id: signup_password_field
+#                id: signup_password
                 hint_text: "Password"
 #                font_name: "MPoppins"
                 size_hint_y: .75
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
                 foreground_color: rgba(0, 0, 59, 255)
@@ -85,10 +94,13 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .53}
             TextInput:
-                id: signup_phone_field
-                hint_text: "Pincode"
+#                id: signup_phone
+                hint_text: "Phone no"
 #                font_name: "MPoppins"
                 size_hint_y: .75
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
                 foreground_color: rgba(0, 0, 59, 255)
@@ -105,10 +117,13 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .44}
             TextInput:
-                id: signup_pincode_field
+#                id: signup_pincode
                 hint_text: "Pincode"
 #                font_name: "MPoppins"
                 size_hint_y: .75
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
                 foreground_color: rgba(0, 0, 59, 255)
@@ -127,8 +142,9 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .3}
             background_color: 0, 0, 0, 0
 #            font_name: "BPoppins"
-#            on_release:
-#                pass
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "login"
             canvas.before:
                 Color:
                     rgb: rgba(136, 8, 8, 255)

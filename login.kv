@@ -28,10 +28,13 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .63}
             TextInput:
-                id: username_field
+#                id: login_email
                 hint_text: "Email"
 #                font_name: "MPoppins"
                 size_hint_y: .75
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
                 foreground_color: rgba(0, 0, 59, 255)
@@ -48,10 +51,13 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .5}
             TextInput:
-                id: password_field
+#                id: login_password
                 hint_text: "Password"
 #                font_name: "MPoppins"
                 size_hint_y: .75
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
                 foreground_color: rgba(0, 0, 59, 255)
