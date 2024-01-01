@@ -1,1 +1,2 @@
-ptint ("hello")
+print ("hello")
+print('bye')
