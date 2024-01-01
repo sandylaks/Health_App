@@ -23,10 +23,12 @@ MDScreen:
             font_size: "18sp"
             pos_hint: {"center_x": .6, "center_y": .79}
             color: rgba(135, 78, 78, 255)
+        # Email input
         MDFloatLayout:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .63}
             TextInput:
+                id: username_field
                 hint_text: "Email"
 #                font_name: "MPoppins"
                 size_hint_y: .75
@@ -41,10 +43,12 @@ MDScreen:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
                 md_bg_color: rgba(178, 178, 178, 255)
+        # Password input
         MDFloatLayout:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .5}
             TextInput:
+                id: password_field
                 hint_text: "Password"
 #                font_name: "MPoppins"
                 size_hint_y: .75
@@ -60,6 +64,7 @@ MDScreen:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
                 md_bg_color: rgba(178, 178, 178, 255)
+        # Login button
         Button:
             text: "LOGIN"
             size_hint: .66, .065
@@ -75,6 +80,7 @@ MDScreen:
                     size: self.size
                     pos: self.pos
                     radius: [5]
+        # Forgot password button
         MDTextButton:
             text: "Forgot Password?"
             pos_hint: {"center_x": .5, "center_y": .28}
@@ -88,6 +94,7 @@ MDScreen:
             font_size: "13sp"
 #            font_name: "BPoppins"
             halign: "center"
+        #lines
         MDFloatLayout:
             md_bg_color: rgba(178, 178, 178, 255)
             size_hint: .3, .002
@@ -96,6 +103,7 @@ MDScreen:
             md_bg_color: rgba(178, 178, 178, 255)
             size_hint: .3, .002
             pos_hint: {"center_x": .7, "center_y": .218}
+        #social media
         MDLabel:
             text: "Social Media Login"
 #            font_name: "BPoppins"
@@ -103,6 +111,7 @@ MDScreen:
             halign: "center"
             pos_hint: {"center_y": .16}
             color: rgba(135, 78, 78, 255)
+        # social media images
         MDGridLayout:
             cols: 3
             size_hint: .4, .05
@@ -113,6 +122,7 @@ MDScreen:
                 source: "images/facebook.png"
             Image:
                 source: "images/apple.png"
+        # Signup button
         MDLabel:
             text: "Don't have an account?"
 #            font_name: "BPoppins"
