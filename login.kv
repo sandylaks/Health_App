@@ -1,6 +1,7 @@
 MDScreen:
     name: "login"
     MDFloatLayout:
+        id:main
         md_bg_color: 1, 1, 1, 1
         MDIconButton:
             icon: "arrow-left"
@@ -16,13 +17,13 @@ MDScreen:
 #            font_name: "BPoppins"
             font_size: "23sp"
             pos_hint: {"center_x": .6,"center_y": .85}
-            color: rgba(133, 28, 28, 255)
+            color: rgba(255, 0, 0, 255)
         MDLabel:
             text: "Sign in to continue"
 #            font_name: "MPoppins"
             font_size: "18sp"
             pos_hint: {"center_x": .6, "center_y": .79}
-            color: rgba(135, 78, 78, 255)
+            color: rgba(250, 87, 87, 255)
         # Email input
         MDFloatLayout:
             size_hint: .7, .07
@@ -42,6 +43,8 @@ MDScreen:
                 font_size: "14sp"
                 cursor_width: "2sp"
                 multiline: False
+                write_tab: False
+#                on_text_validate: login_password.focus
             MDFloatLayout:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
@@ -66,22 +69,26 @@ MDScreen:
                 cursor_width: "2sp"
                 multiline: False
                 password: True
+                write_tab: False
+#                on_text_validate: login_password.focus
             MDFloatLayout:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
                 md_bg_color: rgba(178, 178, 178, 255)
         # Login button
         Button:
+#            id: login_button
             text: "LOGIN"
             size_hint: .66, .065
             pos_hint: {"center_x": .5, "center_y": .34}
             background_color: 0, 0, 0, 0
 #            font_name: "BPoppins"
-#            on_release:
-#                pass
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "client_services"
             canvas.before:
                 Color:
-                    rgb: rgba(136, 8, 8, 255)
+                    rgb: rgba(255, 0, 0, 255)
                 RoundedRectangle:
                     size: self.size
                     pos: self.pos
@@ -90,12 +97,12 @@ MDScreen:
         MDTextButton:
             text: "Forgot Password?"
             pos_hint: {"center_x": .5, "center_y": .28}
-            color: rgba(135, 78, 78, 255)
+            color: rgba(250, 87, 87, 255)
             font_size: "12sp"
 #            font_name: "BPoppins"
         MDLabel:
             text: "or"
-            color: rgba(136, 8, 8, 255)
+            color: rgba(250, 87, 87, 255)
             pos_hint: {"center_y": .22}
             font_size: "13sp"
 #            font_name: "BPoppins"
@@ -116,7 +123,7 @@ MDScreen:
             font_size: "13sp"
             halign: "center"
             pos_hint: {"center_y": .16}
-            color: rgba(135, 78, 78, 255)
+            color: rgba(250, 87, 87, 255)
         # social media images
         MDGridLayout:
             cols: 3
@@ -134,13 +141,13 @@ MDScreen:
 #            font_name: "BPoppins"
             font_size: "11sp"
             pos_hint: {"center_x": .78, "center_y": .05}
-            color: rgba(135, 78, 78, 255)
+            color: rgba(250, 87, 87, 255)
         MDTextButton:
             text: "Sign up"
 #            font_name: "BPoppins"
             font_size: "11sp"
             pos_hint: {"center_x": .68, "center_y": .05}
-            color: rgba(136, 8, 8, 255)
+            color: rgba(250, 0, 0, 255)
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "signup"

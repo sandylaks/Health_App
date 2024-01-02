@@ -18,7 +18,7 @@ MDScreen:
 #            font_name: "MPoppins"
             font_size: "18sp"
             pos_hint: {"center_x": .6, "center_y": .89}
-            color: rgba(135, 78, 78, 255)
+            color: rgba(255, 0, 0, 255)
         # Username input
         MDFloatLayout:
             size_hint: .7, .07
@@ -38,6 +38,7 @@ MDScreen:
                 font_size: "14sp"
                 cursor_width: "2sp"
                 multiline: False
+                write_tab: False
             MDFloatLayout:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
@@ -47,12 +48,12 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .71}
             TextInput:
-#                id: signup_email
+                id: signup_email
                 hint_text: "Email"
 #                font_name: "MPoppins"
                 size_hint_y: .75
-                helper_text:'Required'
-                helper_text_mode:  'on_error'
+                helper_text:"Invalid Email"
+                helper_text_mode: 'on_error'
                 required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
                 background_color: 1, 1, 1, 0
@@ -61,6 +62,7 @@ MDScreen:
                 font_size: "14sp"
                 cursor_width: "2sp"
                 multiline: False
+                write_tab: False
             MDFloatLayout:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
@@ -70,11 +72,11 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .62}
             TextInput:
-#                id: signup_password
+                id: signup_password
                 hint_text: "Password"
 #                font_name: "MPoppins"
                 size_hint_y: .75
-                helper_text:'Required'
+                helper_text:"Invalid Password (at least 6 characters)"
                 helper_text_mode:  'on_error'
                 required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
@@ -85,6 +87,7 @@ MDScreen:
                 cursor_width: "2sp"
                 multiline: False
                 password: True
+                write_tab: False
             MDFloatLayout:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
@@ -94,11 +97,11 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .53}
             TextInput:
-#                id: signup_phone
+                id: signup_phone
                 hint_text: "Phone no"
 #                font_name: "MPoppins"
                 size_hint_y: .75
-                helper_text:'Required'
+                helper_text:("Invalid Phone number (10 digits required)")
                 helper_text_mode:  'on_error'
                 required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
@@ -108,6 +111,8 @@ MDScreen:
                 font_size: "14sp"
                 cursor_width: "2sp"
                 multiline: False
+                write_tab: False
+                input_type: "number"
             MDFloatLayout:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
@@ -117,11 +122,11 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .44}
             TextInput:
-#                id: signup_pincode
+                id: signup_pincode
                 hint_text: "Pincode"
 #                font_name: "MPoppins"
                 size_hint_y: .75
-                helper_text:'Required'
+                helper_text:("Invalid Pincode (6 digits required)")
                 helper_text_mode:  'on_error'
                 required: True
                 pos_hint: {"center_x": .43, "center_y": .5}
@@ -131,6 +136,8 @@ MDScreen:
                 font_size: "14sp"
                 cursor_width: "2sp"
                 multiline: False
+                write_tab: False
+                input_type: "number"
             MDFloatLayout:
                 pos_hint: {"center_x": .45, "center_y": 0}
                 size_hint_y: .03
@@ -142,12 +149,13 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .3}
             background_color: 0, 0, 0, 0
 #            font_name: "BPoppins"
-            on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "login"
+            on_release: app.validate_inputs(self)
+#            on_release:
+#                root.manager.transition.direction = "left"
+#                root.manager.current = "login"
             canvas.before:
                 Color:
-                    rgb: rgba(136, 8, 8, 255)
+                    rgb: rgba(255, 0, 0, 255)
                 RoundedRectangle:
                     size: self.size
                     pos: self.pos
@@ -155,7 +163,7 @@ MDScreen:
         # or label
         MDLabel:
             text: "or"
-            color: rgba(136, 8, 8, 255)
+            color: rgba(250, 87, 87, 255)
             pos_hint: {"center_y": .22}
             font_size: "13sp"
 #            font_name: "BPoppins"
@@ -176,7 +184,7 @@ MDScreen:
             font_size: "13sp"
             halign: "center"
             pos_hint: {"center_y": .16}
-            color: rgba(135, 78, 78, 255)
+            color: rgba(250, 87, 87, 255)
         #social media images
         MDGridLayout:
             cols: 3
@@ -194,13 +202,28 @@ MDScreen:
 #            font_name: "BPoppins"
             font_size: "11sp"
             pos_hint: {"center_x": .78, "center_y": .05}
-            color: rgba(135, 78, 78, 255)
+            color: rgba(250, 87, 87, 255)
         MDTextButton:
             text: "Sign in"
 #            font_name: "BPoppins"
             font_size: "11sp"
             pos_hint: {"center_x": .71, "center_y": .05}
-            color: rgba(136, 8, 8, 255)
+            color: rgba(250, 0, 0, 255)
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "login"
+        MDLabel:
+            text: "Are you service provider?"
+#            font_name: "BPoppins"
+            font_size: "11sp"
+            pos_hint: {"center_x": .78, "center_y": .98}
+            color: rgba(250, 87, 87, 255)
+        MDTextButton:
+            text: "Sign in"
+#            font_name: "BPoppins"
+            font_size: "11sp"
+            pos_hint: {"center_x": .71, "center_y": .98}
+            color: rgba(250, 0, 0, 255)
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "service_provider"
