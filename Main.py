@@ -38,8 +38,10 @@ class LoginApp(MDApp):
             self.show_validation_dialog("Invalid Pincode (6 digits required)")
         elif not phone or len(phone) != 10:
             self.show_validation_dialog("Invalid Phone number (10 digits required)")
-
-
+        else:
+            # Navigate to the success screen
+            self.root.transition = SlideTransition(direction='left')  # Optional transition effect
+            self.root.current = 'login'
 
     def show_validation_dialog(self, message):
         dialog = MDDialog(

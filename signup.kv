@@ -149,10 +149,8 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .3}
             background_color: 0, 0, 0, 0
 #            font_name: "BPoppins"
-            on_press: app.validate_inputs(self)
-            on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "login"
+            on_release: app.validate_inputs(self)
+
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)
