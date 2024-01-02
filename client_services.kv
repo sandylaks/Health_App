@@ -1,4 +1,114 @@
+# client_services_screen.kv
 MDScreen:
     name: "client_services"
-    MDLabel:
-        text: "client_services"
+
+    MDNavigationLayout:
+        ScreenManager:
+            Screen:
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    MDTopAppBar:
+                        title: "Available Services"
+                        md_bg_color: 1, 0, 0, 1
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
+                        right_action_items: [["map-marker", lambda x: app.client_location_button()]]
+
+                    ScrollView:
+                        MDList:
+                            TwoLineAvatarListItem:
+                                id: item_1
+                                text: "Hospitals"
+                                secondary_text: "Hospitals Address"
+                                on_press: app.on_list_item_pressed(item_1.text)
+                                ImageLeftWidget:
+                                    source: 'logo.png'
+
+                            TwoLineAvatarListItem:
+                                id: item_2
+                                text: "Ambulance"
+                                secondary_text: "Ambulance Details"
+                                on_press: app.on_list_item_pressed(item_2.text)
+                                ImageLeftWidget:
+                                    source: 'logo.png'
+
+                            TwoLineAvatarListItem:
+                                id: item_3
+                                text: "Gym"
+                                secondary_text: "Gym Address"
+                                on_press: app.on_list_item_pressed(item_3.text)
+                                ImageLeftWidget:
+                                    source: 'logo.png'
+
+                            TwoLineAvatarListItem:
+                                id: item_4
+                                text: "Home Setup"
+                                secondary_text: "Home Setup Details"
+                                on_press: app.on_list_item_pressed(item_4.text)
+                                ImageLeftWidget:
+                                    source: 'logo.png'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+            orientation: 'vertical'
+            padding: "1dp"
+            spacing: "8dp"
+
+            TwoLineAvatarListItem:
+                id: item_3
+                md_bg_color: 1, 0, 0, 1
+                #source: 'H:\Documents\photo.png'
+                text: "client name"
+                secondary_text: "client email Address"
+                ImageLeftWidget:
+                    source: 'H:\Documents\photo.png'
+                #on_press: app.on_list_item_pressed(item_3.text)
+            BoxLayout:
+                orientation: 'vertical'
+
+                ScrollView:
+                    MDList:
+                        id: md_list
+                        MDList:
+                            OneLineIconListItem:
+                                text: "Profile"
+
+                                IconLeftWidget:
+                                    icon: "account-circle"
+
+                            OneLineIconListItem:
+                                text: "Notification"
+
+                                IconLeftWidget:
+                                    icon: "bell-outline"
+
+
+                            OneLineIconListItem:
+                                text: "Bookings"
+
+                                IconLeftWidget:
+                                    icon: "book-account-outline"
+
+                            OneLineIconListItem:
+                                text: "Reports"
+
+                                IconLeftWidget:
+                                    icon: "file-multiple"
+
+                            OneLineIconListItem:
+                                text: "Support"
+
+                                IconLeftWidget:
+                                    icon: "book-information-variant"
+
+                            OneLineIconListItem:
+                                text: "Settings"
+
+                                IconLeftWidget:
+                                    icon: "cog"
+
+                            OneLineIconListItem:
+                                text: "Logout"
+
+                                IconLeftWidget:
+                                    icon: "logout"

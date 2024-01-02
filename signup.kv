@@ -24,7 +24,7 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .8}
             TextInput:
-#                id: signup_username
+                id: signup_username
                 hint_text: "Username"
 #                font_name: "MPoppins"
                 size_hint_y: .75
@@ -149,10 +149,10 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .3}
             background_color: 0, 0, 0, 0
 #            font_name: "BPoppins"
-            on_release: app.validate_inputs(self)
-#            on_release:
-#                root.manager.transition.direction = "left"
-#                root.manager.current = "login"
+            on_press: app.validate_inputs(self)
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "login"
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)
