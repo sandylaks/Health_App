@@ -1,9 +1,10 @@
 import re
 
 from kivy.lang import Builder
+from kivymd import app
 from kivymd.app import MDApp
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import ScreenManager, SlideTransition
 from kivy.core.text import LabelBase
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
@@ -13,44 +14,34 @@ Window.size = (310, 580)
 
 # Create the main app class
 class LoginApp(MDApp):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.screen = Builder.load_file("signup.kv")
 
-    def set_error_message(self, instance_signup_email):
-        # Validation logic
-        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
-        if not self.email or not re.match(email_regex, self.email):
-            self.screen.ids.signup_email.error = True
-        elif not self.password or len(self.password) < 6:
-            self.screen.ids.signup_password.error = True
-        elif not self.phone or len(self.phone) != 10:
-            self.screen.ids.signup_phone.error = True
-        elif not self.pincode or len(self.pincode) != 6:
-            self.screen.ids.signup_pincode.error = True
-        else:
-            self.root.manager.transition.direction = "left"
-            self.root.manager.current = "login.kv"
 
     def validate_inputs(self, instance, *args):
-        self.email = self.screen.ids.signup_email.bind(
-            on_text_validate=self.set_error_message,
-            on_focus=self.set_error_message,
-        )
-        self.password = self.screen.ids.signup_password.bind(
-            on_text_validate=self.set_error_message,
-            on_focus=self.set_error_message,
-        )
-        self.phone = self.screen.ids.signup_phone.bind(
-            on_text_validate=self.set_error_message,
-            on_focus=self.set_error_message,
-        )
-        self.pincode = self.screen.ids.signup_pincode.bind(
-            on_text_validate=self.set_error_message,
-            on_focus=self.set_error_message,
-        )
-        return self.screen
+        self.screen=Builder.load_file("signup.kv")
+        screen = self.root.current_screen
+        email = screen.ids.signup_email.text
+        password = screen.ids.signup_password.text
+        phone = screen.ids.signup_phone.text
+        pincode = screen.ids.signup_pincode.text
+        print(email)
+        print(password)
+        print(phone)
+        print(pincode)
 
+        # Validation logic
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not email or not re.match(email_regex, email):
+            self.show_validation_dialog("Invalid Email")
+        elif not password or len(password) < 6:
+            self.show_validation_dialog("Invalid Password (at least 6 characters)")
+        elif not pincode or len(pincode) != 6:
+            self.show_validation_dialog("Invalid Pincode (6 digits required)")
+        elif not phone or len(phone) != 10:
+            self.show_validation_dialog("Invalid Phone number (10 digits required)")
+        else:
+            # Navigate to the success screen
+            self.root.transition = SlideTransition(direction='left')  # Optional transition effect
+            self.root.current = 'login'
 
     def show_validation_dialog(self, message):
         dialog = MDDialog(
