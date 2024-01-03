@@ -59,7 +59,9 @@ MDScreen:
                                             theme_text_color: "Custom"
                                             text_color: 1, 1, 1, 1
                                             font_style: "Button"
-                                            on_release: app.book_now_pressed()
+                                            on_release:
+                                                root.manager.transition.direction = "right"
+                                                root.manager.current = "hospital_book"
                                             canvas.before:
                                                 Color:
                                                     rgb: rgba(255, 0, 0, 255)
@@ -104,7 +106,9 @@ MDScreen:
                                             theme_text_color: "Custom"
                                             text_color: 1, 1, 1, 1
                                             font_style: "Button"
-                                            on_release: app.book_now_pressed()
+                                            on_release:
+                                                root.manager.transition.direction = "right"
+                                                root.manager.current = "hospital_book"
                                             canvas.before:
                                                 Color:
                                                     rgb: rgba(255, 0, 0, 255)
@@ -150,7 +154,9 @@ MDScreen:
                                             theme_text_color: "Custom"
                                             text_color: 1, 1, 1, 1
                                             font_style: "Button"
-                                            on_release: app.book_now_pressed()
+                                            on_release:
+                                                root.manager.transition.direction = "right"
+                                                root.manager.current = "hospital_book"
                                             canvas.before:
                                                 Color:
                                                     rgb: rgba(255, 0, 0, 255)
@@ -195,7 +201,9 @@ MDScreen:
                                             theme_text_color: "Custom"
                                             text_color: 1, 1, 1, 1
                                             font_style: "Button"
-                                            on_release: app.book_now_pressed()
+                                            on_release:
+                                                root.manager.transition.direction = "right"
+                                                root.manager.current = "hospital_book"
                                             canvas.before:
                                                 Color:
                                                     rgb: rgba(255, 0, 0, 255)
@@ -229,8 +237,14 @@ MDScreen:
                         MDList:
                             OneLineIconListItem:
                                 text: "Profile"
+                                on_release:
+                                    root.manager.transition.direction = "right"
+                                    root.manager.current = "menu_profile"
                                 IconLeftWidget:
                                     icon: "account-circle"
+                                    on_release:
+                                        root.manager.transition.direction = "right"
+                                        root.manager.current = "menu_profile"
 
                             OneLineIconListItem:
                                 text: "Notification"
