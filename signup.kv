@@ -15,10 +15,10 @@ MDScreen:
         # Label
         MDLabel:
             text: "Create new account"
-#            font_name: "MPoppins"
+            font_name: "MPoppins"
             font_size: "18sp"
             pos_hint: {"center_x": .6, "center_y": .89}
-            color: rgba(255, 0, 0, 255)
+            color: rgba(0, 0, 0, 255)
         # Username input
         MDFloatLayout:
             size_hint: .7, .07
@@ -26,7 +26,7 @@ MDScreen:
             TextInput:
                 id: signup_username
                 hint_text: "Username"
-#                font_name: "MPoppins"
+                font_name: "MPoppins"
                 size_hint_y: .75
                 helper_text:'Required'
                 helper_text_mode:  'on_error'
@@ -50,7 +50,7 @@ MDScreen:
             TextInput:
                 id: signup_email
                 hint_text: "Email"
-#                font_name: "MPoppins"
+                font_name: "MPoppins"
                 size_hint_y: .75
                 helper_text:"Invalid Email"
                 helper_text_mode: 'on_error'
@@ -74,7 +74,7 @@ MDScreen:
             TextInput:
                 id: signup_password
                 hint_text: "Password"
-#                font_name: "MPoppins"
+                font_name: "MPoppins"
                 size_hint_y: .75
                 helper_text:"Invalid Password (at least 6 characters)"
                 helper_text_mode:  'on_error'
@@ -99,7 +99,7 @@ MDScreen:
             TextInput:
                 id: signup_phone
                 hint_text: "Phone no"
-#                font_name: "MPoppins"
+                font_name: "MPoppins"
                 size_hint_y: .75
                 helper_text:("Invalid Phone number (10 digits required)")
                 helper_text_mode:  'on_error'
@@ -124,7 +124,7 @@ MDScreen:
             TextInput:
                 id: signup_pincode
                 hint_text: "Pincode"
-#                font_name: "MPoppins"
+                font_name: "MPoppins"
                 size_hint_y: .75
                 helper_text:("Invalid Pincode (6 digits required)")
                 helper_text_mode:  'on_error'
@@ -148,7 +148,7 @@ MDScreen:
             size_hint: .66, .065
             pos_hint: {"center_x": .5, "center_y": .3}
             background_color: 0, 0, 0, 0
-#            font_name: "BPoppins"
+            font_name: "BPoppins"
             on_release: app.validate_inputs(self)
 
             canvas.before:
@@ -161,10 +161,10 @@ MDScreen:
         # or label
         MDLabel:
             text: "or"
-            color: rgba(250, 87, 87, 255)
+            color: rgba(74, 73, 73, 255)
             pos_hint: {"center_y": .22}
             font_size: "13sp"
-#            font_name: "BPoppins"
+            font_name: "BPoppins"
             halign: "center"
         #lines
         MDFloatLayout:
@@ -178,11 +178,11 @@ MDScreen:
         #social media section
         MDLabel:
             text: "Social Media Login"
-#            font_name: "BPoppins"
+            font_name: "BPoppins"
             font_size: "13sp"
             halign: "center"
             pos_hint: {"center_y": .16}
-            color: rgba(250, 87, 87, 255)
+            color: rgba(74, 73, 73, 255)
         #social media images
         MDGridLayout:
             cols: 3
@@ -197,31 +197,31 @@ MDScreen:
         #log in button
         MDLabel:
             text: "Already have an account?"
-#            font_name: "BPoppins"
+            font_name: "BPoppins"
             font_size: "11sp"
-            pos_hint: {"center_x": .78, "center_y": .05}
-            color: rgba(250, 87, 87, 255)
+            pos_hint: {"center_x": .7, "center_y": .05}
+            color: rgba(74, 73, 73, 255)
         MDTextButton:
             text: "Sign in"
-#            font_name: "BPoppins"
+            font_name: "BPoppins"
             font_size: "11sp"
-            pos_hint: {"center_x": .71, "center_y": .05}
-            color: rgba(250, 0, 0, 255)
+            pos_hint: {"center_x": .76, "center_y": .05}
+            color: rgba(225, 0, 0, 255)
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "login"
         MDLabel:
             text: "Are you service provider?"
-#            font_name: "BPoppins"
+            font_name: "BPoppins"
             font_size: "11sp"
-            pos_hint: {"center_x": .78, "center_y": .98}
-            color: rgba(250, 87, 87, 255)
+            pos_hint: {"center_x": .69, "center_y": .98}
+            color: rgba(74, 73, 73, 255)
         MDTextButton:
             text: "Sign in"
-#            font_name: "BPoppins"
+            font_name: "BPoppins"
             font_size: "11sp"
-            pos_hint: {"center_x": .71, "center_y": .98}
-            color: rgba(250, 0, 0, 255)
+            pos_hint: {"center_x": .73, "center_y": .98}
+            color: rgba(225, 0, 0, 255)
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "service_provider"
