@@ -20,13 +20,13 @@ Screen:
                 BoxLayout:
                     orientation: 'vertical'
                     size_hint_y: None
-                    height: dp(350)
+                    height: dp(300)
 
                     MDCard:
                         size_hint: None, None
                         size: dp(300), dp(250)
                         pos_hint: {'center_x': .5,'center_y':.1}
-#                        elevation: 7
+                        elevation: 3
                         radius: [20]
 
                         Image:
@@ -35,16 +35,25 @@ Screen:
                             allow_stretch: True
                             keep_ratio: False
 
-                    MDLabel:
-                        text: 'Hospital Facility Manager'  # Description
+                    MDBoxLayout:
+                        orientation: 'vertical'
                         size_hint: None, None
-                        size: dp(300), dp(50)
-                        pos_hint: {'center_x': .5}
-                        font_size: 16
-                        halign: 'center'
-                        md_bg_color:1,0,0,1
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1  # White color
+                        size: dp(303), dp(53)
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        #spacing: dp(5)
+                        #padding: dp(10)
+                        md_bg_color: 0, 0, 0, 0.4  # Semi-transparent background color
+
+                        MDLabel:
+                            text: 'Hospital Facility'  # Description for img_1.jpg
+                            font_size: 16
+                            halign: 'center'
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1  # White color
+                            size_hint: None, None
+                            size: dp(298), dp(48)
+                            pos_hint: {'center_x': .5}
+                            md_bg_color: 1, 0, 0, 1
 
                 BoxLayout:
                     orientation: 'vertical'
@@ -55,7 +64,7 @@ Screen:
                         size_hint: None, None
                         size: dp(300), dp(250)
                         pos_hint: {'center_x': .5}
-#                        elevation: 7
+                        elevation: 3
                         radius: [20]
 
                         Image:
@@ -83,7 +92,7 @@ Screen:
                         size_hint: None, None
                         size: dp(300), dp(250)
                         pos_hint: {'center_x': .5}
-#                        elevation: 7
+                        elevation: 3
                         radius: [20]
 
                         Image:
@@ -112,7 +121,7 @@ Screen:
                         size_hint: None, None
                         size: dp(300), dp(250)
                         pos_hint: {'center_x': .5}
-#                        elevation: 7
+                        elevation: 3
                         radius: [20]
 
                         Image:
@@ -120,9 +129,8 @@ Screen:
                             size_hint: 1, 1
                             allow_stretch: True
                             keep_ratio: False
-
                     MDLabel:
-                        text: 'Doctors '  # Description
+                        text: 'Ambulance Facility Manager'  # Description
                         size_hint: None, None
                         size: dp(300), dp(50)
                         pos_hint: {'center_x': .5}
@@ -141,7 +149,7 @@ Screen:
                         size_hint: None, None
                         size: dp(300), dp(250)
                         pos_hint: {'center_x': .5}
-#                        elevation: 7
+                        elevation: 3
                         radius: [20]
 
                         Image:
@@ -160,6 +168,7 @@ Screen:
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1  # White color
                         md_bg_color:1,0,0,1
+                        elevation: 7
 
 
 
