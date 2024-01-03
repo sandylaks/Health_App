@@ -52,10 +52,10 @@ class LoginApp(MDApp):
 
     def build(self):
         screen_manager = ScreenManager()
-        screen_manager.add_widget(Builder.load_file("client_services.kv"))
         screen_manager.add_widget(Builder.load_file("main_sc.kv"))
         screen_manager.add_widget(Builder.load_file("login.kv"))
         screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
         screen_manager.add_widget(Builder.load_file("service_provider.kv"))
 
         return screen_manager
