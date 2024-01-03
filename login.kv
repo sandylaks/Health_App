@@ -29,7 +29,7 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .63}
             TextInput:
-#                id: login_email
+                id: login_email
                 hint_text: "Email"
 #                font_name: "MPoppins"
                 size_hint_y: .75
@@ -54,7 +54,7 @@ MDScreen:
             size_hint: .7, .07
             pos_hint: {"center_x": .5, "center_y": .5}
             TextInput:
-#                id: login_password
+                id: login_password
                 hint_text: "Password"
 #                font_name: "MPoppins"
                 size_hint_y: .75
@@ -77,15 +77,14 @@ MDScreen:
                 md_bg_color: rgba(178, 178, 178, 255)
         # Login button
         Button:
-#            id: login_button
+            id: login_button
             text: "LOGIN"
             size_hint: .66, .065
             pos_hint: {"center_x": .5, "center_y": .34}
             background_color: 0, 0, 0, 0
 #            font_name: "BPoppins"
             on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "client_services"
+                app.login(self)
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)
