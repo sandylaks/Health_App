@@ -1,4 +1,191 @@
-MDScreen:
-    name: "service_provider"
-    MDLabel:
-        text: "service_provider"
+Screen:
+    name:'service_provider'
+    BoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: "Service Provider Type"
+            elevation: 3
+            md_bg_color:1,0,0,1
+
+        ScrollView:
+            GridLayout:
+                id: grid
+                cols: 1
+                spacing: dp(10)
+                padding: dp(10)
+                size_hint_y: None
+                height: self.minimum_height - self.padding[1] - self.padding[3]
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(300)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(300), dp(250)
+                        pos_hint: {'center_x': .5,'center_y':.1}
+                        elevation: 3
+                        radius: [20]
+
+                        Image:
+                            source: "images/hospital.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        size_hint: None, None
+                        size: dp(303), dp(53)
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        #spacing: dp(5)
+                        #padding: dp(10)
+                        md_bg_color: 0, 0, 0, 0.4  # Semi-transparent background color
+
+                        MDLabel:
+                            text: 'Hospital Facility'  # Description for img_1.jpg
+                            font_size: 16
+                            halign: 'center'
+                            theme_text_color: "Custom"
+                            text_color: 1, 1, 1, 1  # White color
+                            size_hint: None, None
+                            size: dp(298), dp(48)
+                            pos_hint: {'center_x': .5}
+                            md_bg_color: 1, 0, 0, 1
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(350)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(300), dp(250)
+                        pos_hint: {'center_x': .5}
+                        elevation: 3
+                        radius: [20]
+
+                        Image:
+                            source: "images/ambulance.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+
+                    MDLabel:
+                        text: 'Ambulance Facility Manager'  # Description
+                        size_hint: None, None
+                        size: dp(300), dp(50)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(350)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(300), dp(250)
+                        pos_hint: {'center_x': .5}
+                        elevation: 3
+                        radius: [20]
+
+                        Image:
+                            source: "images/gym.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+
+                    MDLabel:
+                        text: 'Gym Facility Manager'  # Description
+                        size_hint: None, None
+                        size: dp(300), dp(50)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(350)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(300), dp(250)
+                        pos_hint: {'center_x': .5}
+                        elevation: 3
+                        radius: [20]
+
+                        Image:
+                            source: "images/doctor.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+                    MDLabel:
+                        text: 'Ambulance Facility Manager'  # Description
+                        size_hint: None, None
+                        size: dp(300), dp(50)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(350)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(300), dp(250)
+                        pos_hint: {'center_x': .5}
+                        elevation: 3
+                        radius: [20]
+
+                        Image:
+                            source: "images/driver.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+
+                    MDLabel:
+                        text: ' Professional Ambulance Drivers'  # Description for img_1.jpg
+                        size_hint: None, None
+                        size: dp(300), dp(50)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+                        md_bg_color:1,0,0,1
+                        elevation: 7
+
+
+
+                # Add similar structures for other image cards...
+
+        MDFlatButton:
+            text: "REGISTER"
+            size_hint: None, None
+            size_hint_x:1
+            pos_hint: {"center_x": 0.5,'center_y':.7}
+            md_bg_color:1,0,0,1
+            theme_text_color: "Custom"
+            text_color: 1, 1, 1, 1  # White color
+
+
+
+
+
+
+
