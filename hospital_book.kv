@@ -1,4 +1,150 @@
 MDScreen:
     name:'hospital_book'
-    MDLabel:
-        text:"hospital_book"
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        MDTopAppBar:
+            title: "Available Services"
+            md_bg_color: 1, 0, 0, 1
+            left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
+            right_action_items: [["map-marker", lambda x: app.client_location_button()]]
+
+        ScrollView:
+            GridLayout:
+                cols: 1
+                spacing: dp(10)
+                padding: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+
+                MDSwiper:
+                    size_hint: None, None
+                    size: dp(270), dp(130)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    MDSwiperItem:
+                        FitImage:
+                            source: "images/doctor.png"
+#                            size_hint: None, None
+#                            size: dp(300), dp(300)
+#                    MDSwiperItem:
+#                        FitImage:
+#                            source: "E:\Project\healthtech\Health_App\images\doctor.png"
+#                            size_hint: None, None
+#                            size: dp(110), dp(80)
+                MDLabel:
+                    text: "Hospital Name"
+                    theme_text_color: "Custom"
+                    text_color: 0, 0, 0, 1
+                    font_style: "H6"
+                    font_size: "24sp"
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_y: None
+                    height: dp(40)
+
+                    canvas.before:
+                        Color:
+                            rgba: 0.5, 0.5, 0.5, 1
+                        Line:
+                            points: self.x, self.y, self.x + self.width, self.y
+                            width: 3
+#                BoxLayout:
+#                    size_hint_y: None
+#                    height: dp(5)
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)  # Adjust the height as needed
+
+                    MDIcon:
+                        icon: "map-marker"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0, 0, 1  # Red color for the location icon
+                        size_hint_x: None
+                        width: dp(24)
+
+                    MDLabel:
+                        text: "Hospital Adresss:"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+
+                    MDIcon:
+                        icon: "doctor"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0, 0, 1  # Red color for the location icon
+                        size_hint_x: None
+                        width: dp(24)
+
+                    MDLabel:
+                        text: "Doctor Name:"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+
+                    MDIcon:
+                        icon: "phone"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0, 0, 1  # Red color for the location icon
+                        size_hint_x: None
+                        width: dp(24)
+
+                    MDLabel:
+                        text: "Number"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+
+                    MDIcon:
+                        icon: "clock"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0, 0, 1  # Red color for the location icon
+                        size_hint_x: None
+                        width: dp(24)
+
+                    MDLabel:
+                        text: "Timings:"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(60)
+
+                    MDLabel:
+                        text: "Hospital \n Details \n about"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+
+
+        Button:
+            id: book_slot
+            text: "Book Slot"
+            size_hint_y:.08
+            background_color: 0, 0, 0, 0
+    #            font_name: "BPoppins"
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "service_register_form"
+            canvas.before:
+                Color:
+                    rgb: rgba(255, 0, 0, 255)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [0]

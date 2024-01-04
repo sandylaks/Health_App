@@ -5,11 +5,15 @@ from kivy.lang import Builder
 from kivymd import app
 from kivymd.app import MDApp
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager, SlideTransition
+from kivy.uix.screenmanager import ScreenManager, SlideTransition, Screen
 from kivy.core.text import LabelBase
+from kivymd.uix.behaviors import FakeRectangularElevationBehavior
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+
 import sqlite3
+from kivymd.uix.floatlayout import MDFloatLayout
+
 
 Window.size = (310, 580)
 
@@ -28,6 +32,9 @@ cursor.execute('''
 ''')
 conn.commit()
 
+
+class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
+    pass
 
 # Create the main app class
 class LoginApp(MDApp):
@@ -99,13 +106,23 @@ class LoginApp(MDApp):
 
     def build(self):
         screen_manager = ScreenManager()
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        #screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(Builder.load_file("service_provider.kv"))
+
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(Builder.load_file("service_provider.kv"))
+
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(Builder.load_file("service_provider.kv"))
         screen_manager.add_widget(Builder.load_file("service_register_form.kv"))
 
 
@@ -147,4 +164,6 @@ class LoginApp(MDApp):
 
 # Run the app
 if __name__ == '__main__':
+    LabelBase.register(name="MPoppins", fn_regular="Poppins/Poppins-Medium.ttf")
+    LabelBase.register(name="BPoppins", fn_regular="Poppins/Poppins-Bold.ttf")
     LoginApp().run()
