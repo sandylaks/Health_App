@@ -1,4 +1,5 @@
 import re
+from kivymd.uix.menu import MDDropdownMenu
 
 from kivy.lang import Builder
 from kivymd import app
@@ -102,9 +103,19 @@ class LoginApp(MDApp):
         )
         dialog.open()
 
+
     def build(self):
         screen_manager = ScreenManager()
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(Builder.load_file("service_provider.kv"))
+
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
         screen_manager.add_widget(Builder.load_file("main_sc.kv"))
         screen_manager.add_widget(Builder.load_file("login.kv"))
         screen_manager.add_widget(Builder.load_file("signup.kv"))
@@ -117,6 +128,38 @@ class LoginApp(MDApp):
 
 
         return screen_manager
+
+
+    #-------------------------service-provider-flow-------------
+    menu = None
+    def open_dropdown(self):
+        self.screen_service = Builder.load_file('service_register_form.kv')
+        screen_service = self.root.current_screen
+        if not self.menu:
+            # Dropdown items (Replace these with your city names)
+            cities = ["Hospital Facility Manager",
+                      "Ambulance Facility Manager",
+                      "Gym Facility Manager", "Doctors",
+                      "Ambulance Drivers"]
+            items = [
+                {
+                    "viewclass": "MDDropDownItem",
+                    "text": city,
+                    "callback": self.select_city,
+                } for city in cities
+            ]
+            self.menu = MDDropdownMenu(items=items, width_mult=3,max_height=100, pos_hint={'center_x': 0, 'center_y': 0.9})
+
+        # Open the dropdown menu
+        self.menu.caller = self.screen_service.ids.dropdown_field
+        self.menu.open()
+
+    def select_city(self, instance,instance_item):
+        # Callback function when a city is selected
+        selected_city = instance_item.text
+        print(instance_item.text)
+        self.root.ids.dropdown_field.text = selected_city
+        self.menu.dismiss()
 
 
 # Run the app
