@@ -1,7 +1,8 @@
 import re
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.pickers import MDDatePicker
 
+from kivymd.uix.pickers import MDDatePicker
+# from kivyauth.google_auth import initialize_google,login_google,logout_google
 from kivy.lang import Builder
 from kivymd import app
 from kivymd.app import MDApp
@@ -57,10 +58,12 @@ class LoginApp(MDApp):
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        # Enhanced password validation
+        is_valid_password, password_error_message = self.validate_password(password)
         if not email or not re.match(email_regex, email):
             self.show_validation_dialog("Invalid Email")
-        elif not password or len(password) < 6:
-            self.show_validation_dialog("Invalid Password (at least 6 characters)")
+        elif not is_valid_password:
+            self.show_validation_dialog(password_error_message)
         elif not pincode or len(pincode) != 6:
             self.show_validation_dialog("Invalid Pincode (6 digits required)")
         elif not phone or len(phone) != 10:
@@ -75,9 +78,35 @@ class LoginApp(MDApp):
             # Navigate to the success screen
             self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
-    #
-    def login(self,  instance, *args):
-        self.screen1 = Builder.load_file("login.kv")
+
+    #password validation
+    def validate_password(self, password):
+        # Check if the password is not empty
+        if not password:
+            return False, "Password cannot be empty"
+
+        # Check if the password has at least 8 characters
+        if len(password) < 6:
+            return False, "Password must have at least 6 characters"
+
+        # Check if the password contains both uppercase and lowercase letters
+        if not any(c.isupper() for c in password) or not any(c.islower() for c in password):
+            return False, "Password must contain both uppercase and lowercase letters"
+
+        # Check if the password contains at least one digit
+        if not any(c.isdigit() for c in password):
+            return False, "Password must contain at least one digit"
+
+        # Check if the password contains at least one special character
+        special_characters = r"[!@#$%^&*(),.?\":{}|<>]"
+        if not re.search(special_characters, password):
+            return False, "Password must contain at least one special character"
+
+        # All checks passed; the password is valid
+        return True, "Password is valid"
+
+    def login_page(self,  instance, *args):
+        self.screen = Builder.load_file("login.kv")
         screen1 = self.root.current_screen
         login_email = screen1.ids.login_email.text
         login_password = screen1.ids.login_password.text
@@ -91,6 +120,12 @@ class LoginApp(MDApp):
         if user:
             # Login successful
             print("Login successful. User details:", user)
+            username = user[1]
+            # self.update(login_email, username)
+            self.screen = Builder.load_file("menu_profile.kv")
+            screen = self.root.get_screen('menu_profile')
+            screen.ids.username.text = username
+            screen.ids.email.text = login_email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
@@ -106,7 +141,9 @@ class LoginApp(MDApp):
 
 
     def build(self):
-
+        # client_id = open("client_id.txt")
+        # client_secret = open("client_secret.txt")
+        # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
 
         screen_manager.add_widget(Builder.load_file("main_sc.kv"))
@@ -114,13 +151,22 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("signup.kv"))
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(Builder.load_file("service_provider.kv"))
         screen_manager.add_widget(Builder.load_file("service_register_form.kv"))
 
 
         return screen_manager
-
+    # #google auth
+    # def after_login(self):
+    #     pass
+    # def error_listener(self):
+    #     pass
+    # def login(self):
+    #     login_google()
 
     #-------------------------service-provider-flow-------------
     menu = None
