@@ -1,4 +1,8 @@
+import base64
 import re
+
+from kivy.uix.filechooser import FileChooserListView
+from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.menu import MDDropdownMenu
 
 from kivymd.uix.pickers import MDDatePicker
@@ -23,15 +27,15 @@ Window.size = (310, 580)
 conn = sqlite3.connect("users.db")  # Replace "users.db" with your desired database name
 cursor = conn.cursor()
 cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        email TEXT NOT NULL,
-        password TEXT NOT NULL,
-        phone TEXT NOT NULL,
-        pincode TEXT NOT NULL
-    )
-''')
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    password TEXT NOT NULL,
+                    phone TEXT NOT NULL,
+                    pincode TEXT NOT NULL
+                )
+            ''')
 conn.commit()
 
 
@@ -60,15 +64,36 @@ class LoginApp(MDApp):
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
         # Enhanced password validation
         is_valid_password, password_error_message = self.validate_password(password)
+        # Clear existing helper texts
+        screen.ids.signup_email.helper_text = ""
+        screen.ids.signup_password.helper_text = ""
+        screen.ids.signup_phone.helper_text = ""
+        screen.ids.signup_pincode.helper_text = ""
+
         if not email or not re.match(email_regex, email):
-            self.show_validation_dialog("Invalid Email")
+            screen.ids.signup_email.error = True
+            screen.ids.signup_email.helper_text = "Invalid Email"
         elif not is_valid_password:
-            self.show_validation_dialog(password_error_message)
-        elif not pincode or len(pincode) != 6:
-            self.show_validation_dialog("Invalid Pincode (6 digits required)")
+            screen.ids.signup_password.error = True
+            screen.ids.signup_password.helper_text = password_error_message
         elif not phone or len(phone) != 10:
-            self.show_validation_dialog("Invalid Phone number (10 digits required)")
+            screen.ids.signup_phone.error = True
+            screen.ids.signup_phone.helper_text = "Invalid Phone number (10 digits required)"
+        elif not pincode or len(pincode) != 6:
+            screen.ids.signup_pincode.error = True
+            screen.ids.signup_pincode.helper_text = "Invalid Pincode (6 digits required)"
+
         else:
+            # Clear any existing errors and helper texts
+            screen.ids.signup_email.error = False
+            screen.ids.signup_email.helper_text = ""
+            screen.ids.signup_password.error = False
+            screen.ids.signup_password.helper_text = ""
+            screen.ids.signup_phone.error = False
+            screen.ids.signup_phone.helper_text = ""
+            screen.ids.signup_pincode.error = False
+            screen.ids.signup_pincode.helper_text = ""
+
             #If validation is successful, insert into the database
             cursor.execute('''
                         INSERT INTO users (username, email, password, phone, pincode)
@@ -91,7 +116,7 @@ class LoginApp(MDApp):
 
         # Check if the password contains both uppercase and lowercase letters
         if not any(c.isupper() for c in password) or not any(c.islower() for c in password):
-            return False, "Password must contain both uppercase and lowercase letters"
+            return False, "Password must contain uppercase, lowercase"
 
         # Check if the password contains at least one digit
         if not any(c.isdigit() for c in password):
@@ -100,7 +125,7 @@ class LoginApp(MDApp):
         # Check if the password contains at least one special character
         special_characters = r"[!@#$%^&*(),.?\":{}|<>]"
         if not re.search(special_characters, password):
-            return False, "Password must contain at least one special character"
+            return False, "Password must contain a special character"
 
         # All checks passed; the password is valid
         return True, "Password is valid"
@@ -130,7 +155,11 @@ class LoginApp(MDApp):
             self.root.current = 'client_services'
         else:
             # Login failed
-            self.show_validation_dialog("Invalid email or password")
+            self.screen = Builder.load_file("login.kv")
+            screen1 = self.root.current_screen
+            screen1.ids.login_email.error = True
+            screen1.ids.login_email.helper_text = "Invalid email or password"
+            screen1.ids.login_password.error = True
 
     def show_validation_dialog(self, message):
         dialog = MDDialog(
@@ -160,13 +189,18 @@ class LoginApp(MDApp):
 
 
         return screen_manager
-    # #google auth
-    # def after_login(self):
-    #     pass
-    # def error_listener(self):
-    #     pass
-    # def login(self):
-    #     login_google()
+
+
+    #---------------Upload functinality------------
+    # def upload_documents(self):
+    #     file_chooser = FileChooserListView()
+    #     file_chooser.bind(on_submit=self.on_file_selected)
+    #     file_chooser.show("C:/Users/Priyavinay/Downloads/1699097364339.jpg") # Replace with your desired initial directory
+    #
+    # def on_file_selected(self, instance, selection, touch):
+    #     if selection:
+    #         document_path = selection[0]
+    #         self.root.get_screen('service_register_form').ids.document_path.text = document_path
 
     #-------------------------service-provider-flow-------------
     menu = None
@@ -186,18 +220,18 @@ class LoginApp(MDApp):
                     "callback": self.select_city,
                 } for city in cities
             ]
-            self.menu = MDDropdownMenu(items=items, width_mult=3,max_height=100, pos_hint={'center_x': 0, 'center_y': 0.9})
+            self.menu = MDDropdownMenu(items=items, width_mult=3,max_height=300, pos_hint={'center_x': 0.5, 'center_y': 3})
 
         # Open the dropdown menu
-        self.menu.caller = self.screen_service.ids.dropdown_field
+        self.menu.caller = self.screen_service.ids.dropdown_nation
         self.menu.open()
 
     def select_city(self, instance,instance_item):
         # Callback function when a city is selected
         selected_city = instance_item.text
-        print(instance_item.text)
-        self.root.ids.dropdown_field.text = selected_city
-        self.menu.dismiss()
+        print(instance)
+        # self.root.ids.dropdown_nation.text = selected_city
+        # self.menu.dismiss()
 
     def on_save(self, instance, value, date_range):
         print(value)
@@ -218,6 +252,45 @@ class LoginApp(MDApp):
         date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
+
+    def registration_submit(self):
+        self.screen = Builder.load_file("service_register_form.kv")
+        screen = self.root.current_screen
+        username = screen.ids.name.text
+        print(username)
+        # cursor.execute('''
+        #     CREATE TABLE IF NOT EXISTS registration_forms (
+        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #         user_id INTEGER,
+        #         name TEXT NOT NULL,
+        #         email TEXT NOT NULL,
+        #         password TEXT NOT NULL,
+        #         address TEXT NOT NULL,
+        #         nation TEXT NOT NULL,
+        #         state TEXT NOT NULL,
+        #         pin_code INTEGER NOT NULL,
+        #         hospital_name TEXT NOT NULL,
+        #         established_year TEXT NOT NULL,
+        #         uploaded_documents BLOB,  -- New column for uploaded documents as BLOB
+        #         UNIQUE (email)
+        #     )
+        # ''')
+        # conn.commit()
+        # # # Assuming file_data contains binary data of the file you want to upload
+        # # file_data = b"..."
+        # #
+        # # # Encode the file data to base64 before inserting it into the database
+        # # encoded_file_data = base64.b64encode(file_data)
+        # cursor.execute('''
+        #     INSERT INTO registration_forms (
+        #         user_id, name, email, password, address, nation, state,
+        #         pin_code, hospital_name, established_year, uploaded_documents
+        #     )
+        #     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        # ''', (user_id, name, email, password, address, nation, state, pin_code, hospital_name, established_year,
+        #       encoded_file_data))
+
+        conn.commit()
 
 
 # Run the app
