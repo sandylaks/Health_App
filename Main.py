@@ -56,10 +56,12 @@ class LoginApp(MDApp):
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        # Enhanced password validation
+        is_valid_password, password_error_message = self.validate_password(password)
         if not email or not re.match(email_regex, email):
             self.show_validation_dialog("Invalid Email")
-        elif not password or len(password) < 6:
-            self.show_validation_dialog("Invalid Password (at least 6 characters)")
+        elif not is_valid_password:
+            self.show_validation_dialog(password_error_message)
         elif not pincode or len(pincode) != 6:
             self.show_validation_dialog("Invalid Pincode (6 digits required)")
         elif not phone or len(phone) != 10:
@@ -74,7 +76,33 @@ class LoginApp(MDApp):
             # Navigate to the success screen
             self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
-    #
+
+    #password validation
+    def validate_password(self, password):
+        # Check if the password is not empty
+        if not password:
+            return False, "Password cannot be empty"
+
+        # Check if the password has at least 8 characters
+        if len(password) < 6:
+            return False, "Password must have at least 6 characters"
+
+        # Check if the password contains both uppercase and lowercase letters
+        if not any(c.isupper() for c in password) or not any(c.islower() for c in password):
+            return False, "Password must contain both uppercase and lowercase letters"
+
+        # Check if the password contains at least one digit
+        if not any(c.isdigit() for c in password):
+            return False, "Password must contain at least one digit"
+
+        # Check if the password contains at least one special character
+        special_characters = r"[!@#$%^&*(),.?\":{}|<>]"
+        if not re.search(special_characters, password):
+            return False, "Password must contain at least one special character"
+
+        # All checks passed; the password is valid
+        return True, "Password is valid"
+
     def login_page(self,  instance, *args):
         self.screen = Builder.load_file("login.kv")
         screen1 = self.root.current_screen
