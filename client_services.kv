@@ -273,6 +273,12 @@ MDScreen:
 
                             OneLineIconListItem:
                                 text: "Logout"
+                                on_release:
+                                    root.manager.transition.direction = "right"
+                                    root.manager.current = "login"
                                 IconLeftWidget:
                                     icon: "logout"
+                                    on_release:
+                                        root.manager.transition.direction = "right"
+                                        root.manager.current = "login"
 
