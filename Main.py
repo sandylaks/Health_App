@@ -1,5 +1,6 @@
 import re
 from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.pickers import MDDatePicker
 
 from kivy.lang import Builder
 from kivymd import app
@@ -128,10 +129,10 @@ class LoginApp(MDApp):
         screen_service = self.root.current_screen
         if not self.menu:
             # Dropdown items (Replace these with your city names)
-            cities = ["Hospital Facility Manager",
-                      "Ambulance Facility Manager",
-                      "Gym Facility Manager", "Doctors",
-                      "Ambulance Drivers"]
+            cities = ["India",
+                      "America",
+                      "Russia",
+                      "China"]
             items = [
                 {
                     "viewclass": "MDDropDownItem",
@@ -151,6 +152,26 @@ class LoginApp(MDApp):
         print(instance_item.text)
         self.root.ids.dropdown_field.text = selected_city
         self.menu.dismiss()
+
+    def on_save(self, instance, value, date_range):
+        print(value)
+        print(date_range)
+        self.screen = Builder.load_file("hospital_book.kv")
+        screen_hos = self.root.current_screen
+        screen_hos.ids.dummy_widget.text = str(value)
+        #self.show_date_dialog(value)
+
+    # click Cancel
+    def on_cancel(self, instance, value):
+        print("cancel")
+        self.screen = Builder.load_file("service_register_form.kv")
+        screen_hos_cancel = self.root.current_screen
+        #screen_hos_cancel.ids.hospital_year.text = "You Clicked Cancel"
+
+    def show_date_picker(self,arg):
+        date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
 
 
 # Run the app
