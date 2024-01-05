@@ -84,7 +84,7 @@ MDScreen:
             background_color: 0, 0, 0, 0
             font_name: "BPoppins"
             on_release:
-                app.login(self)
+                app.login_page(self)
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)
@@ -125,15 +125,18 @@ MDScreen:
             color: rgba(74, 73, 73, 255)
         # social media images
         MDGridLayout:
-            cols: 3
+            cols: 1
             size_hint: .4, .05
             pos_hint: {"center_x": .5, "center_y": .1}
-            Image:
-                source: "images/google.png"
-            Image:
-                source: "images/facebook.png"
-            Image:
-                source: "images/apple.png"
+            Button:
+                size : 170, 70
+                background_color: (0,0,0,0)
+#                on_release: app.login()
+                Image:
+                    source: 'images/google_logo.png'
+                    size : 180, 80
+                    center_x: self.parent.center_x
+                    center_y: self.parent.center_y
         # Sign up button
         MDLabel:
             text: "Don't have an account?"
