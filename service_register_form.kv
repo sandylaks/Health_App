@@ -1,9 +1,8 @@
 MDScreen:
     name: 'service_register_form'
+    BoxLayout:
+        orientation: 'vertical'
 
-    MDFloatLayout:
-        md_bg_color: 1, 1, 1, 1
-        # back button
         MDIconButton:
             icon: "arrow-left"
             pos_hint: {"center_y": .95}
@@ -13,183 +12,243 @@ MDScreen:
             on_release:
                 root.manager.transition.direction = "right"
                 root.manager.current = "service_provider"
-        # Label
         MDLabel:
             text: "Create new account"
-#            font_name: "MPoppins"
+            font_name: "MPoppins"
+            pos_hint: {"center_x":.6,"center_y": .95}
+            size_hint_y:.1
             font_size: "18sp"
-            pos_hint: {"center_x": .6, "center_y": .89}
-            color: rgba(0, 0, 0, 255)
-        # Username input
-        MDFloatLayout:
-            size_hint: .7, .07
-            pos_hint: {"center_x": .5, "center_y": .8}
-            TextInput:
-                id: signup_username
-                hint_text: "Username"
-#                font_name: "MPoppins"
-                size_hint_y: .75
-                helper_text:'Required'
-                helper_text_mode:  'on_error'
-                required: True
-                pos_hint: {"center_x": .43, "center_y": .5}
-                background_color: 1, 1, 1, 0
-                foreground_color: rgba(0, 0, 59, 255)
-                cursor_color: rgba(0, 0, 59, 255)
-                font_size: "14sp"
-                cursor_width: "2sp"
-                multiline: False
-                write_tab: False
-            MDFloatLayout:
-                pos_hint: {"center_x": .45, "center_y": 0}
-                size_hint_y: .03
-                md_bg_color: rgba(178, 178, 178, 255)
-        # Email input
-        MDFloatLayout:
-            size_hint: .7, .07
-            pos_hint: {"center_x": .5, "center_y": .71}
-            TextInput:
-                id: signup_email
-                hint_text: "Email"
-#                font_name: "MPoppins"
-                size_hint_y: .75
-                helper_text:"Invalid Email"
-                helper_text_mode: 'on_error'
-                required: True
-                pos_hint: {"center_x": .43, "center_y": .5}
-                background_color: 1, 1, 1, 0
-                foreground_color: rgba(0, 0, 59, 255)
-                cursor_color: rgba(0, 0, 59, 255)
-                font_size: "14sp"
-                cursor_width: "2sp"
-                multiline: False
-                write_tab: False
-            MDFloatLayout:
-                pos_hint: {"center_x": .45, "center_y": 0}
-                size_hint_y: .03
-                md_bg_color: rgba(178, 178, 178, 255)
-        # Password input
-        MDFloatLayout:
-            size_hint: .7, .07
-            pos_hint: {"center_x": .5, "center_y": .62}
-            TextInput:
-                id: signup_password
-                hint_text: "Password"
-#                font_name: "MPoppins"
-                size_hint_y: .75
-                helper_text:"Invalid Password (at least 6 characters)"
-                helper_text_mode:  'on_error'
-                required: True
-                pos_hint: {"center_x": .43, "center_y": .5}
-                background_color: 1, 1, 1, 0
-                foreground_color: rgba(0, 0, 59, 255)
-                cursor_color: rgba(0, 0, 59, 255)
-                font_size: "14sp"
-                cursor_width: "2sp"
-                multiline: False
-                password: True
-                write_tab: False
-            MDFloatLayout:
-                pos_hint: {"center_x": .45, "center_y": 0}
-                size_hint_y: .03
-                md_bg_color: rgba(178, 178, 178, 255)
-        # Phone num input
-        MDFloatLayout:
-            size_hint: .7, .07
-            pos_hint: {"center_x": .5, "center_y": .53}
-            TextInput:
-                id: signup_phone
-                hint_text: "Phone no"
-#                font_name: "MPoppins"
-                size_hint_y: .75
-                helper_text:("Invalid Phone number (10 digits required)")
-                helper_text_mode:  'on_error'
-                required: True
-                pos_hint: {"center_x": .43, "center_y": .5}
-                background_color: 1, 1, 1, 0
-                foreground_color: rgba(0, 0, 59, 255)
-                cursor_color: rgba(0, 0, 59, 255)
-                font_size: "14sp"
-                cursor_width: "2sp"
-                multiline: False
-                write_tab: False
-                input_type: "number"
-            MDFloatLayout:
-                pos_hint: {"center_x": .45, "center_y": 0}
-                size_hint_y: .03
-                md_bg_color: rgba(178, 178, 178, 255)
-        # Pincode input
-        MDFloatLayout:
-            size_hint: .7, .07
-            pos_hint: {"center_x": .5, "center_y": .44}
-            TextInput:
-                id: signup_pincode
-                hint_text: "Pincode"
-#                font_name: "MPoppins"
-                size_hint_y: .75
-                helper_text:("Invalid Pincode (6 digits required)")
-                helper_text_mode:  'on_error'
-                required: True
-                pos_hint: {"center_x": .43, "center_y": .5}
-                background_color: 1, 1, 1, 0
-                foreground_color: rgba(0, 0, 59, 255)
-                cursor_color: rgba(0, 0, 59, 255)
-                font_size: "14sp"
-                cursor_width: "2sp"
-                multiline: False
-                write_tab: False
-                input_type: "number"
-            MDFloatLayout:
-                pos_hint: {"center_x": .45, "center_y": 0}
-                size_hint_y: .03
-                md_bg_color: rgba(178, 178, 178, 255)
-        MDFloatLayout:
-            size_hint: .7, .07
-            pos_hint: {"center_x": .5, "center_y": .35}
-            MDTextField:
-                id: dropdown_field
-                hint_text: "Select Position"
-                hint_text_: "10sp"
-                pos_hint: {'center_x': 0.43, 'center_y': 0.5}
-                on_focus: app.open_dropdown()
-                font_size: "14sp"
-                cursor_width: "2sp"
-                readonly: True
-                theme_text_color: "Custom"
-                icon_right: 'chevron-down'
-                line_color_normal: 0, 0, 0, 1
-                line_color_focus: 0, 0, 0, .5
-                icon_right_color: app.theme_cls.primary_color
-                text:''
-        Button:
-            text: "UPLOAD DOCUMENTS"
-            size_hint: .5, .06
-            pos_hint: {"center_x": .5, "center_y": .2}
-            background_color: 0, 0, 0, 0
-#            font_name: "BPoppins"
-            color: rgba(0, 0, 0, 255)
-            on_release: app.open_file_manager()
-            canvas.before:
-                Color:
-                    rgb: rgba(0, 0, 0, 255)
-                Line:
-                    width: 1.2
-                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+        ScrollView:
+            GridLayout:
+                id: grid
+                cols: 1
+                padding: dp(10)
+                spacing: dp(20)
+                size_hint_y: None
+                height: self.minimum_height
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    MDTextField:
+                        font_name: "MPoppins"
+                        font_size:'12sp'
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "25dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_normal:0,0,0,1
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+                    MDTextField:
+                        id: name
+#                        required: True
+                        hint_text: 'Name'
+                        font_name: "MPoppins"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "25dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
 
 
-        # signup button
-        Button:
-            text: "REGISTER"
-            size_hint: .66, .065
-            pos_hint: {"center_x": .5, "center_y": .1}
-            background_color: 0, 0, 0, 0
-#            font_name: "BPoppins"
-            on_release: app.validate_inputs(self)
+                    MDTextField:
+                        id:email
+                        hint_text: "Email"
+#                        required: True
+                        font_name: "MPoppins"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
 
-            canvas.before:
-                Color:
-                    rgb: rgba(255, 0, 0, 255)
-                RoundedRectangle:
-                    size: self.size
-                    pos: self.pos
-                    radius: [5]
+
+                    MDTextField:
+                        id:pass
+                        hint_text: "Enter Password"
+#                        required: True
+                        password: True
+                        font_name: "MPoppins"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "30dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+
+
+                    MDTextField:
+                        id:c_pass
+                        hint_text: "Confirm Password"
+#                       required: True
+                        password: True
+                        font_name: "MPoppins"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "30dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+
+                    MDTextField:
+                        id:address
+                        hint_text: "Address"
+#                        required: True
+                        font_name: "MPoppins"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "30dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+
+
+                    MDTextField:
+                        id: dropdown_nation
+                        hint_text: "Nation"
+                        pos_hint: {'center_x': 0.5}
+                        on_focus: app.open_dropdown()
+                        font_size: "14sp"
+                        size_hint:.9,None
+                        cursor_width: "2sp"
+                        readonly: True
+                        theme_text_color: "Custom"
+                        icon_right: 'chevron-down'
+                        line_color_normal: 0, 0, 0, 1
+                        line_color_focus: 0, 0, 0, .5
+                        icon_right_color: app.theme_cls.primary_color
+                        text:''
+                    MDTextField:
+                        id: dropdown_state
+                        hint_text: "State"
+                        pos_hint: {'center_x': 0.5}
+                        on_focus: app.open_dropdown2()
+                        font_size: "14sp"
+                        size_hint:.9,None
+                        cursor_width: "2sp"
+                        readonly: True
+                        theme_text_color: "Custom"
+                        icon_right: 'chevron-down'
+                        line_color_normal: 0, 0, 0, 1
+                        line_color_focus: 0, 0, 0, .5
+                        icon_right_color: app.theme_cls.primary_color
+                        text:''
+                    MDTextField:
+                        id:pin_code
+                        hint_text: "PIN Code"
+#                        required: True
+                        font_name: "MPoppins"
+                        font_size: "14sp"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "30dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+                    MDTextField:
+                        id:hospital_name
+                        hint_text: "Hospital Name"
+#                        required: True
+                        font_name: "MPoppins"
+                        font_size: "14sp"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "30dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+                    GridLayout:
+                        id: grid2
+                        cols:2
+                        size_hint:.9,.5
+                        pos_hint:{'center_x':.5}
+                        TextInput:
+                            id:hospital_year
+                            hint_text: "Established Year"
+                            required: True
+                            font_name: "MPoppins"
+                            size_hint:.5,None
+                            height: "30dp"
+                            multiline: False
+                            background_color: 0, 0,0 ,0
+                            foreground_color: rgba(35, 35, 35, 255)
+                            cursor_color: rgba(0, 0, 59, 255)
+                            font_size: "14sp"
+                            cursor_width: "2sp"
+                            multiline: False
+                            write_tab: False
+                            input_type: "number"
+                            on_focus: app.show_date_picker(self)
+
+                        MDLabel:
+                            id: dummy_widget
+                            text:''
+                            size_hint:.3,None
+                            height:0
+
+
+
+                    MDFlatButton:
+                        id: upload
+                        text: "UPLOAD DOCUMENTS"
+                        size_hint:.6,.5
+                        pos_hint: {"center_x": .5,'center_y':.3}
+                        background_color: 0, 0, 0, 0
+                        font_name: "BPoppins"
+                        font_size: "12sp"
+                        color: rgba(0, 0, 0, 255)
+                        canvas.before:
+                            Color:
+                                rgb: rgba(0, 0, 0, 255)
+                            Line:
+                                width: 1.2
+                                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+                    BoxLayout:
+                        orientation: 'vertical'
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: dp(20)
+                        spacing: dp(10)
+                        # signup button
+                    MDFlatButton:
+                        id:service_register
+                        text: "REGISTER"
+                        size_hint: .7, .001
+                        pos_hint: {"center_x": .5, "center_y": .1}
+                        background_color: 0, 0, 0, 0
+                        font_name: "BPoppins"
+                        color: rgba(1, 1, 1, 255)
+                        on_release: pass
+                        canvas.before:
+                            Color:
+                                rgb: rgba(255, 0, 0, 255)
+                            RoundedRectangle:
+                                size: self.size
+                                pos: self.pos
+                                radius: [5]
