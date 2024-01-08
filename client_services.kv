@@ -257,23 +257,41 @@ MDScreen:
                                 IconLeftWidget:
                                     icon: "account-circle"
                                     on_release:
-                                        root.manager.transition.direction = "right"
+                                        root.manager.transition.direction = "left"
                                         root.manager.current = "menu_profile"
-
                             OneLineIconListItem:
                                 text: "Notification"
+                                on_release:
+                                    root.manager.transition.direction = "left"
+                                    root.manager.current = "menu_notification"
                                 IconLeftWidget:
                                     icon: "bell-outline"
+                                    on_release:
+                                        root.manager.transition.direction = "left"
+                                        root.manager.current = "menu_notification"
 
                             OneLineIconListItem:
                                 text: "Bookings"
+                                on_release:
+                                    root.manager.transition.direction = "left"
+                                    root.manager.current = "menu_bookings"
                                 IconLeftWidget:
                                     icon: "book-account-outline"
+                                    on_release:
+                                        root.manager.transition.direction = "left"
+                                        root.manager.current = "menu_bookings"
 
                             OneLineIconListItem:
                                 text: "Reports"
+                                on_release:
+                                    root.manager.transition.direction = "left"
+                                    root.manager.current = "menu_reports"
+
                                 IconLeftWidget:
                                     icon: "file-multiple"
+                                    on_release:
+                                        root.manager.transition.direction = "left"
+                                        root.manager.current = "menu_reports"
 
                             OneLineIconListItem:
                                 text: "Support"
