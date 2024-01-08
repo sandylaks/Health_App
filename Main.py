@@ -1,8 +1,9 @@
+import base64
 import re
-from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.pickers import MDDatePicker
 from ServiceProvider import ServiceRegister,ServiceProvider
 
+from kivymd.uix.pickers import MDDatePicker
+# from kivyauth.google_auth import initialize_google,login_google,logout_google
 from kivy.lang import Builder
 from kivymd import app
 from kivymd.app import MDApp
@@ -39,6 +40,17 @@ cursor.execute('''
         pincode TEXT NOT NULL
     )
 ''')
+# Create the BookSlot table if it doesn't exist
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS BookSlot (
+        slot_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        username TEXT NOT NULL,
+        book_date TEXT NOT NULL,
+        book_time TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )
+''')
 
 conn.commit()
 
@@ -67,15 +79,38 @@ class LoginApp(MDApp):
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        # Enhanced password validation
+        is_valid_password, password_error_message = self.validate_password(password)
+        # Clear existing helper texts
+        screen.ids.signup_email.helper_text = ""
+        screen.ids.signup_password.helper_text = ""
+        screen.ids.signup_phone.helper_text = ""
+        screen.ids.signup_pincode.helper_text = ""
+
         if not email or not re.match(email_regex, email):
-            self.show_validation_dialog("Invalid Email")
-        elif not password or len(password) < 6:
-            self.show_validation_dialog("Invalid Password (at least 6 characters)")
-        elif not pincode or len(pincode) != 6:
-            self.show_validation_dialog("Invalid Pincode (6 digits required)")
+            screen.ids.signup_email.error = True
+            screen.ids.signup_email.helper_text = "Invalid Email"
+        elif not is_valid_password:
+            screen.ids.signup_password.error = True
+            screen.ids.signup_password.helper_text = password_error_message
         elif not phone or len(phone) != 10:
-            self.show_validation_dialog("Invalid Phone number (10 digits required)")
+            screen.ids.signup_phone.error = True
+            screen.ids.signup_phone.helper_text = "Invalid Phone number (10 digits required)"
+        elif not pincode or len(pincode) != 6:
+            screen.ids.signup_pincode.error = True
+            screen.ids.signup_pincode.helper_text = "Invalid Pincode (6 digits required)"
+
         else:
+            # Clear any existing errors and helper texts
+            screen.ids.signup_email.error = False
+            screen.ids.signup_email.helper_text = ""
+            screen.ids.signup_password.error = False
+            screen.ids.signup_password.helper_text = ""
+            screen.ids.signup_phone.error = False
+            screen.ids.signup_phone.helper_text = ""
+            screen.ids.signup_pincode.error = False
+            screen.ids.signup_pincode.helper_text = ""
+
             #If validation is successful, insert into the database
             cursor.execute('''
                         INSERT INTO users (username, email, password, phone, pincode)
@@ -85,7 +120,10 @@ class LoginApp(MDApp):
             # Navigate to the success screen
             self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
- 
+    #
+    def login(self, instance, *args):
+        self.screen1 = Builder.load_file("login.kv")
+
 
     #password validation
     def validate_password(self, password):
@@ -115,6 +153,7 @@ class LoginApp(MDApp):
 
     def login_page(self,  instance, *args):
         self.screen = Builder.load_file("login.kv")
+
         screen1 = self.root.current_screen
         login_email = screen1.ids.login_email.text
         login_password = screen1.ids.login_password.text
@@ -128,21 +167,27 @@ class LoginApp(MDApp):
         if user:
             # Login successful
             print("Login successful. User details:", user)
+            username = user[1]
+            # self.update(login_email, username)
+            self.screen = Builder.load_file("menu_profile.kv")
+            screen = self.root.get_screen('menu_profile')
+            screen.ids.username.text = username
+            screen.ids.email.text = login_email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
             # Login failed
-            self.show_validation_dialog("Invalid email or password")
+            self.screen = Builder.load_file("login.kv")
+            screen1 = self.root.current_screen
+            screen1.ids.login_email.error = True
+            screen1.ids.login_email.helper_text = "Invalid email or password"
+            screen1.ids.login_password.error = True
 
-    def show_validation_dialog(self, message):
-        dialog = MDDialog(
-            text=message,
-            buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
-        )
-        dialog.open()
 
     def build(self):
-
+        # client_id = open("client_id.txt")
+        # client_secret = open("client_secret.txt")
+        # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
 
         screen_manager.add_widget(Builder.load_file("main_sc.kv"))
@@ -157,7 +202,7 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
-        screen_manager.add_widget(Builder.load_file("slot_booking.kv")
+        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
 
         return screen_manager
@@ -214,6 +259,44 @@ class LoginApp(MDApp):
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
 
+    def registration_submit(self):
+        self.screen = Builder.load_file("service_register_form.kv")
+        screen = self.root.current_screen
+        username = screen.ids.name.text
+        print(username)
+        # cursor.execute('''
+        #     CREATE TABLE IF NOT EXISTS registration_forms (
+        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        #         user_id INTEGER,
+        #         name TEXT NOT NULL,
+        #         email TEXT NOT NULL,
+        #         password TEXT NOT NULL,
+        #         address TEXT NOT NULL,
+        #         nation TEXT NOT NULL,
+        #         state TEXT NOT NULL,
+        #         pin_code INTEGER NOT NULL,
+        #         hospital_name TEXT NOT NULL,
+        #         established_year TEXT NOT NULL,
+        #         uploaded_documents BLOB,  -- New column for uploaded documents as BLOB
+        #         UNIQUE (email)
+        #     )
+        # ''')
+        # conn.commit()
+        # # # Assuming file_data contains binary data of the file you want to upload
+        # # file_data = b"..."
+        # #
+        # # # Encode the file data to base64 before inserting it into the database
+        # # encoded_file_data = base64.b64encode(file_data)
+        # cursor.execute('''
+        #     INSERT INTO registration_forms (
+        #         user_id, name, email, password, address, nation, state,
+        #         pin_code, hospital_name, established_year, uploaded_documents
+        #     )
+        #     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        # ''', (user_id, name, email, password, address, nation, state, pin_code, hospital_name, established_year,
+        #       encoded_file_data))
+
+        conn.commit()
 
     # hospital_Book page logic
     # functionality for back button in hospital book
@@ -277,67 +360,6 @@ class LoginApp(MDApp):
         #     self.show_validation_dialog("Select Time")
         # else:
         #     self.show_validation_dialog("Select Date and Time")
-
-
-
-
-
-#------------------------menu-support-flow-------------------------
-
-    def show_customer_support_dialog(self):
-        dialog = MDDialog(
-            title="Contact Customer Support",
-            text="Call Customer Support at: +1-800-123-4567"
-        )
-        dialog.open()
-
-
-    def show_doctor_dialog(self):
-        dialog = MDDialog(
-            title="Call On-Call Doctor",
-            text="Call On-Call Doctor at: +1-888-765-4321"
-        )
-        dialog.open()
-
-
-    def submit_ticket(self, issue_title, issue_description):
-        # self.root.transition = SlideTransition(direction='right')
-        # self.root.current = 'client_services'
-        self.screen = Builder.load_file("menu_support.kv")
-        screen = self.root.current_screen
-        submitted_title = screen.ids.issue_title.text
-        submitted_description = screen.ids.issue_description.text
-        print(f"Submitted Issue Title: {submitted_title}")
-        print(f"Submitted Issue Description: {submitted_description}")
-
-
-    def show_ticket_popup(self):
-        self.screen = Builder.load_file("menu_support.kv")
-        screen = self.root.current_screen
-        submitted_title = screen.ids.issue_title.text
-        submitted_description = screen.ids.issue_description.text
-
-        # Create and show the popup
-        ticket_popup = MDDialog(
-            title="Ticket Raised",
-            text=f"Issue '{submitted_title}' has been raised.",
-            buttons=[
-                MDFlatButton(
-                    text="OK",
-                    md_bg_color=(1, 0, 0, 1),
-                    theme_text_color="Custom",
-                    text_color=(1, 1, 1, 1),
-                    font_size=15,
-                    on_release=lambda *args: ticket_popup.dismiss()
-                ),
-            ],
-        )
-        ticket_popup.open()
-        screen.ids.issue_title.text = ""
-        screen.ids.issue_description.text = ""
-
-#------------------------menu-support-flow-------------------------
-
 
 
 # Run the app
