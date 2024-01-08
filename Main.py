@@ -54,15 +54,7 @@ cursor.execute('''
         FOREIGN KEY (user_id) REFERENCES users (id)
     )
 ''')
-                CREATE TABLE IF NOT EXISTS users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT NOT NULL,
-                    email TEXT NOT NULL,
-                    password TEXT NOT NULL,
-                    phone TEXT NOT NULL,
-                    pincode TEXT NOT NULL
-                )
-            ''')
+
 conn.commit()
 
 
@@ -221,21 +213,8 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("service_register_form.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
 
-
-
         return screen_manager
 
-
-    #---------------Upload functinality------------
-    # def upload_documents(self):
-    #     file_chooser = FileChooserListView()
-    #     file_chooser.bind(on_submit=self.on_file_selected)
-    #     file_chooser.show("C:/Users/Priyavinay/Downloads/1699097364339.jpg") # Replace with your desired initial directory
-    #
-    # def on_file_selected(self, instance, selection, touch):
-    #     if selection:
-    #         document_path = selection[0]
-    #         self.root.get_screen('service_register_form').ids.document_path.text = document_path
 
     #-------------------------service-provider-flow-------------
     menu = None
