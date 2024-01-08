@@ -54,15 +54,7 @@ cursor.execute('''
         FOREIGN KEY (user_id) REFERENCES users (id)
     )
 ''')
-                CREATE TABLE IF NOT EXISTS users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT NOT NULL,
-                    email TEXT NOT NULL,
-                    password TEXT NOT NULL,
-                    phone TEXT NOT NULL,
-                    pincode TEXT NOT NULL
-                )
-            ''')
+
 conn.commit()
 
 
