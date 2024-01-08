@@ -1,0 +1,208 @@
+MDScreen:
+    name:'slot_booking'
+    BoxLayout:
+        orientation: 'vertical'
+
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_y": .91}
+            user_font_size: "20sp"
+            theme_text_color: "Custom"
+            text_color: rgba(71, 92, 119, 255)
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "hospital_book"
+    BoxLayout:
+        orientation: 'vertical'
+
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_y": .91}
+            user_font_size: "20sp"
+            theme_text_color: "Custom"
+            text_color: rgba(71, 92, 119, 255)
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "hospital_book"
+
+        ScrollView:
+            GridLayout:
+                cols: 1
+                spacing: dp(10)
+                padding: dp(10)
+                size_hint_y: None
+                height: self.minimum_height
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+
+
+                    MDIcon:
+                        icon: "calendar"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0, 0, 1
+                        size_hint_x: None
+                        width: dp(24)
+
+                    MDFlatButton:
+                        text: "SELECT DATE "
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+                        font_name: "BPoppins"
+                        on_release: app.slot_date_picker()
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    MDLabel:
+                        id: slot_date_label
+                        text: ""
+                        halign: 'center'
+                        height: dp(40)
+
+                        canvas.before:
+                            Color:
+                                rgba: 0.5, 0.5, 0.5, 1
+                            Line:
+                                points: self.x, self.y, self.x + self.width, self.y
+                                width: 3
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    MDLabel:
+                        text: "Select Time"
+                        font_name: "BPoppins"
+                        font_size: "30sp"
+                        text_color: 0, 0, 0, 1
+                        halign:'center'
+
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: dp(200)
+                    md_bg_color: rgba(153,89,89,255)
+                    GridLayout:
+                        cols:2
+
+                        Label:
+                            text: "9am - 11am"
+                            font_size: 15
+                            font_name: "MPoppins"
+
+                        CheckBox:
+                            group:"time"
+                            on_active: app.checkbox_click(self,self.active,"9am - 11am")
+
+
+                        Label:
+                            text: "11am - 1pm"
+                            font_size: 15
+                            font_name: "MPoppins"
+                        CheckBox:
+                            group:"time"
+                            on_active: app.checkbox_click(self,self.active,"11am - 1pm")
+
+                        Label:
+                            text: "1pm - 3pm"
+                            font_size: 15
+                            font_name: "MPoppins"
+                        CheckBox:
+                            group:"time"
+                            on_active: app.checkbox_click(self,self.active,"1pm - 3pm")
+
+                        Label:
+                            text: "1pm - 3pm"
+                            font_size: 15
+                            font_name: "MPoppins"
+                        CheckBox:
+                            group:"time"
+                            on_active: app.checkbox_click(self,self.active,"1pm - 3pm")
+
+                        Label:
+                            text: "5pm - 7pm"
+                            font_size: 15
+                            font_name: "MPoppins"
+                        CheckBox:
+                            group:"time"
+                            on_active: app.checkbox_click(self,self.active,"5pm - 7pm")
+
+                        Label:
+                            text: "7pm - 9pm"
+                            font_size: 15
+                            font_name: "MPoppins"
+                        CheckBox:
+                            group:"time"
+                            on_active: app.checkbox_click(self,self.active,"7pm - 9pm")
+
+                        Label:
+                            text: "9pm - 10pm"
+                            font_size: 15
+                            font_name: "MPoppins"
+                        CheckBox:
+                            group:"time"
+                            on_active: app.checkbox_click(self,self.active,"9pm - 10pm")
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    MDLabel:
+                        text: "Your Session will be on"
+                        font_name: "BPoppins"
+                        font_size: "20sp"
+                        text_color: 0, 0, 0, 1
+                        halign:'center'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    MDIcon:
+                        icon: "calendar"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0, 0, 1
+                        size_hint_x: None
+                        width: dp(24)
+                    MDLabel:
+                        id: session_date
+                        text: "Date"
+                        font_name: "MPoppins"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    MDIcon:
+                        icon: "clock"
+                        theme_text_color: "Custom"
+                        text_color: 1, 0, 0, 1
+                        size_hint_x: None
+                        width: dp(24)
+                    MDLabel:
+                        id: session_time
+                        text: "Time"
+                        font_name: "MPoppins"
+                        theme_text_color: "Custom"
+                        text_color: 0, 0, 0, 1
+
+        Button:
+            id: book_slot
+            text: "Pay Now"
+            size_hint_y:.08
+            background_color: 0, 0, 0, 0
+            font_name: "BPoppins"
+            on_release:
+                app.pay_now(self)
+#                root.manager.transition.direction = "left"
+#                root.manager.current = "payment_page"
+            canvas.before:
+                Color:
+                    rgb: rgba(255, 0, 0, 255)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [0]

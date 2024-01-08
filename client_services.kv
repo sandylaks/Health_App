@@ -10,9 +10,11 @@ MDScreen:
 
                     MDTopAppBar:
                         title: "Available Services"
+                        font_name: "BPoppins"
                         md_bg_color: 1, 0, 0, 1
                         left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
                         right_action_items: [["map-marker", lambda x: app.client_location_button()]]
+
 
                     ScrollView:
                         GridLayout:
@@ -42,16 +44,19 @@ MDScreen:
 
                                         MDLabel:
                                             text: "Hospitals"
+                                            font_name: "BPoppins"
                                             theme_text_color: "Secondary"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.2}
 
                                         MDLabel:
                                             text: "Hospitals Address"
+                                            font_name: "MPoppins"
                                             theme_text_color: "Hint"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
                                         Button:
                                             text: "Book Now"
+                                            font_name: "BPoppins"
                                             size_hint: None, None
                                             size: "100dp", "30dp"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.9}
@@ -89,16 +94,19 @@ MDScreen:
 
                                         MDLabel:
                                             text: "Ambulance"
+                                            font_name: "BPoppins"
                                             theme_text_color: "Secondary"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.2}
 
                                         MDLabel:
                                             text: "Ambulance Details"
+                                            font_name: "MPoppins"
                                             theme_text_color: "Hint"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
                                         Button:
                                             text: "Book Now"
+                                            font_name: "BPoppins"
                                             size_hint: None, None
                                             size: "100dp", "30dp"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.9}
@@ -137,16 +145,19 @@ MDScreen:
 
                                         MDLabel:
                                             text: "Gym"
+                                            font_name: "BPoppins"
                                             theme_text_color: "Secondary"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.2}
 
                                         MDLabel:
                                             text: "Gym Address"
+                                            font_name: "MPoppins"
                                             theme_text_color: "Hint"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
                                         Button:
                                             text: "Book Now"
+                                            font_name: "BPoppins"
                                             size_hint: None, None
                                             size: "100dp", "30dp"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.9}
@@ -184,16 +195,19 @@ MDScreen:
 
                                         MDLabel:
                                             text: "Home Setup"
+                                            font_name: "BPoppins"
                                             theme_text_color: "Secondary"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.2}
 
                                         MDLabel:
                                             text: "Home Setup Details"
+                                            font_name: "MPoppins"
                                             theme_text_color: "Hint"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.5}
 
                                         Button:
                                             text: "Book Now"
+                                            font_name: "BPoppins"
                                             size_hint: None, None
                                             size: "100dp", "30dp"
                                             pos_hint: {'center_x': 0.5,'center_y': 0.9}
