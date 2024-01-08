@@ -10,6 +10,13 @@ from kivy.core.text import LabelBase
 from kivymd.uix.behaviors import FakeRectangularElevationBehavior
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.pickers import MDDatePicker
+from kivymd.uix.selectioncontrol import MDCheckbox
+from kivymd.uix.boxlayout import BoxLayout
+from kivy.uix.widget import Widget
+from datetime import datetime
+
 
 import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
@@ -30,7 +37,19 @@ cursor.execute('''
         pincode TEXT NOT NULL
     )
 ''')
+# Create the BookSlot table if it doesn't exist
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS BookSlot (
+        slot_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        username TEXT NOT NULL,
+        book_date TEXT NOT NULL,
+        book_time TEXT NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )
+''')
 conn.commit()
+
 
 
 class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
@@ -75,7 +94,7 @@ class LoginApp(MDApp):
             self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
     #
-    def login(self,  instance, *args):
+    def login(self, instance, *args):
         self.screen1 = Builder.load_file("login.kv")
         screen1 = self.root.current_screen
         login_email = screen1.ids.login_email.text
@@ -103,7 +122,6 @@ class LoginApp(MDApp):
         )
         dialog.open()
 
-
     def build(self):
 
         screen_manager = ScreenManager()
@@ -114,8 +132,11 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("service_provider.kv"))
         screen_manager.add_widget(Builder.load_file("service_register_form.kv"))
+        screen_manager.add_widget(Builder.load_file("payment_page.kv"))
+
 
 
         return screen_manager
@@ -151,6 +172,72 @@ class LoginApp(MDApp):
         print(instance_item.text)
         self.root.ids.dropdown_field.text = selected_city
         self.menu.dismiss()
+
+    # hospital_Book page logic
+    # functionality for back button in hospital book
+    def back_button_hospital_book(self):
+        self.root.transition = SlideTransition(direction='left')
+        self.root.current = 'client_services'
+
+
+    # Slot_Booking page logic
+    def slot_save(self, instance, value, date_range):
+        # the date string in "year-month-day" format
+        # date_object = datetime.strptime(str(value), "%Y-%m-%d")
+        # Format the date as "day-month-year"
+        # formatted_date = date_object.strftime("%d-%m-%Y")
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen = self.root.current_screen
+        screen.ids.slot_date_label.text = str(value)
+        screen.ids.session_date.text = str(value)
+
+    def slot_cancel(self, instance, value):
+        print("cancel")
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen_hos_cancel = self.root.current_screen
+        screen_hos_cancel.ids.slot_date_label.text = "You Clicked Cancel"
+    def slot_date_picker(self):
+        date_dialog = MDDatePicker(year=2024, month=1, day=4, size_hint=(None, None), size=(150, 150))
+        date_dialog.bind(on_save=self.slot_save, on_cancel=self.slot_cancel)
+        date_dialog.open()
+
+    def checkbox_click(self, checkbox, value, time):
+        if value:
+            self.screen = Builder.load_file("slot_booking.kv")
+            screen = self.root.current_screen
+            screen.ids.session_time.text = str(time)
+
+    def pay_now(self, instance, *args):
+        self.screen1 = Builder.load_file("slot_booking.kv")
+        screen1 = self.root.current_screen
+        session_date = screen1.ids.session_date.text
+        session_time = screen1.ids.session_time.text
+        self.screen = Builder.load_file("menu_profile.kv")
+        screen = self.root.get_screen('menu_profile')
+        username = screen.ids.username.text
+        print(username)
+
+
+        # if len(session_date) == 10 and len(session_time) >= 9:
+        #     # If date and time are successfully Selected, insert into the database
+        #
+        #     cursor.execute('''
+        #            INSERT INTO BookSlot (user_id, username, book_date, book_time)
+        #            VALUES (?, ?, ?, ?)
+        #        ''', (user_id, username, session_date, session_time))
+
+        #
+        #     self.root.transition.direction = 'left'
+        #     self.root.current = 'payment_page'
+        # elif len(session_date) == 4 and len(session_time) >= 9 :
+        #     self.show_validation_dialog("Select Date")
+        # elif len(session_date) == 10 and len(session_time) == 4:
+        #     self.show_validation_dialog("Select Time")
+        # else:
+        #     self.show_validation_dialog("Select Date and Time")
+
+
+
 
 
 # Run the app
