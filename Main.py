@@ -170,7 +170,9 @@ class LoginApp(MDApp):
             username = user[1]
             # self.update(login_email, username)
             self.screen = Builder.load_file("menu_profile.kv")
+            self.screen = Builder.load_file("client_services.kv")
             screen = self.root.get_screen('menu_profile')
+            screen = self.root.get_screen('client_services')
             screen.ids.username.text = username
             screen.ids.email.text = login_email
             self.root.transition.direction = 'left'
