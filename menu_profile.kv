@@ -1,0 +1,83 @@
+MDScreen:
+    name: "menu_profile"
+    MDFloatLayout:
+        md_bg_color: rgba(246, 250, 255, 255)
+        ProfileCard:
+            size_hint_y: .65
+            pos_hint: {"center_y": .7}
+            elevation: 3
+            md_bg_color: 1, 1, 1, 1
+            radius: [0, 0, 20, 20]
+            MDIconButton:
+                icon: "arrow-left"
+                pos_hint: {"center_y": .91}
+                user_font_size: "20sp"
+                theme_text_color: "Custom"
+                text_color: rgba(34, 34, 34, 255)
+                on_release:
+                    root.manager.transition.direction = "right"
+                    root.manager.current = "client_services"
+            MDIconButton:
+                icon: "dots-vertical"
+                pos_hint: {"center_x": .93, "center_y": .91}
+                user_font_size: "20sp"
+                theme_text_color: "Custom"
+                text_color: rgba(34, 34, 34, 255)
+            MDLabel:
+                text: "My Profile"
+                font_name: "BPoppins"
+                font_size: "20sp"
+                pos_hint: {"center_x": .56, "center_y": .82}
+                color: rgba(34, 34, 34, 255)
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgba: (0,0,0 ,.5)
+                    Ellipse:
+                        pos: 140, 498
+                        size: 112 , 112
+            FloatLayout:
+                canvas:
+                    Color:
+                        rgb: 1, 1, 1
+                    Ellipse:
+                        pos: 140, 500
+                        size: 110 , 110
+                        source: 'images/hospital.png'
+                        angle_start: 0
+                        angle_end: 360
+            MDFloatLayout:
+                orientation:'vertical'
+#                pos_hint: {"center_x": .5, "center_y": .72}
+                MDLabel:
+                    id: username
+                    text: "username"
+                    font_name: "BPoppins"
+                    pos_hint: {"center_x": .66,"center_y": .85}
+                    color: rgba(34, 34, 34, 255)
+                MDLabel:
+                    id: email
+                    text: "clientemail@gmail.com"
+                    font_name: "BPoppins"
+                    pos_hint: {"center_x": .66,"center_y": .73}
+                    color: rgba(34, 34, 34, 255)
+            MDFloatLayout:
+                md_bg_color: rgba(178, 178, 178, 255)
+                size_hint: .62, .002
+                pos_hint: {"center_x": .47, "center_y": .218}
+#            ScrollView
+#                MDList:
+#                    OneLineIconListItem:
+#                        id: profile_name
+#                        text: "client Name"
+#                        pos_hint: {"center_x": .56, "center_y": .82}
+#                        font_name: "MPoppins"
+#                        IconLeftWidget:
+#                            icon: "account-circle"
+#
+#                    OneLineIconListItem:
+#                        id: profile_email
+#                        text: "clientemail@gmail.com"
+#                        IconLeftWidget:
+#                            icon: "email"
+

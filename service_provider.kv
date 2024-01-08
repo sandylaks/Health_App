@@ -1,0 +1,214 @@
+
+MDScreen:
+    name:'service_provider'
+    BoxLayout:
+        orientation: 'vertical'
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_y": .95}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 24, 58, 255)
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "signup"
+        ScrollView:
+            GridLayout:
+                id: grid
+                cols: 1
+                spacing: dp(10)
+                padding: dp(20)
+                size_hint_y: None
+                height: self.minimum_height
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    size_hint_y: None
+                    height: dp(185)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(290), dp(150)
+                        pos_hint: {'center_x': .5,'center_y':.1}
+                        elevation: 3
+                        radius: [36,36,36,36]
+
+                        Image:
+                            source: "images/hospital.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+                            radius: [36,36,0,0,]
+                            canvas.before:
+
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+                                    radius: [25]
+                    MDLabel:
+                        text: 'Hospital Facility Manager'  # Description
+                        size_hint: None, None
+                        size: dp(290), dp(35)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    size_hint_y: None
+                    height: dp(185)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(290), dp(150)
+                        pos_hint: {'center_x': .5,'center_y':.1}
+                        elevation: 3
+                        radius: [36,36,36,36]
+
+                        Image:
+                            source: "images/ambulance.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+                            radius: [36,36,0,0,]
+                            canvas.before:
+
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+                                    radius: [25]
+                    MDLabel:
+                        text: 'Ambulance Facility Manager'  # Description
+                        size_hint: None, None
+                        size: dp(290), dp(35)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    size_hint_y: None
+                    height: dp(185)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(290), dp(150)
+                        pos_hint: {'center_x': .5,'center_y':.1}
+                        elevation: 3
+                        radius: [36,36,36,36]
+
+                        Image:
+                            source: "images/gym.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+                            radius: [36,36,0,0,]
+                            canvas.before:
+
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+                                    radius: [25]
+                    MDLabel:
+                        text: 'Gym Facility Manager'  # Description
+                        size_hint: None, None
+                        size: dp(290), dp(35)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    size_hint_y: None
+                    height: dp(185)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(290), dp(150)
+                        pos_hint: {'center_x': .5,'center_y':.1}
+                        elevation: 3
+                        radius: [36,36,36,36]
+
+                        Image:
+                            source: "images/doctor.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+                            radius: [36,36,0,0,]
+                            canvas.before:
+
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+                                    radius: [25]
+                    MDLabel:
+                        text: 'Doctors'  # Description
+                        size_hint: None, None
+                        size: dp(290), dp(35)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    size_hint_y: None
+                    height: dp(185)
+
+                    MDCard:
+                        size_hint: None, None
+                        size: dp(290), dp(150)
+                        pos_hint: {'center_x': .5,'center_y':.1}
+                        elevation: 3
+                        radius: [36,36,36,36]
+
+                        Image:
+                            source: "images/driver.png"  # Replace with your image path
+                            size_hint: 1, 1
+                            allow_stretch: True
+                            keep_ratio: False
+                            radius: [36,36,0,0,]
+                            canvas.before:
+
+                                RoundedRectangle:
+                                    size: self.size
+                                    pos: self.pos
+                                    radius: [25]
+                    MDLabel:
+                        text: 'Professional Ambulance Driver'  # Description
+                        size_hint: None, None
+                        size: dp(290), dp(35)
+                        pos_hint: {'center_x': .5}
+                        font_size: 16
+                        halign: 'center'
+                        md_bg_color:1,0,0,1
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1  # White color
+        Button:
+            id: register_button
+            text: "REGISTER"
+            size_hint_y:.08
+            background_color: 0, 0, 0, 0
+    #            font_name: "BPoppins"
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "service_register_form"
+            canvas.before:
+                Color:
+                    rgb: rgba(255, 0, 0, 255)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]

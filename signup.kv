@@ -1,2 +1,209 @@
 MDScreen:
     name: "signup"
+
+    MDFloatLayout:
+        md_bg_color: 1, 1, 1, 1
+        # back button
+        MDIconButton:
+            icon: "arrow-left"
+            pos_hint: {"center_y": .95}
+            user_font_size: "30sp"
+            theme_text_color: "Custom"
+            text_color: rgba(26, 24, 58, 255)
+            on_release:
+                root.manager.transition.direction = "right"
+                root.manager.current = "main"
+        # Label
+        MDLabel:
+            text: "Create new account"
+            font_name: "MPoppins"
+            font_size: "18sp"
+            pos_hint: {"center_x": .6, "center_y": .89}
+            color: rgba(0, 0, 0, 255)
+        # Username input
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .83}
+            MDTextField:
+                id: signup_username
+                hint_text: "Username"
+                font_name: "MPoppins"
+                helper_text:'Required'
+                helper_text_mode:  'on_error'
+                required: False
+                pos_hint: {"center_x": .5, "center_y": 0}
+                multiline: False
+                write_tab: False
+                line_color_focus: [75/255, 75/255, 75/255, 1]
+                hint_text_color_focus: [75/255, 75/255, 75/255, 1]
+                canvas.before:
+                    Color:
+                        rgba: [75/255, 75/255, 75/255, 1]
+
+
+        # Email input
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .74}
+            MDTextField:
+                id: signup_email
+                hint_text: "Email"
+                font_name: "MPoppins"
+                helper_text:"Invalid Email"
+                helper_text_mode: 'on_error'
+                required: False
+                pos_hint: {"center_x": .5, "center_y": 0}
+                multiline: False
+                write_tab: False
+                line_color_focus: [75/255, 75/255, 75/255, 1]
+                hint_text_color_focus: [75/255, 75/255, 75/255, 1]
+                canvas.before:
+                    Color:
+                        rgba: [75/255, 75/255, 75/255, 1]
+
+        # Password input
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .65}
+            MDTextField:
+                id: signup_password
+                hint_text: "Password"
+                font_name: "MPoppins"
+                helper_text:"Required"
+                helper_text_mode: 'on_error'
+                required: False
+                pos_hint: {"center_x": .5, "center_y": 0}
+                multiline: False
+                password: True
+                write_tab: False
+                line_color_focus: [75/255, 75/255, 75/255, 1]
+                hint_text_color_focus: [75/255, 75/255, 75/255, 1]
+                canvas.before:
+                    Color:
+                        rgba: [75/255, 75/255, 75/255, 1]
+
+        # Phone num input
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .56}
+            MDTextField:
+                id: signup_phone
+                hint_text: "Phone no"
+                font_name: "MPoppins"
+                helper_text:"Invalid Phone number (10 digits required)"
+                helper_text_mode:  'on_error'
+                required: False
+                pos_hint: {"center_x": .5, "center_y": 0}
+                multiline: False
+                write_tab: False
+                input_type: "number"
+                line_color_focus: [75/255, 75/255, 75/255, 1]
+                hint_text_color_focus: [75/255, 75/255, 75/255, 1]
+                canvas.before:
+                    Color:
+                        rgba: [75/255, 75/255, 75/255, 1]
+
+        # Pincode input
+        MDFloatLayout:
+            size_hint: .7, .07
+            pos_hint: {"center_x": .5, "center_y": .47}
+            MDTextField:
+                id: signup_pincode
+                hint_text: "Pincode"
+                font_name: "MPoppins"
+                helper_text:("Invalid Pincode (6 digits required)")
+                helper_text_mode:  'on_error'
+                required: False
+                pos_hint: {"center_x": .5, "center_y": 0}
+                multiline: False
+                write_tab: False
+                input_type: "number"
+                line_color_focus: [75/255, 75/255, 75/255, 1]
+                hint_text_color_focus: [75/255, 75/255, 75/255, 1]
+                canvas.before:
+                    Color:
+                        rgba: [75/255, 75/255, 75/255, 1]
+
+        # signup button
+        Button:
+            text: "SIGNUP"
+            size_hint: .66, .065
+            pos_hint: {"center_x": .5, "center_y": .3}
+            background_color: 0, 0, 0, 0
+            font_name: "BPoppins"
+            on_release: app.validate_inputs(self)
+
+            canvas.before:
+                Color:
+                    rgb: rgba(255, 0, 0, 255)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [5]
+        # or label
+        MDLabel:
+            text: "or"
+            color: rgba(74, 73, 73, 255)
+            pos_hint: {"center_y": .22}
+            font_size: "13sp"
+            font_name: "BPoppins"
+            halign: "center"
+        #lines
+        MDFloatLayout:
+            md_bg_color: rgba(178, 178, 178, 255)
+            size_hint: .3, .002
+            pos_hint: {"center_x": .3, "center_y": .218}
+        MDFloatLayout:
+            md_bg_color: rgba(178, 178, 178, 255)
+            size_hint: .3, .002
+            pos_hint: {"center_x": .7, "center_y": .218}
+        #social media section
+        MDLabel:
+            text: "Social Media Login"
+            font_name: "BPoppins"
+            font_size: "13sp"
+            halign: "center"
+            pos_hint: {"center_y": .16}
+            color: rgba(74, 73, 73, 255)
+        #social media images
+        MDGridLayout:
+            cols: 3
+            size_hint: .4, .05
+            pos_hint: {"center_x": .5, "center_y": .1}
+            Image:
+                source: "images/google.png"
+            Image:
+                source: "images/facebook.png"
+            Image:
+                source: "images/apple.png"
+        #log in button
+        MDLabel:
+            text: "Already have an account?"
+            font_name: "BPoppins"
+            font_size: "11sp"
+            pos_hint: {"center_x": .7, "center_y": .05}
+            color: rgba(74, 73, 73, 255)
+        MDTextButton:
+            text: "Sign in"
+            font_name: "BPoppins"
+            font_size: "11sp"
+            pos_hint: {"center_x": .76, "center_y": .05}
+            color: rgba(225, 0, 0, 255)
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "login"
+        MDLabel:
+            text: "Are you service provider?"
+            font_name: "BPoppins"
+            font_size: "11sp"
+            pos_hint: {"center_x": .69, "center_y": .98}
+            color: rgba(74, 73, 73, 255)
+        MDTextButton:
+            text: "Sign in"
+            font_name: "BPoppins"
+            font_size: "11sp"
+            pos_hint: {"center_x": .73, "center_y": .98}
+            color: rgba(225, 0, 0, 255)
+            on_release:
+                root.manager.transition.direction = "left"
+                root.manager.current = "service_provider"
