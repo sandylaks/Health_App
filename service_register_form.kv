@@ -1,4 +1,4 @@
-MDScreen:
+<ServiceRegister>:
     name: 'service_register_form'
     BoxLayout:
         orientation: 'vertical'
@@ -31,19 +31,6 @@ MDScreen:
                     size_hint_y: None
                     height: self.minimum_height
                     MDTextField:
-                        font_name: "MPoppins"
-                        font_size:'12sp'
-                        pos_hint:{'center_x':.5}
-                        size_hint:.9,None
-                        height: "25dp"
-                        multiline: False
-                        color_mode: 'custom'
-                        line_color_normal:0,0,0,1
-                        line_color_focus: 0, 0, 0, 1
-                        text_color_focus:0,0,0,1
-                        hint_text_color:0,0,0,1
-                        hint_text_color_focus:0,0,0,.5
-                    MDTextField:
                         id: service_provider_name
 #                        required: True
                         hint_text: 'Name'
@@ -58,8 +45,9 @@ MDScreen:
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
 
+
                     MDTextField:
-                        id: service_provider_email
+                        id:service_provider_email
                         hint_text: "Email"
 #                        required: True
                         font_name: "MPoppins"
@@ -72,8 +60,9 @@ MDScreen:
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
 
+
                     MDTextField:
-                        id: service_provider_password
+                        id:service_provider_password
                         hint_text: "Enter Password"
 #                        required: True
                         password: True
@@ -88,21 +77,21 @@ MDScreen:
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
 
-#                    MDTextField:
-#                        id:c_pass
-#                        hint_text: "Confirm Password"
-##                       required: True
-#                        password: True
-#                        font_name: "MPoppins"
-#                        pos_hint:{'center_x':.5}
-#                        size_hint:.9,None
-#                        height: "30dp"
-#                        multiline: False
-#                        color_mode: 'custom'
-#                        line_color_focus: 0, 0, 0, 1
-#                        text_color_focus:0,0,0,1
-#                        hint_text_color:0,0,0,1
-#                        hint_text_color_focus:0,0,0,.5
+
+                    MDTextField:
+                        id:service_provider_phoneno
+                        hint_text: "Phone No"
+#                       required: True
+                        font_name: "MPoppins"
+                        pos_hint:{'center_x':.5}
+                        size_hint:.9,None
+                        height: "30dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
 
                     MDTextField:
                         id:service_provider_address
@@ -119,39 +108,46 @@ MDScreen:
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
 
+
                     MDTextField:
                         id: dropdown_nation
-                        text:''
                         hint_text: "Nation"
                         pos_hint: {'center_x': 0.5}
-                        on_focus: app.open_dropdown()
+                        on_focus: root.open_dropdown(self)
                         font_size: "14sp"
                         size_hint:.9,None
                         cursor_width: "2sp"
                         readonly: True
                         theme_text_color: "Custom"
                         icon_right: 'chevron-down'
-                        line_color_normal: 0, 0, 0, 1
-                        line_color_focus: 0, 0, 0, .5
-                        icon_right_color: app.theme_cls.primary_color
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
 
                     MDTextField:
                         id: dropdown_state
                         hint_text: "State"
                         pos_hint: {'center_x': 0.5}
-                        on_focus: app.open_dropdown2()
+                        on_focus: root.open_dropdown2(self)
                         font_size: "14sp"
                         size_hint:.9,None
                         cursor_width: "2sp"
                         readonly: True
                         theme_text_color: "Custom"
                         icon_right: 'chevron-down'
-                        line_color_normal: 0, 0, 0, 1
-                        line_color_focus: 0, 0, 0, .5
-                        icon_right_color: app.theme_cls.primary_color
-                        text:''
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+                        icon_right_color:0,0,0,1
+                        icon_right_color_focus:0,0,0,.5
+
+
                     MDTextField:
-                        id:pin_code
+                        id:service_provider_pincode
                         hint_text: "PIN Code"
 #                        required: True
                         font_name: "MPoppins"
@@ -180,34 +176,30 @@ MDScreen:
                         text_color_focus:0,0,0,1
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
-                    GridLayout:
-                        id: grid2
-                        cols:2
-                        size_hint:.9,.5
+                    MDTextField:
+                        id:est_year
+                        hint_text: "Established Year"
+#                        required: True
+                        font_name: "MPoppins"
+                        font_size: "14sp"
                         pos_hint:{'center_x':.5}
-                        TextInput:
-                            id:hospital_year
-                            hint_text: "Established Year"
-                            required: True
-                            font_name: "MPoppins"
-                            size_hint:.5,None
-                            height: "30dp"
-                            multiline: False
-                            background_color: 0, 0,0 ,0
-                            foreground_color: rgba(35, 35, 35, 255)
-                            cursor_color: rgba(0, 0, 59, 255)
-                            font_size: "14sp"
-                            cursor_width: "2sp"
-                            multiline: False
-                            write_tab: False
-                            input_type: "number"
-                            on_focus: app.show_date_picker(self)
+                        size_hint:.9,None
+                        height: "30dp"
+                        multiline: False
+                        color_mode: 'custom'
+                        line_color_focus: 0, 0, 0, 1
+                        text_color_focus:0,0,0,1
+                        hint_text_color:0,0,0,1
+                        hint_text_color_focus:0,0,0,.5
+                        on_focus: root.show_date_picker(self)
 
                         MDLabel:
                             id: dummy_widget
                             text:''
                             size_hint:.3,None
                             height:0
+
+
 
                     MDFlatButton:
                         id: upload
@@ -224,7 +216,6 @@ MDScreen:
                             Line:
                                 width: 1.2
                                 rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
-                        on_release: app.show_file_chooser()
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: None
@@ -240,7 +231,7 @@ MDScreen:
                         background_color: 0, 0, 0, 0
                         font_name: "BPoppins"
                         color: rgba(1, 1, 1, 255)
-                        on_release: app.registration_submit()
+                        on_release: root.registration_submit(self)
                         canvas.before:
                             Color:
                                 rgb: rgba(255, 0, 0, 255)
