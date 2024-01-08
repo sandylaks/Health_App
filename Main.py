@@ -150,17 +150,69 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("signup.kv"))
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv")
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
 
-
-
         return screen_manager
 
 
+    #-------------------------service-provider-flow-------------
+    menu = None
+    def open_dropdown(self):
+        self.screen_service = Builder.load_file('service_register_form.kv')
+        screen_service = self.root.current_screen
+        if not self.menu:
+            # Dropdown items (Replace these with your city names)
+            cities = ["India",
+                      "America",
+                      "Russia",
+                      "China"]
+            items = [
+                {
+                    "viewclass": "MDDropDownItem",
+                    "text": city,
+                    "callback": self.select_city,
+                } for city in cities
+            ]
+            self.menu = MDDropdownMenu(items=items, width_mult=3,max_height=300, pos_hint={'center_x': 0.5, 'center_y': 3})
+
+        # Open the dropdown menu
+        self.menu.caller = self.screen_service.ids.dropdown_nation
+        self.menu.open()
+
+    def select_city(self, instance,instance_item):
+        # Callback function when a city is selected
+        selected_city = instance_item.text
+        print(instance)
+        # self.root.ids.dropdown_nation.text = selected_city
+        # self.menu.dismiss()
+
+    def on_save(self, instance, value, date_range):
+        print(value)
+        print(date_range)
+        self.screen = Builder.load_file("hospital_book.kv")
+        screen_hos = self.root.current_screen
+        screen_hos.ids.dummy_widget.text = str(value)
+        #self.show_date_dialog(value)
+
+    # click Cancel
+    def on_cancel(self, instance, value):
+        print("cancel")
+        self.screen = Builder.load_file("service_register_form.kv")
+        screen_hos_cancel = self.root.current_screen
+        #screen_hos_cancel.ids.hospital_year.text = "You Clicked Cancel"
+
+    def show_date_picker(self,arg):
+        date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
+        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
+        date_dialog.open()
 
 
     # hospital_Book page logic
@@ -227,6 +279,64 @@ class LoginApp(MDApp):
         #     self.show_validation_dialog("Select Date and Time")
 
 
+
+
+
+#------------------------menu-support-flow-------------------------
+
+    def show_customer_support_dialog(self):
+        dialog = MDDialog(
+            title="Contact Customer Support",
+            text="Call Customer Support at: +1-800-123-4567"
+        )
+        dialog.open()
+
+
+    def show_doctor_dialog(self):
+        dialog = MDDialog(
+            title="Call On-Call Doctor",
+            text="Call On-Call Doctor at: +1-888-765-4321"
+        )
+        dialog.open()
+
+
+    def submit_ticket(self, issue_title, issue_description):
+        # self.root.transition = SlideTransition(direction='right')
+        # self.root.current = 'client_services'
+        self.screen = Builder.load_file("menu_support.kv")
+        screen = self.root.current_screen
+        submitted_title = screen.ids.issue_title.text
+        submitted_description = screen.ids.issue_description.text
+        print(f"Submitted Issue Title: {submitted_title}")
+        print(f"Submitted Issue Description: {submitted_description}")
+
+
+    def show_ticket_popup(self):
+        self.screen = Builder.load_file("menu_support.kv")
+        screen = self.root.current_screen
+        submitted_title = screen.ids.issue_title.text
+        submitted_description = screen.ids.issue_description.text
+
+        # Create and show the popup
+        ticket_popup = MDDialog(
+            title="Ticket Raised",
+            text=f"Issue '{submitted_title}' has been raised.",
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    md_bg_color=(1, 0, 0, 1),
+                    theme_text_color="Custom",
+                    text_color=(1, 1, 1, 1),
+                    font_size=15,
+                    on_release=lambda *args: ticket_popup.dismiss()
+                ),
+            ],
+        )
+        ticket_popup.open()
+        screen.ids.issue_title.text = ""
+        screen.ids.issue_description.text = ""
+
+#------------------------menu-support-flow-------------------------
 
 
 

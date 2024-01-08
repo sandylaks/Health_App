@@ -81,6 +81,22 @@ MDScreen:
                 canvas.before:
                     Color:
                         rgba: [75/255, 75/255, 75/255, 1]
+            MDIconButton:
+                id: show_password_button
+                pos_hint: {"center_x": .9, "center_y": 0}
+                active: False  # Initial state is password hidden
+                size_hint: None, None
+                size: dp(48), dp(48)
+                text_color: [0, 0, 0, 1]
+                opposite_colors: True
+                background_palette: "Grey"
+                background_hue: "500"
+                elevation_normal: 10
+                on_release:
+                    self.active = not self.active
+                    signup_password.password = not self.active
+                Image:
+                    source: "images/eye-off.png" if not show_password_button.active else "images/eye.png"
 
         # Phone num input
         MDFloatLayout:
