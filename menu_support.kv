@@ -89,9 +89,6 @@ MDScreen:
         pos_hint: {"center_x": .3, "center_y": .2}
         background_color: 0, 0, 0, 0
         font_name: "BPoppins"
-        on_release:
-            app.submit_ticket(issue_title,issue_description)
-            app.show_ticket_popup()
         canvas.before:
             Color:
                 rgb: rgba(255, 0, 0, 255)
@@ -99,6 +96,9 @@ MDScreen:
                 size: self.size
                 pos: self.pos
                 radius: [5]
+        on_release:
+            app.submit_ticket(issue_title,issue_description)
+            app.show_ticket_popup()
 
 
 <MDDialog>:
