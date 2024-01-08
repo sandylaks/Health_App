@@ -217,18 +217,39 @@ MDScreen:
         MDNavigationDrawer:
             id: nav_drawer
             orientation: 'vertical'
-            padding: "1dp"
-            spacing: "8dp"
+            size_hint_max_x: "250dp"
+            padding: "5dp"
+            spacing: "5dp"
 
-            TwoLineAvatarListItem:
-                id: item_3
-                md_bg_color: 1, 0, 0, 1
-                #source: 'H:\Documents\photo.png'
-                text: "client name"
-                secondary_text: "client email Address"
-                ImageLeftWidget:
-                    source: 'images/doctor.jpg'
-                #on_press: app.on_list_item_pressed(item_3.text)
+            MDCard:
+                orientation: 'vertical'
+                size_hint: None, None
+                size: "250dp", "100dp"
+                elevation: 2
+
+                BoxLayout:
+                    Image:
+                        source: 'images/doctor.jpg'
+                        size_hint: (.4,.5)
+                        pos_hint:{'center_x':.2,'center_y':.6}
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: "5dp"
+                        spacing: "5dp"
+
+                        MDLabel:
+                            id: username
+                            text: "username"
+                            theme_text_color: "Secondary"
+                            pos_hint: {'center_x': 0.5,'center_y': 0.2}
+
+                        MDLabel:
+                            id: email
+                            text: "clientemail@gmail.com"
+                            theme_text_color: "Hint"
+                            pos_hint: {'center_x': 0.5,'center_y': 0.1}
+
             BoxLayout:
                 orientation: 'vertical'
                 ScrollView:
@@ -281,8 +302,14 @@ MDScreen:
 
                             OneLineIconListItem:
                                 text: "Support"
+                                on_release:
+                                    root.manager.transition.direction = "left"
+                                    root.manager.current = "menu_support"
                                 IconLeftWidget:
                                     icon: "book-information-variant"
+                                    on_release:
+                                        root.manager.transition.direction = "left"
+                                        root.manager.current = "menu_support"
 
                             OneLineIconListItem:
                                 text: "Settings"
