@@ -322,6 +322,7 @@ class LoginApp(MDApp):
         print(f"Submitted Issue Title: {submitted_title}")
         print(f"Submitted Issue Description: {submitted_description}")
 
+
     def show_ticket_popup(self):
         self.screen = Builder.load_file("menu_support.kv")
         screen = self.root.current_screen
