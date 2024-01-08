@@ -207,6 +207,7 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
         screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
         screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("service_provider.kv"))
@@ -370,6 +371,64 @@ class LoginApp(MDApp):
         #     self.show_validation_dialog("Select Date and Time")
 
 
+
+
+
+#------------------------menu-support-flow-------------------------
+
+    def show_customer_support_dialog(self):
+        dialog = MDDialog(
+            title="Contact Customer Support",
+            text="Call Customer Support at: +1-800-123-4567"
+        )
+        dialog.open()
+
+
+    def show_doctor_dialog(self):
+        dialog = MDDialog(
+            title="Call On-Call Doctor",
+            text="Call On-Call Doctor at: +1-888-765-4321"
+        )
+        dialog.open()
+
+
+    def submit_ticket(self, issue_title, issue_description):
+        # self.root.transition = SlideTransition(direction='right')
+        # self.root.current = 'client_services'
+        self.screen = Builder.load_file("menu_support.kv")
+        screen = self.root.current_screen
+        submitted_title = screen.ids.issue_title.text
+        submitted_description = screen.ids.issue_description.text
+        print(f"Submitted Issue Title: {submitted_title}")
+        print(f"Submitted Issue Description: {submitted_description}")
+
+
+    def show_ticket_popup(self):
+        self.screen = Builder.load_file("menu_support.kv")
+        screen = self.root.current_screen
+        submitted_title = screen.ids.issue_title.text
+        submitted_description = screen.ids.issue_description.text
+
+        # Create and show the popup
+        ticket_popup = MDDialog(
+            title="Ticket Raised",
+            text=f"Issue '{submitted_title}' has been raised.",
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    md_bg_color=(1, 0, 0, 1),
+                    theme_text_color="Custom",
+                    text_color=(1, 1, 1, 1),
+                    font_size=15,
+                    on_release=lambda *args: ticket_popup.dismiss()
+                ),
+            ],
+        )
+        ticket_popup.open()
+        screen.ids.issue_title.text = ""
+        screen.ids.issue_description.text = ""
+
+#------------------------menu-support-flow-------------------------
 
 
 
