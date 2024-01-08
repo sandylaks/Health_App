@@ -1,6 +1,7 @@
 import re
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
+from ServiceProvider import ServiceRegister,ServiceProvider
 
 from kivy.lang import Builder
 from kivymd import app
@@ -115,63 +116,14 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        screen_manager.add_widget(Builder.load_file("service_provider.kv"))
-        screen_manager.add_widget(Builder.load_file("service_register_form.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
 
 
         return screen_manager
 
 
-    #-------------------------service-provider-flow-------------
-    menu = None
-    def open_dropdown(self):
-        self.screen_service = Builder.load_file('service_register_form.kv')
-        screen_service = self.root.current_screen
-        if not self.menu:
-            # Dropdown items (Replace these with your city names)
-            cities = ["India",
-                      "America",
-                      "Russia",
-                      "China"]
-            items = [
-                {
-                    "viewclass": "MDDropDownItem",
-                    "text": city,
-                    "callback": self.select_city,
-                } for city in cities
-            ]
-            self.menu = MDDropdownMenu(items=items, width_mult=3,max_height=100, pos_hint={'center_x': 0, 'center_y': 0.9})
 
-        # Open the dropdown menu
-        self.menu.caller = self.screen_service.ids.dropdown_field
-        self.menu.open()
-
-    def select_city(self, instance,instance_item):
-        # Callback function when a city is selected
-        selected_city = instance_item.text
-        print(instance_item.text)
-        self.root.ids.dropdown_field.text = selected_city
-        self.menu.dismiss()
-
-    def on_save(self, instance, value, date_range):
-        print(value)
-        print(date_range)
-        self.screen = Builder.load_file("hospital_book.kv")
-        screen_hos = self.root.current_screen
-        screen_hos.ids.dummy_widget.text = str(value)
-        #self.show_date_dialog(value)
-
-    # click Cancel
-    def on_cancel(self, instance, value):
-        print("cancel")
-        self.screen = Builder.load_file("service_register_form.kv")
-        screen_hos_cancel = self.root.current_screen
-        #screen_hos_cancel.ids.hospital_year.text = "You Clicked Cancel"
-
-    def show_date_picker(self,arg):
-        date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
-        date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
-        date_dialog.open()
 
 
 # Run the app
