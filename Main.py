@@ -62,7 +62,6 @@ class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
 # Create the main app class
 class LoginApp(MDApp):
 
-
     def validate_inputs(self, instance, *args):
         self.screen=Builder.load_file("signup.kv")
         screen = self.root.current_screen
@@ -173,6 +172,10 @@ class LoginApp(MDApp):
             screen = self.root.get_screen('menu_profile')
             screen.ids.username.text = username
             screen.ids.email.text = login_email
+            self.screen = Builder.load_file("client_services.kv")
+            screen2 = self.root.get_screen('client_services')
+            screen2.ids.username.text = username
+            screen2.ids.email.text = login_email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
