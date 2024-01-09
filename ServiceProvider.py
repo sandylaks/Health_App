@@ -11,12 +11,19 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.animation import Animation
 from kivy.metrics import dp
 
+from kivymd.app import MDApp
+from kivy.clock import Clock
+from kivymd.uix.behaviors import CommonElevationBehavior
+
 
 Builder.load_file("service_register_form.kv")
 Builder.load_file("service_provider.kv")
+# Builder.load_file("hospital_manager.kv")
+Builder.load_file("ambulance_register_form.kv")
+Builder.load_file("gym_register_form.kv")
 
 #----------------------Rigistration form--------------------
-class ServiceRegister(MDScreen):
+class BaseRegistrationScreen(MDScreen):
     menu = ObjectProperty(None)
     menu2 = ObjectProperty(None)
 
@@ -106,7 +113,7 @@ class ServiceRegister(MDScreen):
         date_dialog.open()
         self.ids.est_year.text=''
 
-    def registration_submit(self, instance):
+    def registration_submit_button(self, instance):
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
         service_provider_password = self.ids.service_provider_password.text
@@ -115,8 +122,8 @@ class ServiceRegister(MDScreen):
         dropdown_nation=self.ids.dropdown_nation.text
         dropdown_state=self.ids.dropdown_state.text
         service_provider_pincode=self.ids.service_provider_pincode.text
-        hospital_name=self.ids.hospital_name.text
-        est_year=self.ids.est_year.text
+        extra_info=self.ids.extra_info.text
+        extra_info=self.ids.extra_info.text
         print(service_provider_name)
         print(service_provider_email)
         print(service_provider_password)
@@ -125,8 +132,8 @@ class ServiceRegister(MDScreen):
         print(dropdown_nation)
         print(dropdown_state)
         print(service_provider_pincode)
-        print(hospital_name)
-        print(est_year)
+        print(extra_info)
+        print(extra_info)
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -164,29 +171,29 @@ class ServiceRegister(MDScreen):
             self.ids.service_provider_pincode.error = True
             self.ids.service_provider_pincode.helper_text = "Invalid pincode (6 digits required)."
             self.ids.service_provider_pincode.required = True
-        elif not hospital_name:
-            self.ids.hospital_name.error = True
-            self.ids.hospital_name.helper_text = "This field is required."
-            self.ids.hospital_name.required = True
-        elif not est_year:
-            self.ids.est_year.error = True
-            self.ids.est_year.helper_text = "This field is required."
+        elif not extra_info:
+            self.ids.extra_info.error = True
+            self.ids.extra_info.helper_text = "This field is required."
+            self.ids.extra_info.required = True
+        elif not extra_info2:
+            self.ids.extra_info2.error = True
+            self.ids.extra_info2.helper_text = "This field is required."
             # self.ids.est_year.required = True
 
         else:
             # All validations passed; proceed with registration process
-            pass
-
-    #If validation is successful, insert into the database
+            #If validation is successful, insert into the database
             # cursor.execute('''
             #             INSERT INTO users (username, email, password, phone, pincode)
             #             VALUES (?, ?, ?, ?, ?)
             #         ''', (username, email, password, phone, pincode))
             # conn.commit()
             # Navigate to the success screen
-            # self.root.transition = SlideTransition(direction='left')
-            # self.root.current = 'login'
-        # password validation
+            app = MDApp.get_running_app()
+            app.root.transition.direction = "left"
+            app.root.current = "hospital_manager"
+
+    # password validation
     def validate_password(self, password):
         # Check if the password is not empty
         if not password:
@@ -213,10 +220,20 @@ class ServiceRegister(MDScreen):
         return True, "Password is valid"
 
 
+class ServiceRegister(BaseRegistrationScreen):
+    # Additional functionalities specific to ServiceRegister
+    pass
+
+class ServiceRegisterGym(BaseRegistrationScreen):
+    # Additional functionalities specific to ServiceRegisterGym
+    pass
+
+class ServiceRegisterAmbulance(BaseRegistrationScreen):
+    # Additional functionalities specific to ServiceRegisterAmbulance
+    pass
+
 #------------------------ServiceProvider--------------------
-from kivymd.app import MDApp
-from kivy.clock import Clock
-from kivymd.uix.behaviors import CommonElevationBehavior
+
 class ServiceProvider(MDScreen):
 
     def animate_button(self, instance):
@@ -245,4 +262,10 @@ class ServiceProvider(MDScreen):
 
         app = MDApp.get_running_app()
         app.root.transition.direction = "left"
-        app.root.current = "service_register_form"
+        app.root.current = "ambulance_register_form"
+
+#----------------------- Hospital Manager ----------------------
+
+class HospitalManager(MDScreen):
+    pass
+

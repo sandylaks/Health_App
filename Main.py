@@ -1,6 +1,6 @@
 import base64
 import re
-from ServiceProvider import ServiceRegister,ServiceProvider
+from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
 
 from kivymd.uix.pickers import MDDatePicker
 # from kivyauth.google_auth import initialize_google,login_google,logout_google
@@ -206,7 +206,8 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        screen_manager.add_widget(Builder.load_file("payment_page.kv"))
+        screen_manager.add_widget(ServiceRegisterGym("Gym_register_form"))
+        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
 
         return screen_manager
 
