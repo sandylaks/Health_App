@@ -8,10 +8,14 @@ from kivy.properties import ObjectProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
+from kivy.animation import Animation
+from kivy.metrics import dp
 
 
 Builder.load_file("service_register_form.kv")
 Builder.load_file("service_provider.kv")
+
+#----------------------Rigistration form--------------------
 class ServiceRegister(MDScreen):
     menu = ObjectProperty(None)
     menu2 = ObjectProperty(None)
@@ -207,55 +211,38 @@ class ServiceRegister(MDScreen):
 
         # All checks passed; the password is valid
         return True, "Password is valid"
+
+
+#------------------------ServiceProvider--------------------
+from kivymd.app import MDApp
+from kivy.clock import Clock
+from kivymd.uix.behaviors import CommonElevationBehavior
 class ServiceProvider(MDScreen):
-    pass
-    # def on_button_click(self):
-    #     # Switch to 'service_register_form' screen
-    #     self.manager.transition = SlideTransition(direction='left')
-    #     self.manager.current = 'service_register_form'
-    #
-    #
 
-class ImageButton(ButtonBehavior, Image):
-    def zoom_in_image(self):
-        self.size_hint = (None, None)
-        self.size = (self.width * 1.2, self.height * 1.2)
+    def animate_button(self, instance):
+        original_button_size = (dp(300), dp(160))  # Original button size
 
-    def zoom_out_image(self):
-        self.size_hint = (None, None)
-        self.size = (self.width / 1.2, self.height / 1.2)
+        # Create animation for the button size
+        anim_button = Animation(size=original_button_size, duration=0.4) + Animation(size=(dp(290), dp(150)) , duration=0.4, transition="linear")
+        anim_button.start(instance)
 
-    def on_enter(self):
-        self.zoom_in_image()
+        # Find the Image widget inside the MDIconButton
+        for widget in instance.children:
+            if widget.__class__.__name__ == "Image":
+                original_image_size = widget.size  # Original image size
 
-    def on_leave(self):
-        self.zoom_out_image()
+                # Create animation for the image size
+                anim_image = Animation(size=original_button_size, duration=0.4) + Animation(size=(dp(290), dp(150)), duration=0.4, transition="linear")
+                anim_image.start(widget)  # Start the animation for the Image widget
 
-    # def on_release(self):
-    #     # Emit an event to indicate that the button was clicked
-    #     self.dispatch('on_button_click')
-    #
-    # def on_button_click(self):
-    #     pass  # This method will be overridden in the parent class
+        # Set other properties as needed
+        instance.elevation_normal = 0
 
+        # Schedule a transition to the new screen after a delay
+        Clock.schedule_once(self.transition_to_service_register_form, 1)
 
-class HoverButton(ButtonBehavior, Image):
-    def __init__(self, **kwargs):
-        super(HoverButton, self).__init__(**kwargs)
-        self.hovered = False
+    def transition_to_service_register_form(self, dt):
 
-    def on_enter(self):
-        self.hovered = True
-        self.animate_image()
-
-    def on_leave(self):
-        self.hovered = False
-        self.animate_image()
-
-    def animate_image(self):
-        if self.hovered:
-            self.size_hint = (None, None)
-            self.size = (self.width * 1.2, self.height * 1.2)
-        else:
-            self.size_hint = (None, None)
-            self.size = (self.width / 1.2, self.height / 1.2)
+        app = MDApp.get_running_app()
+        app.root.transition.direction = "left"
+        app.root.current = "service_register_form"
