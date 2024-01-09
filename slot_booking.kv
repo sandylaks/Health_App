@@ -1,3 +1,16 @@
+#<CustomCheckBox@CheckBox>:
+#    canvas.before:
+#        Color:
+#            rgba: 1, 0, 0, 1  # Red background color (RGBA format)
+#        Ellipse:
+#            pos: self.center_x - self.width / 4, self.center_y - self.height / 4
+#            size: self.width / 2, self.height / 2
+#
+#        Color:
+#            rgba: 0, 0, 0, 1  # Black border color (RGBA format)
+#        Line:
+#            rounded_rectangle: (self.x + 1, self.y + 1, self.width - 2, self.height - 2, 5)
+
 MDScreen:
     name:'slot_booking'
     BoxLayout:
@@ -89,62 +102,90 @@ MDScreen:
                         cols:2
 
                         Label:
+                            id: FirstSlot
                             text: "9am - 11am"
                             font_size: 15
                             font_name: "MPoppins"
+                            color: 0, 0, 0, 1
 
                         CheckBox:
+                            id: 9am - 11am
                             group:"time"
-                            on_active: app.checkbox_click(self,self.active,"9am - 11am")
+                            disabled: False
+                            on_active: app.checkbox_click(self,self.active,FirstSlot.text)
 
 
                         Label:
+                            id: SecondSlot
                             text: "11am - 1pm"
                             font_size: 15
                             font_name: "MPoppins"
+                            color: 0, 0, 0, 1
                         CheckBox:
+                            id: 11am - 1pm
                             group:"time"
-                            on_active: app.checkbox_click(self,self.active,"11am - 1pm")
+                            disabled: False
+                            on_active: app.checkbox_click(self,self.active,SecondSlot.text)
 
                         Label:
+                            id: ThirdSlot
                             text: "1pm - 3pm"
                             font_size: 15
                             font_name: "MPoppins"
+                            color: 0, 0, 0, 1
                         CheckBox:
+                            id: 1pm - 3pm
                             group:"time"
-                            on_active: app.checkbox_click(self,self.active,"1pm - 3pm")
+                            disabled: False
+                            on_active: app.checkbox_click(self,self.active,ThirdSlot.text)
 
                         Label:
-                            text: "1pm - 3pm"
+                            id: ForthSlot
+                            text: "3pm - 5pm"
                             font_size: 15
                             font_name: "MPoppins"
+                            color: 0, 0, 0, 1
                         CheckBox:
+                            id: 3pm - 5pm
                             group:"time"
-                            on_active: app.checkbox_click(self,self.active,"1pm - 3pm")
+                            disabled: False
+                            on_active: app.checkbox_click(self,self.active,ForthSlot.text)
 
                         Label:
+                            id: FifthSlot
                             text: "5pm - 7pm"
                             font_size: 15
                             font_name: "MPoppins"
+                            color: 0, 0, 0, 1
                         CheckBox:
+                            id: 5pm - 7pm
                             group:"time"
-                            on_active: app.checkbox_click(self,self.active,"5pm - 7pm")
+                            disabled: False
+                            on_active: app.checkbox_click(self,self.active,FifthSlot.text)
 
                         Label:
-                            text: "7pm - 9pm"
+                            id: SixthSlot
+                            text: "5pm - 7pm"
                             font_size: 15
                             font_name: "MPoppins"
+                            color: 0, 0, 0, 1
                         CheckBox:
+                            id: 5pm - 7pm
                             group:"time"
-                            on_active: app.checkbox_click(self,self.active,"7pm - 9pm")
+                            disabled: False
+                            on_active: app.checkbox_click(self,self.active,SixthSlot.text)
 
                         Label:
+                            id: SeventhSlot
                             text: "9pm - 10pm"
                             font_size: 15
                             font_name: "MPoppins"
+                            color: 0, 0, 0, 1
                         CheckBox:
+                            id: 9pm - 10pm
                             group:"time"
-                            on_active: app.checkbox_click(self,self.active,"9pm - 10pm")
+                            disabled: False
+                            on_active: app.checkbox_click(self,self.active,SeventhSlot.text)
                 MDBoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: None
