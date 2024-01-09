@@ -10,6 +10,10 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.animation import Animation
 from kivy.metrics import dp
+from kivy.uix.popup import Popup
+from kivy.uix.filechooser import FileChooserListView
+from kivy.uix.button import Button
+#from plyer import filechooser
 
 
 Builder.load_file("service_register_form.kv")
@@ -105,6 +109,39 @@ class ServiceRegister(MDScreen):
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
         self.ids.est_year.text=''
+#------------------------------upload--docs--------------------------
+    def open_file_chooser(self):
+        file_chooser = FileChooserListView(filters=["*.pdf", "*.doc", "*.docx", "*.png", "*.jpg"])
+        file_chooser.bind(on_selection=self.file_selected)
+
+        popup = Popup(title="Choose a file", content=file_chooser, size_hint=(0.9, 0.9))
+        popup.open()
+
+        self.file_chooser_popup = popup
+
+    def file_selected(self, selected_file):
+        # Do something with the selected file path, like uploading it to the database
+        print(f"Selected file: {selected_file}")
+
+        self.file_chooser_popup.dismiss()
+
+    # def dismiss_popup(self):
+    #     for widget in self.walk(restrict=True):
+    #         if isinstance(widget, Popup):
+    #             widget.dismiss()
+
+    #-----------------------------------or-----------------------------------------
+    '''
+    def file_chooser(self):
+        filechooser.open_file(on_selection = self.selected)
+
+    def selected(self, selection):
+        if selection:
+            # self.root.ids.img.source = selection[0]
+            self.root.ids.selected_path = selection[0]
+            print(f'selected file path : {selection[0]}')
+
+    '''
 
     def registration_submit(self, instance):
         service_provider_name = self.ids.service_provider_name.text
