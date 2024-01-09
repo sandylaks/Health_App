@@ -21,193 +21,141 @@
                 height: self.minimum_height
                 BoxLayout:
                     orientation: 'vertical'
-
                     size_hint_y: None
                     height: dp(185)
-
+                    md_bg_color: 1, 1, 1, 1
                     MDCard:
+                        orientation: 'vertical'
                         size_hint: None, None
-                        size: dp(290), dp(150)
-                        pos_hint: {'center_x': .5,'center_y':.1}
-                        elevation: 3
-                        radius: [36,36,36,36]
+                        size: (dp(290), dp(150))  # Set the initial size of the card
+                        pos_hint: {'center_x': 0.5}
+                        elevation: 5
+                        MDIconButton:
+                            id: big_button
+                            size_hint: None, None
+                            size: (dp(290), dp(150))  # Set the initial size of the button
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # Position in the center of the screen
+                            elevation: 0
+                            md_bg_color: 1, 1, 1, 1  # Set the button color to the app's primary color
+                            on_release: root.animate_button(self)  # Perform animation on button click
+                            Image:
+                                source: "images/hospital.png"  # Replace with your image path
+                                size_hint: None, None
+                                size: (dp(290), dp(150))  # Set initial size for the image
+                                allow_stretch: True
+                                keep_ratio: False
+                                pos_hint: {'center_x': 0.5}  # Position in the center of the card
+                                md_bg_color: 1, 1, 1, 1
+                                padding: dp(10)  # Adjust padding here to equally reduce all edges
+                                size_hint_min: dp(290), dp(150)
 
-                        Image:
-                            source: "images/hospital.png"  # Replace with your image path
-                            size_hint: 1, 1
-                            allow_stretch: True
-                            keep_ratio: False
-                            radius: [36,36,0,0,]
-                            canvas.before:
-
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-                                    radius: [25]
                     MDLabel:
                         text: 'Hospital Facility Manager'  # Description
                         size_hint: None, None
                         size: dp(290), dp(35)
                         pos_hint: {'center_x': .5}
                         font_size: 16
+                        font_name: "MPoppins"
                         halign: 'center'
-                        md_bg_color:1,0,0,1
+                        md_bg_color:1,1,1,1
                         theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1  # White color
-
+                        text_color: 0,0,0, 1
                 BoxLayout:
                     orientation: 'vertical'
-
                     size_hint_y: None
                     height: dp(185)
-
-                    MDCard:
+                    MDIconButton:
+                        id: ambulance_button
                         size_hint: None, None
-                        size: dp(290), dp(150)
-                        pos_hint: {'center_x': .5,'center_y':.1}
-                        elevation: 3
-                        radius: [36,36,36,36]
-
+                        size: (dp(290), dp(150))
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        elevation:5
+                        md_bg_color: 1, 1, 1, 1
+                        on_release: root.animate_button(self)
                         Image:
-                            source: "images/ambulance.png"  # Replace with your image path
-                            size_hint: 1, 1
+                            id:ambulance
+                            source: "images/ambulance.png"
+                            size_hint: None, None
+                            size: self.parent.size if self.parent else (dp(290), dp(150))  # Set a default size
                             allow_stretch: True
                             keep_ratio: False
-                            radius: [36,36,0,0,]
-                            canvas.before:
-
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-                                    radius: [25]
+                            md_bg_color: 1, 1, 1, 1
+                            padding: dp(10)
+                            size_hint_min: dp(290), dp(150)
                     MDLabel:
                         text: 'Ambulance Facility Manager'  # Description
                         size_hint: None, None
                         size: dp(290), dp(35)
                         pos_hint: {'center_x': .5}
                         font_size: 16
+                        font_name: "MPoppins"
                         halign: 'center'
-                        md_bg_color:1,0,0,1
+                        md_bg_color:1,1,1,1
                         theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1  # White color
+                        text_color: 0,0,0, 1
                 BoxLayout:
                     orientation: 'vertical'
-
                     size_hint_y: None
                     height: dp(185)
-
-                    MDCard:
+                    MDIconButton:
+                        id: gym_button
                         size_hint: None, None
-                        size: dp(290), dp(150)
-                        pos_hint: {'center_x': .5,'center_y':.1}
-                        elevation: 3
-                        radius: [36,36,36,36]
-
+                        size: (dp(290), dp(150))
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        elevation:5
+                        md_bg_color: 1, 1, 1, 1
+                        on_release: root.animate_button(self)  # Perform animation on button click
                         Image:
-                            source: "images/gym.png"  # Replace with your image path
-                            size_hint: 1, 1
+                            id:gym
+                            source: "images/gym.png"
+                            size_hint: None, None
+                            size: self.parent.size if self.parent else (dp(290), dp(150))  # Set a default size
                             allow_stretch: True
                             keep_ratio: False
-                            radius: [36,36,0,0,]
-                            canvas.before:
-
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-                                    radius: [25]
+                            md_bg_color: 1, 1, 1, 1
+                            padding: dp(10)
+                            size_hint_min: dp(290), dp(150)
                     MDLabel:
                         text: 'Gym Facility Manager'  # Description
                         size_hint: None, None
                         size: dp(290), dp(35)
                         pos_hint: {'center_x': .5}
                         font_size: 16
+                        font_name: "MPoppins"
                         halign: 'center'
-                        md_bg_color:1,0,0,1
+                        md_bg_color:1,1,1,1
                         theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1  # White color
+                        text_color: 0,0,0, 1
                 BoxLayout:
                     orientation: 'vertical'
-
                     size_hint_y: None
                     height: dp(185)
-
-                    MDCard:
+                    MDIconButton:
+                        id: doctors_button
                         size_hint: None, None
-                        size: dp(290), dp(150)
-                        pos_hint: {'center_x': .5,'center_y':.1}
-                        elevation: 3
-                        radius: [36,36,36,36]
-
+                        size: (dp(290), dp(150))
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        elevation:5
+                        md_bg_color: 1, 1, 1, 1
+                        on_release: root.animate_button(self)
                         Image:
-                            source: "images/doctor.png"  # Replace with your image path
-                            size_hint: 1, 1
+                            id:doctors
+                            source: "images/doctor.png"
+                            size_hint: None, None
+                            size: self.parent.size if self.parent else (dp(290), dp(150))  # Set a default size
                             allow_stretch: True
                             keep_ratio: False
-                            radius: [36,36,0,0,]
-                            canvas.before:
-
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-                                    radius: [25]
+                            md_bg_color: 1, 1, 1, 1
+                            padding: dp(10)
+                            size_hint_min: dp(290), dp(150)  # Set a minimum size for the image
                     MDLabel:
                         text: 'Doctors'  # Description
                         size_hint: None, None
                         size: dp(290), dp(35)
                         pos_hint: {'center_x': .5}
                         font_size: 16
+                        font_name: "MPoppins"
                         halign: 'center'
-                        md_bg_color:1,0,0,1
+                        md_bg_color:1,1,1,1
                         theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1  # White color
-                BoxLayout:
-                    orientation: 'vertical'
-
-                    size_hint_y: None
-                    height: dp(185)
-
-                    MDCard:
-                        size_hint: None, None
-                        size: dp(290), dp(150)
-                        pos_hint: {'center_x': .5,'center_y':.1}
-                        elevation: 3
-                        radius: [36,36,36,36]
-
-                        Image:
-                            source: "images/driver.png"  # Replace with your image path
-                            size_hint: 1, 1
-                            allow_stretch: True
-                            keep_ratio: False
-                            radius: [36,36,0,0,]
-                            canvas.before:
-
-                                RoundedRectangle:
-                                    size: self.size
-                                    pos: self.pos
-                                    radius: [25]
-                    MDLabel:
-                        text: 'Professional Ambulance Driver'  # Description
-                        size_hint: None, None
-                        size: dp(290), dp(35)
-                        pos_hint: {'center_x': .5}
-                        font_size: 16
-                        halign: 'center'
-                        md_bg_color:1,0,0,1
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1  # White color
-        Button:
-            id: register_button
-            text: "REGISTER"
-            size_hint_y:.08
-            background_color: 0, 0, 0, 0
-    #            font_name: "BPoppins"
-            on_release:
-                root.manager.transition.direction = "left"
-                root.manager.current = "service_register_form"
-            canvas.before:
-                Color:
-                    rgb: rgba(255, 0, 0, 255)
-                RoundedRectangle:
-                    size: self.size
-                    pos: self.pos
-                    radius: [5]
+                        text_color: 0,0,0, 1
