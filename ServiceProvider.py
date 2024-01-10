@@ -18,7 +18,7 @@ from kivymd.uix.behaviors import CommonElevationBehavior
 
 Builder.load_file("service_register_form.kv")
 Builder.load_file("service_provider.kv")
-# Builder.load_file("hospital_manager.kv")
+Builder.load_file("service_provider_main_page.kv")
 Builder.load_file("ambulance_register_form.kv")
 Builder.load_file("gym_register_form.kv")
 
@@ -82,8 +82,9 @@ class BaseRegistrationScreen(MDScreen):
             # Create the dropdown menu
             self.menu2 = MDDropdownMenu(
                 items=items,
-                width_mult=3,
-                max_height=300,
+                width_mult=6,
+                max_height=400,
+                pos_hint={'center_x':.1,'center_y':.9}
             )
         else:
             self.menu2.dismiss()  # Dismiss if already open
@@ -100,7 +101,7 @@ class BaseRegistrationScreen(MDScreen):
 
 
     def on_save(self, instance, value, date_range):
-        self.ids.est_year.text = str(value)
+        self.ids.extra_info2.text = str(value)
 
     # click Cancel
     def on_cancel(self, instance, value):
@@ -111,7 +112,7 @@ class BaseRegistrationScreen(MDScreen):
         date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
-        self.ids.est_year.text=''
+        self.ids.extra_info2.text=''
 
     def registration_submit_button(self, instance):
         service_provider_name = self.ids.service_provider_name.text
@@ -123,17 +124,17 @@ class BaseRegistrationScreen(MDScreen):
         dropdown_state=self.ids.dropdown_state.text
         service_provider_pincode=self.ids.service_provider_pincode.text
         extra_info=self.ids.extra_info.text
-        extra_info=self.ids.extra_info.text
-        print(service_provider_name)
-        print(service_provider_email)
-        print(service_provider_password)
-        print(service_provider_address)
-        print(service_provider_phoneno)
-        print(dropdown_nation)
-        print(dropdown_state)
-        print(service_provider_pincode)
-        print(extra_info)
-        print(extra_info)
+        extra_info2=self.ids.extra_info2.text
+        # print(service_provider_name)
+        # print(service_provider_email)
+        # print(service_provider_password)
+        # print(service_provider_address)
+        # print(service_provider_phoneno)
+        # print(dropdown_nation)
+        # print(dropdown_state)
+        # print(service_provider_pincode)
+        # print(extra_info)
+        # print(extra_info2)
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -191,7 +192,7 @@ class BaseRegistrationScreen(MDScreen):
             # Navigate to the success screen
             app = MDApp.get_running_app()
             app.root.transition.direction = "left"
-            app.root.current = "hospital_manager"
+            app.root.current = "login"
 
     # password validation
     def validate_password(self, password):
@@ -268,3 +269,18 @@ class ServiceProvider(MDScreen):
         elif button_id == 'gym_button':
             app.root.current = "gym_register_form"
         # Add more conditions as needed for other buttons
+
+#-------------------service provider main-----------------------
+class ServiceProviderMain(MDScreen):
+    def service_button(self):
+        pass
+    def profile_button_action(self):
+        pass
+    def notification_button_action(self):
+        pass
+    def slots_button_action(self):
+        pass
+    def support_button_action(self):
+        pass
+    def sign_out_button_action(self):
+        pass
