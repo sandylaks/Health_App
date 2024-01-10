@@ -71,12 +71,12 @@ MDScreen:
                 pos_hint: {"center_x": .9, "center_y": .5}
                 active: False  # Initial state is password hidden
                 size_hint: None, None
-                size: dp(48), dp(48)
-                text_color: [0, 0, 0, 1]
+                icon_color: [75,75,75, 1]
                 opposite_colors: True
                 background_palette: "Grey"
                 background_hue: "500"
                 elevation_normal: 10
+                border_radius: 100
                 on_release:
                     self.active = not self.active
                     login_password.password = not self.active
