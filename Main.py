@@ -206,7 +206,7 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        screen_manager.add_widget(ServiceRegisterGym("Gym_register_form"))
+        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
         screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
 
         return screen_manager

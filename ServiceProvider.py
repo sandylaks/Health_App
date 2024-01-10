@@ -236,36 +236,35 @@ class ServiceRegisterAmbulance(BaseRegistrationScreen):
 
 class ServiceProvider(MDScreen):
 
-    def animate_button(self, instance):
-        original_button_size = (dp(300), dp(160))  # Original button size
+    def animate_button(self, button_id):
+        original_button_size = (dp(290), dp(150))  # Original button size
+        original_image_size = (dp(290), dp(150))  # Original image size
 
         # Create animation for the button size
-        anim_button = Animation(size=original_button_size, duration=0.4) + Animation(size=(dp(290), dp(150)) , duration=0.4, transition="linear")
-        anim_button.start(instance)
+        anim_button = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_button_size,
+                                                                                   duration=0.4, transition="linear")
+        anim_button.start(self.ids[button_id])  # Access the button using the button_id
 
-        # Find the Image widget inside the MDIconButton
-        for widget in instance.children:
-            if widget.__class__.__name__ == "Image":
-                original_image_size = widget.size  # Original image size
-
-                # Create animation for the image size
-                anim_image = Animation(size=original_button_size, duration=0.4) + Animation(size=(dp(290), dp(150)), duration=0.4, transition="linear")
-                anim_image.start(widget)  # Start the animation for the Image widget
+        # Create animation for the image size
+        anim_image = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_image_size,
+                                                                                  duration=0.4, transition="linear")
+        anim_image.start(self.ids[button_id].children[0])  # Access the Image inside the button
 
         # Set other properties as needed
-        instance.elevation_normal = 0
+        self.ids[button_id].elevation_normal = 0
 
         # Schedule a transition to the new screen after a delay
-        Clock.schedule_once(self.transition_to_service_register_form, 1)
+        Clock.schedule_once(lambda dt: self.transition_to_service_register_form(button_id), 1)
 
-    def transition_to_service_register_form(self, dt):
-
+    def transition_to_service_register_form(self, button_id):
+        #print("Button ID:", button_id)  # Print button ID in console
         app = MDApp.get_running_app()
         app.root.transition.direction = "left"
-        app.root.current = "ambulance_register_form"
 
-#----------------------- Hospital Manager ----------------------
-
-class HospitalManager(MDScreen):
-    pass
-
+        if button_id == 'hospital_button':
+            app.root.current = "service_register_form"
+        elif button_id == 'ambulance_button':
+            app.root.current = "ambulance_register_form"
+        elif button_id == 'gym_button':
+            app.root.current = "gym_register_form"
+        # Add more conditions as needed for other buttons
