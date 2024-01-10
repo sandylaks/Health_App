@@ -18,19 +18,12 @@ MDScreen:
                 size_hint: None, None
                 size: dp(270), dp(130)
                 pos_hint: {"center_x": 0.5, "center_y": 0.5}
-#                padding: dp(10)
-#                spacing: dp(0)
+
                 MDSwiperItem:
                     FitImage:
                         source: "images/doctor.png"
                         size_hint: None, None
                         size: dp(270), dp(130)
-#                MDSwiperItem:
-#                    FitImage:
-#                        y: 0
-#                        source: "images/doctor.png"
-#                        size_hint: None, None
-#                        size: dp(270), dp(130)
         ScrollView:
             GridLayout:
                 cols: 1
@@ -57,9 +50,7 @@ MDScreen:
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
                             width: 3
-#                BoxLayout:
-#                    size_hint_y: None
-#                    height: dp(5)
+
                 MDBoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: None
@@ -160,7 +151,7 @@ MDScreen:
         Button:
             id: book_slot
             text: "Book Slot"
-            size_hint_y:.08
+            size_hint_y:.15
             background_color: 0, 0, 0, 0
             font_name: "BPoppins"
             on_release:
