@@ -32,8 +32,8 @@ MDScreen:
                 id: login_email
                 hint_text: "Email"
                 font_name: "MPoppins"
-#                size_hint_y: .75
                 helper_text:''
+                keyboard_suggestions: True
                 helper_text_mode:  'on_error'
                 required: True
                 pos_hint: {"center_x": .5, "center_y": .5}
@@ -71,12 +71,12 @@ MDScreen:
                 pos_hint: {"center_x": .9, "center_y": .5}
                 active: False  # Initial state is password hidden
                 size_hint: None, None
-                icon_color: [75,75,75, 1]
+                size: dp(70), dp(70)
+                text_color: [0, 0, 0, 1]
                 opposite_colors: True
                 background_palette: "Grey"
                 background_hue: "500"
                 elevation_normal: 10
-                border_radius: 100
                 on_release:
                     self.active = not self.active
                     login_password.password = not self.active
@@ -133,29 +133,25 @@ MDScreen:
         # social media images
         MDGridLayout:
             cols: 1
-            size_hint: .4, .05
+            size_hint: .5, .08
+            size_hint_y: .05
             pos_hint: {"center_x": .5, "center_y": .1}
             Button:
-                size : 170, 70
+                size_hint: .6, .08
                 background_color: (0,0,0,0)
 #                on_release: app.login()
-                Image:
-                    source: 'images/google_logo.png'
-                    size : 180, 80
-                    center_x: self.parent.center_x
-                    center_y: self.parent.center_y
-        # Sign up button
-        MDLabel:
-            text: "Don't have an account?"
-            font_name: "BPoppins"
-            font_size: "11sp"
-            pos_hint: {"center_x": .7, "center_y": .05}
-            color: rgba(74, 73, 73, 255)
+        Image:
+            size_hint: .5, .1
+            pos_hint: {"center_x": .5, "center_y": .1}
+            source: 'images/google_logo.png'
+            center_x: self.parent.center_x
+            center_y: self.parent.center_y
+
         MDTextButton:
-            text: "Sign up"
+            text: "Don't have an account? Sign up"
             font_name: "BPoppins"
             font_size: "11sp"
-            pos_hint: {"center_x": .72, "center_y": .05}
+            pos_hint: {"center_x": .5, "center_y": .05}
             color: rgba(225, 0, 0, 255)
             on_release:
                 root.manager.transition.direction = "left"

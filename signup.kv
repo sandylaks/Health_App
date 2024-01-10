@@ -30,6 +30,7 @@ MDScreen:
                 font_name: "MPoppins"
                 helper_text:'Required'
                 helper_text_mode:  'on_error'
+                keyboard_suggestions: True
                 required: False
                 pos_hint: {"center_x": .5, "center_y": 0}
                 multiline: False
@@ -51,6 +52,7 @@ MDScreen:
                 font_name: "MPoppins"
                 helper_text:"Invalid Email"
                 helper_text_mode: 'on_error'
+                keyboard_suggestions: True
                 required: False
                 pos_hint: {"center_x": .5, "center_y": 0}
                 multiline: False
@@ -71,6 +73,7 @@ MDScreen:
                 font_name: "MPoppins"
                 helper_text:"Required"
                 helper_text_mode: 'on_error'
+                keyboard_suggestions: True
                 required: False
                 pos_hint: {"center_x": .5, "center_y": 0}
                 multiline: False
@@ -109,6 +112,7 @@ MDScreen:
                 helper_text:"Invalid Phone number (10 digits required)"
                 helper_text_mode:  'on_error'
                 required: False
+                keyboard_suggestions: True
                 pos_hint: {"center_x": .5, "center_y": 0}
                 multiline: False
                 write_tab: False
@@ -130,6 +134,7 @@ MDScreen:
                 helper_text:("Invalid Pincode (6 digits required)")
                 helper_text_mode:  'on_error'
                 required: False
+                keyboard_suggestions: True
                 pos_hint: {"center_x": .5, "center_y": 0}
                 multiline: False
                 write_tab: False
@@ -183,42 +188,35 @@ MDScreen:
             color: rgba(74, 73, 73, 255)
         #social media images
         MDGridLayout:
-            cols: 3
-            size_hint: .4, .05
+            cols: 1
+            size_hint: .5, .08
+            size_hint_y: .05
             pos_hint: {"center_x": .5, "center_y": .1}
-            Image:
-                source: "images/google.png"
-            Image:
-                source: "images/facebook.png"
-            Image:
-                source: "images/apple.png"
+            Button:
+                size_hint: .6, .08
+                background_color: (0,0,0,0)
+#                on_release: app.login()
+        Image:
+            size_hint: .5, .1
+            pos_hint: {"center_x": .5, "center_y": .1}
+            source: 'images/google_logo.png'
+            center_x: self.parent.center_x
+            center_y: self.parent.center_y
         #log in button
-        MDLabel:
-            text: "Already have an account?"
-            font_name: "BPoppins"
-            font_size: "11sp"
-            pos_hint: {"center_x": .7, "center_y": .05}
-            color: rgba(74, 73, 73, 255)
         MDTextButton:
-            text: "Sign in"
+            text: "Already have an account? Sign in"
             font_name: "BPoppins"
             font_size: "11sp"
-            pos_hint: {"center_x": .76, "center_y": .05}
+            pos_hint: {"center_x": .5, "center_y": .05}
             color: rgba(225, 0, 0, 255)
             on_release:
                 root.manager.transition.direction = "left"
                 root.manager.current = "login"
-        MDLabel:
-            text: "Are you service provider?"
-            font_name: "BPoppins"
-            font_size: "11sp"
-            pos_hint: {"center_x": .69, "center_y": .98}
-            color: rgba(74, 73, 73, 255)
         MDTextButton:
-            text: "Sign in"
+            text: "Are you service provider? Sign in"
             font_name: "BPoppins"
             font_size: "11sp"
-            pos_hint: {"center_x": .73, "center_y": .98}
+            pos_hint: {"center_x": .5, "center_y": .98}
             color: rgba(225, 0, 0, 255)
             on_release:
                 root.manager.transition.direction = "left"
