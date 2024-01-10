@@ -193,49 +193,25 @@ class LoginApp(MDApp):
         # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
 
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(ServiceProvider("service_provider"))
-        # screen_manager.add_widget(ServiceRegister("service_register_form"))
-        # screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        # screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
-        # screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
+        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
+        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
+        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
         screen_manager.add_widget(Builder.load_file("service_provider_main_page.kv"))
 
         return screen_manager
 
-
-    #-------------------------service-provider-flow-------------
-    menu = None
-    def open_dropdown(self):
-        self.screen_service = Builder.load_file('service_register_form.kv')
-        screen_service = self.root.current_screen
-        if not self.menu:
-            # Dropdown items (Replace these with your city names)
-            cities = ["India",
-                      "America",
-                      "Russia",
-                      "China"]
-            items = [
-                {
-                    "viewclass": "MDDropDownItem",
-                    "text": city,
-                    "callback": self.select_city,
-                } for city in cities
-            ]
-            self.menu = MDDropdownMenu(items=items, width_mult=3,max_height=300, pos_hint={'center_x': 0.5, 'center_y': 3})
-
-        # Open the dropdown menu
-        self.menu.caller = self.screen_service.ids.dropdown_nation
-        self.menu.open()
 
     def select_city(self, instance,instance_item):
         # Callback function when a city is selected
