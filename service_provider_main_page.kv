@@ -1,0 +1,129 @@
+MDScreen:
+    name: "service_provider_main"
+
+    MDNavigationLayout:
+        ScreenManager:
+            Screen:
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    MDTopAppBar:
+                        title: "Service Provider"
+                        font_name: "BPoppins"
+                        md_bg_color: 1, 0, 0, 1
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
+                        right_action_items: [["dots-vertical", lambda x: app.service_button()]]
+
+
+                    ScrollView:
+                        GridLayout:
+                            cols: 1
+                            spacing: dp(10)
+                            padding: dp(10)
+                            size_hint_y: None
+                            height: self.minimum_height
+
+                            # Your content here...
+
+        MDNavigationDrawer:
+            id: nav_drawer
+            orientation: 'vertical'
+            size_hint_x:dp(290)
+            size_hint_max_x: "290dp"
+            padding: "0dp"
+            spacing: "5dp"
+
+            MDCard:
+                orientation: 'vertical'
+                size_hint: None, None
+                size: "290dp", "120dp"
+                elevation: 2
+                md_bg_color: 1, 0, 0, 1
+
+                BoxLayout:
+                    Image:
+                        source: 'images/doctor.jpg'
+                        size_hint: (.4,.5)
+                        pos_hint:{'center_x':.2,'center_y':.6}
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: "5dp"
+                        spacing: "5dp"
+
+                        MDLabel:
+                            id: username
+                            text: "username"
+                            theme_text_color: "Secondary"
+                            pos_hint: {'center_x': 0.5,'center_y': 0.2}
+
+                        MDLabel:
+                            id: email
+                            text: "clientemail@gmail.com"
+                            theme_text_color: "Hint"
+                            pos_hint: {'center_x': 0.5,'center_y': 0.1}
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                ScrollView:
+                    BoxLayout:
+                        orientation: 'vertical'
+                        GridLayout:
+                            cols: 2
+                            padding: dp(10)
+                            spacing: dp(5)
+
+                            MDIconButton:
+                                icon: 'account-circle'
+                                on_release: app.profile_button_action()
+                            MDTextButton:
+                                text: 'Profile'
+                                on_release: app.profile_button_action()
+                                halign: 'center'
+                                pos_hint: {'center_x': .5, 'center_y': .5}
+                            MDIconButton:
+                                icon: 'bell-outline'
+                                on_release: app.notification_button_action()
+                            MDTextButton:
+                                text: 'Notification'
+                                on_release: app.notification_button_action()
+                                halign: 'center'
+                                pos_hint: {'center_x': .5, 'center_y': .5}
+                            MDIconButton:
+                                icon: 'book-account-outline'
+                                on_release: app.slots_button_action()
+                            MDTextButton:
+                                text: 'Slots'
+                                on_release: app.slots_button_action()
+                                halign: 'center'
+                                pos_hint: {'center_x': .5, 'center_y': .5}
+                        # Second GridLayout for additional buttons...
+                        GridLayout:
+                            cols: 2
+                            padding: dp(10)
+                            spacing: dp(5)
+
+
+
+                        GridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(20)
+
+                            MDIconButton:
+                                icon: 'headphones'
+                                on_release: app.support_button_action()
+                            MDTextButton:
+                                text: 'Support'
+                                on_release: app.support_button_action()
+                                halign: 'center'
+                                pos_hint: {'center_x': .5, 'center_y': .5}
+                            MDIconButton:
+                                icon: 'logout'
+                                on_release: app.sign_out_button_action()
+                            MDTextButton:
+                                text: 'Sign Out'
+                                on_release: app.sign_out_button_action()
+                                halign: 'center'
+                                pos_hint: {'center_x': .5, 'center_y': .5}
