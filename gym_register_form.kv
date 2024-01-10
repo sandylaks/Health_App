@@ -1,5 +1,5 @@
-<ServiceRegister>:
-    name: 'service_register_form'
+<ServiceRegisterGym>:
+    name: 'gym_register_form'
     BoxLayout:
         orientation: 'vertical'
 
@@ -163,7 +163,7 @@
                         hint_text_color_focus:0,0,0,.5
                     MDTextField:
                         id:extra_info
-                        hint_text: "Hospital Name"
+                        hint_text: "Gym Name"
 #                        required: True
                         font_name: "MPoppins"
                         font_size: "14sp"
@@ -198,55 +198,24 @@
                             text:''
                             size_hint:.3,None
                             height:0
-                    MDLabel:
-                        text:'Upload Required Documents :'
-                        size_hint_y:.1
-                        font_size: "20sp"
 
 
-                    MDBoxLayout:
-                        orientation: 'vertical'
-                        size_hint_y: None
-                        height: self.minimum_height
 
-                        # ... (other MDTextField widgets)
-
-                        MDLabel:
-                            id: First_Req_Doc
-                            text: "First required document name"
-                            font_name: "MPoppins"
-                            pos_hint: {"center_x": .5,'center_y':.4}
-                            size_hint_y: None
-                            height: "15dp"
-                            width: "90dp"
-
-                        MDFlatButton:
-                            id: upload
-                            text: "UPLOAD"
-                            size_hint:.2,.1
-                            pos_hint: {"center_x": .8,'center_y':.3}
-                            background_color: 0, 0, 0, 0
-                            font_name: "BPoppins"
-                            font_size: "12sp"
-                            background_color: 0, 0, 0, 0
-                            font_name: "BPoppins"
-                            color: rgba(1, 1, 1, 1)
-                            on_release: root.open_file_chooser()
-                            canvas.before:
-                                Color:
-                                    rgb: rgba(255, 0, 0, 255)
-                                Line:
-                                    width: 1.2
-                                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
-
-                        MDLabel:
-                            id: selected_file_label
-                            text: "None selected"  # Initial text when no file is selected
-                            font_name: "MPoppins"
-                            pos_hint: {"center_x": .5,'center_y':.3}
-                            size_hint_y: None
-                            height: "15dp"
-
+                    MDFlatButton:
+                        id: upload
+                        text: "UPLOAD DOCUMENTS"
+                        size_hint:.6,.5
+                        pos_hint: {"center_x": .5,'center_y':.3}
+                        background_color: 0, 0, 0, 0
+                        font_name: "BPoppins"
+                        font_size: "12sp"
+                        color: rgba(0, 0, 0, 255)
+                        canvas.before:
+                            Color:
+                                rgb: rgba(0, 0, 0, 255)
+                            Line:
+                                width: 1.2
+                                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: None
