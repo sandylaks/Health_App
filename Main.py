@@ -1,9 +1,6 @@
 import base64
 import re
-
-from kivy.uix.filechooser import FileChooserListView
-from kivymd.uix.filemanager import MDFileManager
-from kivymd.uix.menu import MDDropdownMenu
+from ServiceProvider import ServiceRegister,ServiceProvider
 
 
 from kivymd.uix.pickers import MDDatePicker
@@ -68,7 +65,6 @@ class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
 
 # Create the main app class
 class LoginApp(MDApp):
-
 
     def validate_inputs(self, instance, *args):
         self.screen=Builder.load_file("signup.kv")
@@ -180,6 +176,10 @@ class LoginApp(MDApp):
             screen = self.root.get_screen('menu_profile')
             screen.ids.username.text = username
             screen.ids.email.text = login_email
+            self.screen = Builder.load_file("client_services.kv")
+            screen2 = self.root.get_screen('client_services')
+            screen2.ids.username.text = username
+            screen2.ids.email.text = login_email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
@@ -190,12 +190,6 @@ class LoginApp(MDApp):
             screen1.ids.login_email.helper_text = "Invalid email or password"
             screen1.ids.login_password.error = True
 
-    def show_validation_dialog(self, message):
-        dialog = MDDialog(
-            text=message,
-            buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
-        )
-        dialog.open()
 
     def build(self):
         # client_id = open("client_id.txt")
@@ -211,27 +205,15 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
         screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
         screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        screen_manager.add_widget(Builder.load_file("service_provider.kv"))
-        screen_manager.add_widget(Builder.load_file("service_register_form.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
-
-
 
         return screen_manager
 
-
-    #---------------Upload functinality------------
-    # def upload_documents(self):
-    #     file_chooser = FileChooserListView()
-    #     file_chooser.bind(on_submit=self.on_file_selected)
-    #     file_chooser.show("C:/Users/Priyavinay/Downloads/1699097364339.jpg") # Replace with your desired initial directory
-    #
-    # def on_file_selected(self, instance, selection, touch):
-    #     if selection:
-    #         document_path = selection[0]
-    #         self.root.get_screen('service_register_form').ids.document_path.text = document_path
 
     #-------------------------service-provider-flow-------------
     menu = None
@@ -441,9 +423,9 @@ class LoginApp(MDApp):
         # Commit the changes and close the connection
         conn.commit()
 
+
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
-
 
 
 # Run the app
