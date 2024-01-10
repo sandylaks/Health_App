@@ -199,16 +199,16 @@ class LoginApp(MDApp):
         # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
 
-        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        screen_manager.add_widget(Builder.load_file("login.kv"))
-        screen_manager.add_widget(Builder.load_file("signup.kv"))
-        screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        # screen_manager.add_widget(Builder.load_file("login.kv"))
+        # screen_manager.add_widget(Builder.load_file("signup.kv"))
+        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
@@ -237,7 +237,7 @@ class LoginApp(MDApp):
     # click Cancel
     def on_cancel(self, instance, value):
         print("cancel")
-        self.screen = Builder.load_file("service_register_form.kv")
+        self.screen = Builder.load_file("hospital_register_form.kv")
         screen_hos_cancel = self.root.current_screen
         #screen_hos_cancel.ids.hospital_year.text = "You Clicked Cancel"
 
@@ -247,7 +247,7 @@ class LoginApp(MDApp):
         date_dialog.open()
 
     def registration_submit(self):
-        self.screen = Builder.load_file("service_register_form.kv")
+        self.screen = Builder.load_file("hospital_register_form.kv")
         screen = self.root.current_screen
         username = screen.ids.name.text
         print(username)

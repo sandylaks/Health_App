@@ -20,7 +20,7 @@ from kivy.clock import Clock
 from kivymd.uix.behaviors import CommonElevationBehavior
 
 
-Builder.load_file("service_register_form.kv")
+Builder.load_file("hospital_register_form.kv")
 Builder.load_file("service_provider.kv")
 # Builder.load_file("hospital_manager.kv")
 Builder.load_file("ambulance_register_form.kv")
@@ -126,29 +126,18 @@ class BaseRegistrationScreen(MDScreen):
 
         self.file_chooser_popup = popup
 
-    def file_selected(self, selected_file):
-        # Do something with the selected file path, like uploading it to the database
-        print(f"Selected file: {selected_file}")
+    def file_selected(self, instance, selected_files):
+        # Check if any files are selected
+        if selected_files:
+            selected_file = selected_files[0]  # first selected file
+            # Do something with the selected file path, like uploading it to the database
+            with open(selected_file, 'rb') as file:
+                file_content = file.read()
+            print(f"Selected file: {selected_file}")
+            selected_file_label = self.ids.selected_file_label
+            selected_file_label.text = f"{selected_file}"
 
         self.file_chooser_popup.dismiss()
-
-    # def dismiss_popup(self):
-    #     for widget in self.walk(restrict=True):
-    #         if isinstance(widget, Popup):
-    #             widget.dismiss()
-
-    #-----------------------------------or-----------------------------------------
-    '''
-    def file_chooser(self):
-        filechooser.open_file(on_selection = self.selected)
-
-    def selected(self, selection):
-        if selection:
-            # self.root.ids.img.source = selection[0]
-            self.root.ids.selected_path = selection[0]
-            print(f'selected file path : {selection[0]}')
-
-    '''
 
     def registration_submit_button(self, instance):
         service_provider_name = self.ids.service_provider_name.text
@@ -274,27 +263,25 @@ class ServiceRegisterAmbulance(BaseRegistrationScreen):
 class ServiceProvider(MDScreen):
 
     def animate_button(self, button_id):
-        original_button_size = (dp(290), dp(150))  # Original button size
-        original_image_size = (dp(290), dp(150))  # Original image size
+        original_button_size = (dp(290), dp(150))
+        original_image_size = (dp(290), dp(150))
 
         # Create animation for the button size
-        anim_button = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_button_size,
-                                                                                   duration=0.4, transition="linear")
-        anim_button.start(self.ids[button_id])  # Access the button using the button_id
+        anim_button = Animation(size=original_button_size, duration=0.2, transition="linear")
+        anim_button += Animation(size=(dp(280), dp(140)), duration=0.2)
 
         # Create animation for the image size
-        anim_image = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_image_size,
-                                                                                  duration=0.4, transition="linear")
-        anim_image.start(self.ids[button_id].children[0])  # Access the Image inside the button
+        anim_image = Animation(size=original_image_size, duration=0.2, transition="linear")
+        anim_image += Animation(size=(dp(280), dp(140)), duration=0.2)
 
-        # Set other properties as needed
+        anim_button.start(self.ids[button_id])
+        anim_image.start(self.ids[button_id].children[0])
+
         self.ids[button_id].elevation_normal = 0
 
-        # Schedule a transition to the new screen after a delay
-        Clock.schedule_once(lambda dt: self.transition_to_service_register_form(button_id), 1)
+        Clock.schedule_once(lambda dt: self.transition_to_service_register_form(button_id), 0.5)
 
     def transition_to_service_register_form(self, button_id):
-        #print("Button ID:", button_id)  # Print button ID in console
         app = MDApp.get_running_app()
         app.root.transition.direction = "left"
 

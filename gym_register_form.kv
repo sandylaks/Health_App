@@ -199,23 +199,97 @@
                             size_hint:.3,None
                             height:0
 
+                    MDLabel:
+                        text:'Upload Required Documents :'
+                        size_hint_y:.1
+                        font_size: "16sp"
 
 
-                    MDFlatButton:
-                        id: upload
-                        text: "UPLOAD DOCUMENTS"
-                        size_hint:.6,.5
-                        pos_hint: {"center_x": .5,'center_y':.3}
-                        background_color: 0, 0, 0, 0
-                        font_name: "BPoppins"
-                        font_size: "12sp"
-                        color: rgba(0, 0, 0, 255)
-                        canvas.before:
-                            Color:
-                                rgb: rgba(0, 0, 0, 255)
-                            Line:
-                                width: 1.2
-                                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: self.minimum_height
+
+                        MDLabel:
+                            id: Doc_1
+                            text: "Gym Registration"
+                            font_name: "MPoppins"
+                            font_size: "16sp"
+                            pos_hint: {"center_x": .5,'center_y':.4}
+#                            size_hint_y: None
+                            height: "15dp"
+
+                        MDFlatButton:
+                            id: upload
+                            text: "UPLOAD"
+                            size_hint:.4,.5
+                            pos_hint: {"center_x": .8,'center_y':.5}
+                            background_color: 0, 0, 0, 0
+                            font_name: "BPoppins"
+                            font_size: "12sp"
+                            background_color: 0, 0, 0, 0
+                            color: rgba(1, 1, 1, 255)
+                            on_release: root.open_file_chooser()
+                            canvas.before:
+                                Color:
+                                    rgb: rgba(255, 0, 0, 255)
+                                Line:
+                                    width: 1.2
+                                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+
+                    MDLabel:
+                        id: selected_file_label
+                        text: "None selected"  # Initial text when no file is selected
+#                            font_name: "MPoppins"
+                        italic: True
+                        color: 0.5, 0.5, 0.5, 1
+                        pos_hint: {"center_x": .5,'center_y':.4}
+                        size_hint_y: None
+                        height: "30dp"
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: self.minimum_height
+
+                        MDLabel:
+                            id: Doc_2
+                            text: "SSI Registration"
+                            font_name: "MPoppins"
+                            font_size: "16sp"
+                            pos_hint: {"center_x": .5,'center_y':.4}
+#                            size_hint_y: None
+                            height: "15dp"
+
+                        MDFlatButton:
+                            id: upload
+                            text: "UPLOAD"
+                            size_hint:.4,.5
+                            pos_hint: {"center_x": .8,'center_y':.5}
+                            background_color: 0, 0, 0, 0
+                            font_name: "BPoppins"
+                            font_size: "12sp"
+                            background_color: 0, 0, 0, 0
+                            color: rgba(1, 1, 1, 255)
+                            on_release: root.open_file_chooser()
+                            canvas.before:
+                                Color:
+                                    rgb: rgba(255, 0, 0, 255)
+                                Line:
+                                    width: 1.2
+                                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+
+                    MDLabel:
+                        id: selected_file_label
+                        text: "None selected"  # Initial text when no file is selected
+#                        font_name: "MPoppins"
+                        italic: True
+                        color: 0.5, 0.5, 0.5, 1
+                        pos_hint: {"center_x": .5,'center_y':.4}
+                        size_hint_y: None
+                        height: "30dp"
+
+
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: None
