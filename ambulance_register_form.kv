@@ -223,15 +223,16 @@
                         padding: dp(20)
                         spacing: dp(10)
                         # signup button
-                    MDFlatButton:
-                        id:service_register
+                    Button:
+                        id: service_register
                         text: "REGISTER"
-                        size_hint: .7, .001
-                        pos_hint: {"center_x": .5, "center_y": .1}
+                        size_hint: .7,None
+                        height:dp(40)
+                        pos_hint: {"center_x": .5, "center_y": .34}
                         background_color: 0, 0, 0, 0
                         font_name: "BPoppins"
-                        color: rgba(1, 1, 1, 255)
-                        on_release: root.registration_submit_button(self)
+                        on_release:
+                            app.login_page(self)
                         canvas.before:
                             Color:
                                 rgb: rgba(255, 0, 0, 255)

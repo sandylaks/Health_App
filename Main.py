@@ -1,6 +1,6 @@
 import base64
 import re
-from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
+from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
 
 from kivymd.uix.pickers import MDDatePicker
 # from kivyauth.google_auth import initialize_google,login_google,logout_google
@@ -193,22 +193,22 @@ class LoginApp(MDApp):
         # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
 
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(ServiceProvider("service_provider"))
-        # screen_manager.add_widget(ServiceRegister("service_register_form"))
-        # screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        # screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
-        # screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
-        screen_manager.add_widget(Builder.load_file("service_provider_main_page.kv"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
+        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
+        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
+        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
+        screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
 
         return screen_manager
 
