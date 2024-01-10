@@ -124,17 +124,17 @@ class BaseRegistrationScreen(MDScreen):
         dropdown_state=self.ids.dropdown_state.text
         service_provider_pincode=self.ids.service_provider_pincode.text
         extra_info=self.ids.extra_info.text
-        extra_info=self.ids.extra_info.text
-        print(service_provider_name)
-        print(service_provider_email)
-        print(service_provider_password)
-        print(service_provider_address)
-        print(service_provider_phoneno)
-        print(dropdown_nation)
-        print(dropdown_state)
-        print(service_provider_pincode)
-        print(extra_info)
-        print(extra_info)
+        extra_info2=self.ids.extra_info2.text
+        # print(service_provider_name)
+        # print(service_provider_email)
+        # print(service_provider_password)
+        # print(service_provider_address)
+        # print(service_provider_phoneno)
+        # print(dropdown_nation)
+        # print(dropdown_state)
+        # print(service_provider_pincode)
+        # print(extra_info)
+        # print(extra_info2)
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -192,7 +192,7 @@ class BaseRegistrationScreen(MDScreen):
             # Navigate to the success screen
             app = MDApp.get_running_app()
             app.root.transition.direction = "left"
-            app.root.current = "hospital_manager"
+            app.root.current = "login"
 
     # password validation
     def validate_password(self, password):
