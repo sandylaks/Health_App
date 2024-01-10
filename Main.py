@@ -308,7 +308,7 @@ class LoginApp(MDApp):
     # hospital_Book page logic
     # functionality for back button in hospital book
     def back_button_hospital_book(self):
-        self.root.transition = SlideTransition(direction='left')
+        self.root.transition = SlideTransition(direction='right')
         self.root.current = 'client_services'
 
 
