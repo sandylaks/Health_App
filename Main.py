@@ -171,13 +171,15 @@ class LoginApp(MDApp):
             # Login successful
             print("Login successful. User details:", user)
             username = user[1]
+            phone = user[4]
+            pincode = user[5]
             # self.update(login_email, username)
             self.screen = Builder.load_file("menu_profile.kv")
-            self.screen = Builder.load_file("client_services.kv")
             screen = self.root.get_screen('menu_profile')
-            screen = self.root.get_screen('client_services')
-            screen.ids.username.text = username
-            screen.ids.email.text = login_email
+            screen.ids.username.text = f"Username : {username}"
+            screen.ids.email.text = f"Email : {login_email}"
+            screen.ids.phone.text = f"Phone no : {phone}"
+            screen.ids.pincode.text = f"Pincode : {pincode}"
             self.screen = Builder.load_file("client_services.kv")
             screen2 = self.root.get_screen('client_services')
             screen2.ids.username.text = username
