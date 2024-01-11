@@ -57,9 +57,7 @@ MDScreen:
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
                             width: 3
-#                BoxLayout:
-#                    size_hint_y: None
-#                    height: dp(5)
+
                 MDBoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: None
@@ -155,12 +153,10 @@ MDScreen:
                         theme_text_color: "Custom"
                         text_color: 0, 0, 0, 1
 
-
-
         Button:
             id: book_slot
             text: "Book Slot"
-            size_hint_y:.08
+            size_hint_y:.15
             background_color: 0, 0, 0, 0
             font_name: "BPoppins"
             on_release:
