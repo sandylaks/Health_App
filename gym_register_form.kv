@@ -1,5 +1,5 @@
-<ServiceRegister>:
-    name: 'service_register_form'
+<ServiceRegisterGym>:
+    name: 'gym_register_form'
     BoxLayout:
         orientation: 'vertical'
 
@@ -163,7 +163,7 @@
                         hint_text_color_focus:0,0,0,.5
                     MDTextField:
                         id:extra_info
-                        hint_text: "Hospital Name"
+                        hint_text: "Gym Name"
 #                        required: True
                         font_name: "MPoppins"
                         font_size: "14sp"
@@ -192,6 +192,14 @@
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
                         on_focus: root.show_date_picker(self)
+
+                        MDLabel:
+                            id: dummy_widget
+                            text:''
+                            size_hint:.3,None
+                            height:0
+
+
 
                     MDFlatButton:
                         id: upload

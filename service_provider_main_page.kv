@@ -1,0 +1,178 @@
+<ServiceProviderMain>:
+    name: "service_provider_main_page"
+
+    MDNavigationLayout:
+        ScreenManager:
+            Screen:
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    MDTopAppBar:
+                        title: "Service Provider"
+                        font_name: "BPoppins"
+                        md_bg_color: 1, 0, 0, 1
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
+                        right_action_items: [["dots-vertical", lambda x: root.service_button()]]
+
+
+                    ScrollView:
+                        GridLayout:
+                            cols: 1
+                            spacing: dp(30)
+                            padding: dp(10)
+                            size_hint_y: None
+                            height: self.minimum_height
+
+                            # Main page content here...
+                            BoxLayout:
+                                orientation:'vertical'
+                                padding:dp(10)
+                                spacing:dp(5)
+                                size_hint_x:dp(70)
+                                md_bg_color:
+                                MDLabel:
+                                    text:'Empty Slots'
+                                    halign:'center'
+                                MDLabel:
+                                    id:'empty_slots'
+                                    text:'0'
+                                    halign:'center'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        MDNavigationDrawer:
+            id: nav_drawer
+            orientation: 'vertical'
+            size_hint_x:dp(290)
+            size_hint_max_x: "290dp"
+            padding: "0dp"
+            spacing: "5dp"
+
+            MDCard:
+                orientation: 'vertical'
+                size_hint: None, None
+                size: "290dp", "100dp"
+                elevation: 2
+                md_bg_color: 1, 0, 0, 1
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(90)
+                    padding: "15dp"
+
+                    BoxLayout:
+                        size_hint: None, None
+                        size: dp(90), dp(90)
+                        canvas:
+                            Color:
+                                rgb: 1, 1, 1
+                            Ellipse:
+                                pos: self.pos
+                                size: 90, 90
+                                source: 'images/hospital.png'
+                                angle_start: 0
+                                angle_end: 360
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: "5dp"
+                        spacing: "5dp"
+
+                        MDLabel:
+                            id: username
+                            text: "username"
+                            font_name: "MPoppins"
+                            theme_text_color: "Secondary"
+                            pos_hint: {'center_x': 0.5,'center_y': 0.2}
+
+                        MDLabel:
+                            id: email
+                            text: "clientemail@gmail.com"
+                            theme_text_color: "Hint"
+                            font_name: "MPoppins"
+                            font_size:'12sp'
+                            pos_hint: {'center_x': 0.5,'center_y': 0.1}
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                ScrollView:
+                    BoxLayout:
+                        orientation: 'vertical'
+
+                        GridLayout:
+                            cols: 2
+                            padding: dp(10)
+                            spacing: dp(5)
+
+                            MDIconButton:
+                                icon: 'account-circle'
+                                on_release: root.profile_button_action()
+                            MDTextButton:
+                                padding: "10dp"
+                                text: 'Profile'
+                                on_release: root.profile_button_action()
+                                halign: 'center'
+                                font_name: "MPoppins"
+                                pos_hint: {'center_x': .5, 'center_y': .5}
+                            MDIconButton:
+                                icon: 'bell-outline'
+                                on_release: root.notification_button_action()
+                            MDTextButton:
+                                padding: "10dp"
+                                text: 'Notification'
+                                on_release: root.notification_button_action()
+                                halign: 'center'
+                                font_name: "MPoppins"
+                                pos_hint: {'center_x': .5, 'center_y': .5}
+                            MDIconButton:
+                                icon: 'book-account-outline'
+                                on_release: root.slots_button_action()
+                            MDTextButton:
+                                padding: "10dp"
+                                text: 'Slots'
+                                on_release: root.slots_button_action()
+                                halign: 'center'
+                                font_name: "MPoppins"
+                        # Second GridLayout for additional buttons...
+                        GridLayout:
+                            cols: 2
+                            padding: dp(10)
+                            spacing: dp(5)
+
+
+
+                        GridLayout:
+                            cols: 2
+                            spacing: dp(10)
+                            padding: dp(20)
+
+                            MDIconButton:
+                                icon: 'headphones'
+                                on_release: root.support_button_action()
+                            MDTextButton:
+                                padding: "10dp"
+                                text: 'Support'
+                                on_release: root.support_button_action()
+                                halign: 'center'
+                                font_name: "MPoppins"
+                            MDIconButton:
+                                icon: 'logout'
+                                on_release: root.sign_out_button_action()
+                            MDTextButton:
+                                padding: "10dp"
+                                text: 'Sign Out'
+                                on_release: root.sign_out_button_action()
+                                halign: 'center'
+                                font_name: "MPoppins"
+

@@ -11,12 +11,19 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.animation import Animation
 from kivy.metrics import dp
 
+from kivymd.app import MDApp
+from kivy.clock import Clock
+from kivymd.uix.behaviors import CommonElevationBehavior
+
 
 Builder.load_file("service_register_form.kv")
 Builder.load_file("service_provider.kv")
+Builder.load_file("service_provider_main_page.kv")
+Builder.load_file("ambulance_register_form.kv")
+Builder.load_file("gym_register_form.kv")
 
 #----------------------Rigistration form--------------------
-class ServiceRegister(MDScreen):
+class BaseRegistrationScreen(MDScreen):
     menu = ObjectProperty(None)
     menu2 = ObjectProperty(None)
 
@@ -75,8 +82,9 @@ class ServiceRegister(MDScreen):
             # Create the dropdown menu
             self.menu2 = MDDropdownMenu(
                 items=items,
-                width_mult=3,
-                max_height=300,
+                width_mult=6,
+                max_height=400,
+                pos_hint={'center_x':.1,'center_y':.9}
             )
         else:
             self.menu2.dismiss()  # Dismiss if already open
@@ -93,7 +101,7 @@ class ServiceRegister(MDScreen):
 
 
     def on_save(self, instance, value, date_range):
-        self.ids.est_year.text = str(value)
+        self.ids.extra_info2.text = str(value)
 
     # click Cancel
     def on_cancel(self, instance, value):
@@ -104,9 +112,9 @@ class ServiceRegister(MDScreen):
         date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
-        self.ids.est_year.text=''
+        self.ids.extra_info2.text=''
 
-    def registration_submit(self, instance):
+    def registration_submit_button(self, instance):
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
         service_provider_password = self.ids.service_provider_password.text
@@ -115,18 +123,18 @@ class ServiceRegister(MDScreen):
         dropdown_nation=self.ids.dropdown_nation.text
         dropdown_state=self.ids.dropdown_state.text
         service_provider_pincode=self.ids.service_provider_pincode.text
-        hospital_name=self.ids.hospital_name.text
-        est_year=self.ids.est_year.text
-        print(service_provider_name)
-        print(service_provider_email)
-        print(service_provider_password)
-        print(service_provider_address)
-        print(service_provider_phoneno)
-        print(dropdown_nation)
-        print(dropdown_state)
-        print(service_provider_pincode)
-        print(hospital_name)
-        print(est_year)
+        extra_info=self.ids.extra_info.text
+        extra_info2=self.ids.extra_info2.text
+        # print(service_provider_name)
+        # print(service_provider_email)
+        # print(service_provider_password)
+        # print(service_provider_address)
+        # print(service_provider_phoneno)
+        # print(dropdown_nation)
+        # print(dropdown_state)
+        # print(service_provider_pincode)
+        # print(extra_info)
+        # print(extra_info2)
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -164,29 +172,29 @@ class ServiceRegister(MDScreen):
             self.ids.service_provider_pincode.error = True
             self.ids.service_provider_pincode.helper_text = "Invalid pincode (6 digits required)."
             self.ids.service_provider_pincode.required = True
-        elif not hospital_name:
-            self.ids.hospital_name.error = True
-            self.ids.hospital_name.helper_text = "This field is required."
-            self.ids.hospital_name.required = True
-        elif not est_year:
-            self.ids.est_year.error = True
-            self.ids.est_year.helper_text = "This field is required."
+        elif not extra_info:
+            self.ids.extra_info.error = True
+            self.ids.extra_info.helper_text = "This field is required."
+            self.ids.extra_info.required = True
+        elif not extra_info2:
+            self.ids.extra_info2.error = True
+            self.ids.extra_info2.helper_text = "This field is required."
             # self.ids.est_year.required = True
 
         else:
             # All validations passed; proceed with registration process
-            pass
-
-    #If validation is successful, insert into the database
+            #If validation is successful, insert into the database
             # cursor.execute('''
             #             INSERT INTO users (username, email, password, phone, pincode)
             #             VALUES (?, ?, ?, ?, ?)
             #         ''', (username, email, password, phone, pincode))
             # conn.commit()
             # Navigate to the success screen
-            # self.root.transition = SlideTransition(direction='left')
-            # self.root.current = 'login'
-        # password validation
+            app = MDApp.get_running_app()
+            app.root.transition.direction = "left"
+            app.root.current = "login"
+
+    # password validation
     def validate_password(self, password):
         # Check if the password is not empty
         if not password:
@@ -213,36 +221,66 @@ class ServiceRegister(MDScreen):
         return True, "Password is valid"
 
 
+class ServiceRegister(BaseRegistrationScreen):
+    # Additional functionalities specific to ServiceRegister
+    pass
+
+class ServiceRegisterGym(BaseRegistrationScreen):
+    # Additional functionalities specific to ServiceRegisterGym
+    pass
+
+class ServiceRegisterAmbulance(BaseRegistrationScreen):
+    # Additional functionalities specific to ServiceRegisterAmbulance
+    pass
+
 #------------------------ServiceProvider--------------------
-from kivymd.app import MDApp
-from kivy.clock import Clock
-from kivymd.uix.behaviors import CommonElevationBehavior
+
 class ServiceProvider(MDScreen):
 
-    def animate_button(self, instance):
-        original_button_size = (dp(300), dp(160))  # Original button size
+    def animate_button(self, button_id):
+        original_button_size = (dp(290), dp(150))  # Original button size
+        original_image_size = (dp(290), dp(150))  # Original image size
 
         # Create animation for the button size
-        anim_button = Animation(size=original_button_size, duration=0.4) + Animation(size=(dp(290), dp(150)) , duration=0.4, transition="linear")
-        anim_button.start(instance)
+        anim_button = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_button_size,
+                                                                                   duration=0.4, transition="linear")
+        anim_button.start(self.ids[button_id])  # Access the button using the button_id
 
-        # Find the Image widget inside the MDIconButton
-        for widget in instance.children:
-            if widget.__class__.__name__ == "Image":
-                original_image_size = widget.size  # Original image size
-
-                # Create animation for the image size
-                anim_image = Animation(size=original_button_size, duration=0.4) + Animation(size=(dp(290), dp(150)), duration=0.4, transition="linear")
-                anim_image.start(widget)  # Start the animation for the Image widget
+        # Create animation for the image size
+        anim_image = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_image_size,
+                                                                                  duration=0.4, transition="linear")
+        anim_image.start(self.ids[button_id].children[0])  # Access the Image inside the button
 
         # Set other properties as needed
-        instance.elevation_normal = 0
+        self.ids[button_id].elevation_normal = 0
 
         # Schedule a transition to the new screen after a delay
-        Clock.schedule_once(self.transition_to_service_register_form, 1)
+        Clock.schedule_once(lambda dt: self.transition_to_service_register_form(button_id), 1)
 
-    def transition_to_service_register_form(self, dt):
-
+    def transition_to_service_register_form(self, button_id):
+        #print("Button ID:", button_id)  # Print button ID in console
         app = MDApp.get_running_app()
         app.root.transition.direction = "left"
-        app.root.current = "service_register_form"
+
+        if button_id == 'hospital_button':
+            app.root.current = "service_register_form"
+        elif button_id == 'ambulance_button':
+            app.root.current = "ambulance_register_form"
+        elif button_id == 'gym_button':
+            app.root.current = "gym_register_form"
+        # Add more conditions as needed for other buttons
+
+#-------------------service provider main-----------------------
+class ServiceProviderMain(MDScreen):
+    def service_button(self):
+        pass
+    def profile_button_action(self):
+        pass
+    def notification_button_action(self):
+        pass
+    def slots_button_action(self):
+        pass
+    def support_button_action(self):
+        pass
+    def sign_out_button_action(self):
+        pass

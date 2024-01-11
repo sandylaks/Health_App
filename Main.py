@@ -1,6 +1,6 @@
 import base64
 import re
-from ServiceProvider import ServiceRegister,ServiceProvider
+from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
 
 
 from kivymd.uix.pickers import MDDatePicker
@@ -211,9 +211,20 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
+        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
+        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
+        screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
 
         return screen_manager
 
+    #dialog box
+    def show_validation_dialog(self, message):
+        # Display a dialog for invalid login or sign up
+        dialog = MDDialog(
+            text=message,
+            buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
+        )
+        dialog.open()
 
     #-------------------------service-provider-flow-------------
     menu = None

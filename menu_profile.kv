@@ -29,14 +29,9 @@ MDScreen:
                 font_size: "20sp"
                 pos_hint: {"center_x": .56, "center_y": .82}
                 color: rgba(34, 34, 34, 255)
-            FloatLayout:
-                canvas:
-                    Color:
-                        rgba: (0,0,0 ,.5)
-                    Ellipse:
-                        pos: 140, 498
-                        size: 112 , 112
-            FloatLayout:
+            MDFloatLayout:
+                orientation:'vertical'
+#                pos_hint: {"center_x": .5, "center_y": .72}
                 canvas:
                     Color:
                         rgb: 1, 1, 1
@@ -46,9 +41,6 @@ MDScreen:
                         source: 'images/hospital.png'
                         angle_start: 0
                         angle_end: 360
-            MDFloatLayout:
-                orientation:'vertical'
-#                pos_hint: {"center_x": .5, "center_y": .72}
                 MDLabel:
                     id: username
                     text: "username"
