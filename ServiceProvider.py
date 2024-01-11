@@ -10,6 +10,10 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.animation import Animation
 from kivy.metrics import dp
+from kivy.uix.popup import Popup
+from kivy.uix.filechooser import FileChooserListView
+from kivy.uix.button import Button
+#from plyer import filechooser
 
 from kivymd.app import MDApp
 from kivy.clock import Clock
@@ -112,6 +116,29 @@ class BaseRegistrationScreen(MDScreen):
         date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
+        self.ids.est_year.text=''
+#------------------------------upload--docs--------------------------
+    def open_file_chooser(self):
+        file_chooser = FileChooserListView(filters=["*.pdf", "*.doc", "*.docx", "*.png", "*.jpg"])
+        file_chooser.bind(on_selection=self.file_selected)
+
+        popup = Popup(title="Choose a file", content=file_chooser, size_hint=(0.9, 0.9))
+        popup.open()
+
+        self.file_chooser_popup = popup
+
+    def file_selected(self, instance, selected_files):
+        # Check if any files are selected
+        if selected_files:
+            selected_file = selected_files[0]  # first selected file
+            # Do something with the selected file path, like uploading it to the database
+            with open(selected_file, 'rb') as file:
+                file_content = file.read()
+            print(f"Selected file: {selected_file}")
+            selected_file_label = self.ids.selected_file_label
+            selected_file_label.text = f"{selected_file}"
+
+        self.file_chooser_popup.dismiss()
         self.ids.extra_info2.text=''
 
     def registration_submit_button(self, instance):
@@ -238,27 +265,25 @@ class ServiceRegisterAmbulance(BaseRegistrationScreen):
 class ServiceProvider(MDScreen):
 
     def animate_button(self, button_id):
-        original_button_size = (dp(290), dp(150))  # Original button size
-        original_image_size = (dp(290), dp(150))  # Original image size
+        original_button_size = (dp(290), dp(150))
+        original_image_size = (dp(290), dp(150))
 
         # Create animation for the button size
-        anim_button = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_button_size,
-                                                                                   duration=0.4, transition="linear")
-        anim_button.start(self.ids[button_id])  # Access the button using the button_id
+        anim_button = Animation(size=original_button_size, duration=0.2, transition="linear")
+        anim_button += Animation(size=(dp(280), dp(140)), duration=0.2)
 
         # Create animation for the image size
-        anim_image = Animation(size=(dp(270), dp(130)), duration=0.4) + Animation(size=original_image_size,
-                                                                                  duration=0.4, transition="linear")
-        anim_image.start(self.ids[button_id].children[0])  # Access the Image inside the button
+        anim_image = Animation(size=original_image_size, duration=0.2, transition="linear")
+        anim_image += Animation(size=(dp(280), dp(140)), duration=0.2)
 
-        # Set other properties as needed
+        anim_button.start(self.ids[button_id])
+        anim_image.start(self.ids[button_id].children[0])
+
         self.ids[button_id].elevation_normal = 0
 
-        # Schedule a transition to the new screen after a delay
-        Clock.schedule_once(lambda dt: self.transition_to_service_register_form(button_id), 1)
+        Clock.schedule_once(lambda dt: self.transition_to_service_register_form(button_id), 0.5)
 
     def transition_to_service_register_form(self, button_id):
-        #print("Button ID:", button_id)  # Print button ID in console
         app = MDApp.get_running_app()
         app.root.transition.direction = "left"
 

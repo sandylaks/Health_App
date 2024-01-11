@@ -173,7 +173,9 @@ class LoginApp(MDApp):
             username = user[1]
             # self.update(login_email, username)
             self.screen = Builder.load_file("menu_profile.kv")
+            self.screen = Builder.load_file("client_services.kv")
             screen = self.root.get_screen('menu_profile')
+            screen = self.root.get_screen('client_services')
             screen.ids.username.text = username
             screen.ids.email.text = login_email
             self.screen = Builder.load_file("client_services.kv")
@@ -217,6 +219,62 @@ class LoginApp(MDApp):
 
         return screen_manager
 
+    def show_customer_support_dialog(self):
+        dialog = MDDialog(
+            title="Contact Customer Support",
+            text="Call Customer Support at: +1-800-123-4567"
+        )
+        dialog.open()
+
+    def show_doctor_dialog(self):
+        dialog = MDDialog(
+            title="Call On-Call Doctor",
+            text="Call On-Call Doctor at: +1-888-765-4321"
+        )
+        dialog.open()
+
+    def submit_ticket(self):
+        self.screen = Builder.load_file("menu_support.kv")
+        screen = self.root.current_screen
+        title = screen.ids.issue_title.text
+        description = screen.ids.issue_description.text
+
+        # if not title or not description:
+        #     screen.ids.issue_title.error = "Please fill in all fields."
+        #     return
+
+        # Perform ticket submission logic here
+        print(f"Ticket submitted:\nTitle: {title}\nDescription: {description}")
+
+    def clear_text_input(self):
+        self.screen = Builder.load_file("menu_support.kv")
+        screen = self.root.current_screen
+        screen.ids.issue_title.text = ''
+        screen.ids.issue_description.text = ''
+
+    def show_ticket_popup(self):
+        self.screen = Builder.load_file("menu_support.kv")
+        screen = self.root.current_screen
+        submitted_text = screen.ids.issue_title.text
+
+        # Create and show the popup
+        ticket_popup = MDDialog(
+            title="Ticket Raised",
+            text=f"Ticket with content '{submitted_text}' has been raised.",
+            buttons=[
+                MDFlatButton(
+                    text="OK",
+                    md_bg_color=(1, 0, 0, 1),
+                    theme_text_color="Custom",  # Use custom text color
+                    text_color=(1, 1, 1, 1),  # White text color
+                    font_size=20,  # Set the font size
+                    on_release=lambda *args: ticket_popup.dismiss()
+                ),
+            ],
+        )
+        ticket_popup.open()
+        screen.ids.issue_title.text = ''
+        screen.ids.issue_description.text = ''
     #dialog box
     def show_validation_dialog(self, message):
         # Display a dialog for invalid login or sign up
