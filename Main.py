@@ -1,6 +1,6 @@
 import base64
 import re
-from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
+from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
 
 
 from kivymd.uix.pickers import MDDatePicker
@@ -212,9 +212,10 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
+        screen_manager.add_widget(Builder.load_file("payment_page.kv"))
         screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
         screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
-        screen_manager.add_widget(Builder.load_file("service_provider_main_page.kv"))
+        screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
 
         return screen_manager
 
@@ -274,6 +275,38 @@ class LoginApp(MDApp):
         ticket_popup.open()
         screen.ids.issue_title.text = ''
         screen.ids.issue_description.text = ''
+    #dialog box
+    def show_validation_dialog(self, message):
+        # Display a dialog for invalid login or sign up
+        dialog = MDDialog(
+            text=message,
+            buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
+        )
+        dialog.open()
+
+    #-------------------------service-provider-flow-------------
+    menu = None
+    def open_dropdown(self):
+        self.screen_service = Builder.load_file('service_register_form.kv')
+        screen_service = self.root.current_screen
+        if not self.menu:
+            # Dropdown items (Replace these with your city names)
+            cities = ["India",
+                      "America",
+                      "Russia",
+                      "China"]
+            items = [
+                {
+                    "viewclass": "MDDropDownItem",
+                    "text": city,
+                    "callback": self.select_city,
+                } for city in cities
+            ]
+            self.menu = MDDropdownMenu(items=items, width_mult=3,max_height=300, pos_hint={'center_x': 0.5, 'center_y': 3})
+
+        # Open the dropdown menu
+        self.menu.caller = self.screen_service.ids.dropdown_nation
+        self.menu.open()
 
     def select_city(self, instance,instance_item):
         # Callback function when a city is selected
@@ -344,7 +377,7 @@ class LoginApp(MDApp):
     # hospital_Book page logic
     # functionality for back button in hospital book
     def back_button_hospital_book(self):
-        self.root.transition = SlideTransition(direction='left')
+        self.root.transition = SlideTransition(direction='right')
         self.root.current = 'client_services'
 
 

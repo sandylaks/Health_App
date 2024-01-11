@@ -9,6 +9,21 @@ MDScreen:
             left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
             right_action_items: [["arrow-left", lambda x: app.back_button_hospital_book()]]
 
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: dp(145)
+
+            MDSwiper:
+                size_hint: None, None
+                size: dp(270), dp(130)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                MDSwiperItem:
+                    FitImage:
+                        source: "images/doctor.png"
+                        size_hint: None, None
+                        size: dp(270), dp(130)
         ScrollView:
             GridLayout:
                 cols: 1
@@ -17,20 +32,6 @@ MDScreen:
                 size_hint_y: None
                 height: self.minimum_height
 
-                MDSwiper:
-                    size_hint: None, None
-                    size: dp(270), dp(130)
-                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
-                    MDSwiperItem:
-                        FitImage:
-                            source: "images/doctor.png"
-                            size_hint: None, None
-                            size: dp(270), dp(130)
-#                    MDSwiperItem:
-#                        FitImage:
-#                            source: "images/doctor.png"
-#                            size_hint: None, None
-#                            size: dp(270), dp(130)
                 MDLabel:
                     text: "Hospital Name"
                     font_name: "BPoppins"
@@ -49,9 +50,7 @@ MDScreen:
                         Line:
                             points: self.x, self.y, self.x + self.width, self.y
                             width: 3
-#                BoxLayout:
-#                    size_hint_y: None
-#                    height: dp(5)
+
                 MDBoxLayout:
                     orientation: 'horizontal'
                     size_hint_y: None
@@ -147,12 +146,10 @@ MDScreen:
                         theme_text_color: "Custom"
                         text_color: 0, 0, 0, 1
 
-
-
         Button:
             id: book_slot
             text: "Book Slot"
-            size_hint_y:.08
+            size_hint_y:.15
             background_color: 0, 0, 0, 0
             font_name: "BPoppins"
             on_release:

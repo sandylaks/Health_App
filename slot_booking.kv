@@ -1,16 +1,3 @@
-#<CustomCheckBox@CheckBox>:
-#    canvas.before:
-#        Color:
-#            rgba: 1, 0, 0, 1  # Red background color (RGBA format)
-#        Ellipse:
-#            pos: self.center_x - self.width / 4, self.center_y - self.height / 4
-#            size: self.width / 2, self.height / 2
-#
-#        Color:
-#            rgba: 0, 0, 0, 1  # Black border color (RGBA format)
-#        Line:
-#            rounded_rectangle: (self.x + 1, self.y + 1, self.width - 2, self.height - 2, 5)
-
 MDScreen:
     name:'slot_booking'
     BoxLayout:
@@ -104,8 +91,8 @@ MDScreen:
                         Label:
                             id: FirstSlot
                             text: "9am - 11am"
-                            font_size: 15
-                            font_name: "MPoppins"
+                            font_size: 20
+                            font_size: "15sp"
                             color: 0, 0, 0, 1
 
                         CheckBox:
@@ -118,7 +105,8 @@ MDScreen:
                         Label:
                             id: SecondSlot
                             text: "11am - 1pm"
-                            font_size: 15
+                            font_size: 20
+                            font_size: "15sp"
                             font_name: "MPoppins"
                             color: 0, 0, 0, 1
                         CheckBox:
@@ -130,7 +118,8 @@ MDScreen:
                         Label:
                             id: ThirdSlot
                             text: "1pm - 3pm"
-                            font_size: 15
+                            font_size: 20
+                            font_size: "15sp"
                             font_name: "MPoppins"
                             color: 0, 0, 0, 1
                         CheckBox:
@@ -142,7 +131,8 @@ MDScreen:
                         Label:
                             id: ForthSlot
                             text: "3pm - 5pm"
-                            font_size: 15
+                            font_size: 20
+                            font_size: "15sp"
                             font_name: "MPoppins"
                             color: 0, 0, 0, 1
                         CheckBox:
@@ -154,7 +144,8 @@ MDScreen:
                         Label:
                             id: FifthSlot
                             text: "5pm - 7pm"
-                            font_size: 15
+                            font_size: 20
+                            font_size: "15sp"
                             font_name: "MPoppins"
                             color: 0, 0, 0, 1
                         CheckBox:
@@ -166,7 +157,8 @@ MDScreen:
                         Label:
                             id: SixthSlot
                             text: "5pm - 7pm"
-                            font_size: 15
+                            font_size: 20
+                            font_size: "15sp"
                             font_name: "MPoppins"
                             color: 0, 0, 0, 1
                         CheckBox:
@@ -178,7 +170,8 @@ MDScreen:
                         Label:
                             id: SeventhSlot
                             text: "9pm - 10pm"
-                            font_size: 15
+                            font_size: 20
+                            font_size: "15sp"
                             font_name: "MPoppins"
                             color: 0, 0, 0, 1
                         CheckBox:
@@ -233,13 +226,12 @@ MDScreen:
         Button:
             id: book_slot
             text: "Pay Now"
-            size_hint_y:.08
+            size_hint_y:.1
+            size_hint_y: .1
             background_color: 0, 0, 0, 0
             font_name: "BPoppins"
             on_release:
                 app.pay_now(self)
-#                root.manager.transition.direction = "left"
-#                root.manager.current = "payment_page"
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)
