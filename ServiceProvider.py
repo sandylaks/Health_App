@@ -20,7 +20,7 @@ from kivy.clock import Clock
 from kivymd.uix.behaviors import CommonElevationBehavior
 
 
-Builder.load_file("hospital_register_form.kv")
+Builder.load_file("service_register_form.kv")
 Builder.load_file("service_provider.kv")
 # Builder.load_file("hospital_manager.kv")
 Builder.load_file("ambulance_register_form.kv")
