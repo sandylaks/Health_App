@@ -269,7 +269,7 @@ class LoginApp(MDApp):
                     md_bg_color=(1, 0, 0, 1),
                     theme_text_color="Custom",  # Use custom text color
                     text_color=(1, 1, 1, 1),  # White text color
-                    font_size=20,  # Set the font size
+                    font_size="13sp",  # Set the font size
                     on_release=lambda *args: ticket_popup.dismiss()
                 ),
             ],

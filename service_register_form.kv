@@ -195,21 +195,25 @@
 
 
                     MDLabel:
-                        text:'Upload Required Documents :'
+                        text:'Upload Required Documents'
+                        font_name:"BPoppins"
                         size_hint_y:.1
+                        halign:'center'
                         font_size: "16sp"
 
 
                     MDBoxLayout:
                         orientation: 'horizontal'
                         size_hint_y: None
+                        padding: dp(10)
+                        spacing: dp(20)
                         height: self.minimum_height
 
                         MDLabel:
                             id: Doc_1
                             text: "Medical Practitioner License"
                             font_name: "MPoppins"
-                            font_size: "16sp"
+                            font_size: "13sp"
                             pos_hint: {"center_x": .5,'center_y':.4}
 #                            size_hint_y: None
                             height: "15dp"
@@ -235,23 +239,25 @@
                     MDLabel:
                         id: selected_file_label
                         text: "None selected"  # Initial text when no file is selected
-#                            font_name: "MPoppins"
+                        font_size: "13sp"
                         italic: True
                         color: 0.5, 0.5, 0.5, 1
-                        pos_hint: {"center_x": .5,'center_y':.4}
+                        pos_hint: {"center_x": .545,'center_y':.4}
                         size_hint_y: None
                         height: "30dp"
 
                     MDBoxLayout:
                         orientation: 'horizontal'
                         size_hint_y: None
+                        padding: dp(10)
+                        spacing: dp(20)
                         height: self.minimum_height
 
                         MDLabel:
                             id: Doc_2
                             text: "Building Permit and Licenses"
                             font_name: "MPoppins"
-                            font_size: "16sp"
+                            font_size: "13sp"
                             pos_hint: {"center_x": .5,'center_y':.4}
 #                            size_hint_y: None
                             height: "15dp"
@@ -278,26 +284,11 @@
                         id: selected_file_label
                         text: "None selected"  # Initial text when no file is selected
                         italic: True
+                        font_size: "13sp"
                         color: 0.5, 0.5, 0.5, 1
-                        pos_hint: {"center_x": .5,'center_y':.4}
+                        pos_hint: {"center_x": .545,'center_y':.4}
                         size_hint_y: None
                         height: "30dp"
-
-                    MDFlatButton:
-                        id: upload
-                        text: "UPLOAD DOCUMENTS"
-                        size_hint:.6,.5
-                        pos_hint: {"center_x": .5,'center_y':.3}
-                        background_color: 0, 0, 0, 0
-                        font_name: "BPoppins"
-                        font_size: "12sp"
-                        color: rgba(0, 0, 0, 255)
-                        canvas.before:
-                            Color:
-                                rgb: rgba(0, 0, 0, 255)
-                            Line:
-                                width: 1.2
-                                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: None
