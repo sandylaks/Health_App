@@ -14,6 +14,12 @@ from kivy.uix.popup import Popup
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.button import Button
 #from plyer import filechooser
+from kivymd.uix.filemanager import MDFileManager
+import sqlite3
+import os
+import base64
+from kivy.uix.image import AsyncImage
+from kivy.uix.image import Image
 
 from kivymd.app import MDApp
 from kivy.clock import Clock
@@ -28,12 +34,12 @@ Builder.load_file("gym_register_form.kv")
 
 #----------------------Rigistration form--------------------
 class BaseRegistrationScreen(MDScreen):
+
+
+    #------------------dropdowns---------------
     menu = ObjectProperty(None)
     menu2 = ObjectProperty(None)
-
-
-    def open_dropdown(self,widget):
-
+    def open_dropdown(self, widget):
         if not self.menu:
             # Dropdown items
             cities = ["India", "America", "Russia", "China"]
@@ -44,8 +50,9 @@ class BaseRegistrationScreen(MDScreen):
                     "on_release": lambda x=city: self.select_city(x),
                 } for city in cities
             ]
-            # Create the dropdown menu
+            # Create the dropdown menu with the caller property set
             self.menu = MDDropdownMenu(
+                caller=widget,
                 items=items,
                 width_mult=3,
                 max_height=300,
@@ -53,15 +60,13 @@ class BaseRegistrationScreen(MDScreen):
         else:
             self.menu.dismiss()  # Dismiss if already open
 
-        # Set the caller and open the dropdown menu
-        self.menu.caller = widget
+        # Open the dropdown menu
         self.menu.open()
 
     def select_city(self, selected_city):
-        # print(selected_city)
         # Callback function when a city is selected
         self.ids.dropdown_nation.text = selected_city  # Update the text field
-        self.menu.dismiss()  # Dismiss the menu
+        self.menu.dismiss()
     def open_dropdown2(self,widget):
 
         if not self.menu2:
@@ -94,7 +99,7 @@ class BaseRegistrationScreen(MDScreen):
             self.menu2.dismiss()  # Dismiss if already open
 
         # Set the caller and open the dropdown menu
-        self.menu2.caller = widget
+        self.menu2.caller = self.ids.dropdown_state
         self.menu2.open()
 
     def select_state(self, select_state):
@@ -116,31 +121,92 @@ class BaseRegistrationScreen(MDScreen):
         date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
-        self.ids.est_year.text=''
-#------------------------------upload--docs--------------------------
-    def open_file_chooser(self):
-        file_chooser = FileChooserListView(filters=["*.pdf", "*.doc", "*.docx", "*.png", "*.jpg"])
-        file_chooser.bind(on_selection=self.file_selected)
-
-        popup = Popup(title="Choose a file", content=file_chooser, size_hint=(0.9, 0.9))
-        popup.open()
-
-        self.file_chooser_popup = popup
-
-    def file_selected(self, instance, selected_files):
-        # Check if any files are selected
-        if selected_files:
-            selected_file = selected_files[0]  # first selected file
-            # Do something with the selected file path, like uploading it to the database
-            with open(selected_file, 'rb') as file:
-                file_content = file.read()
-            print(f"Selected file: {selected_file}")
-            selected_file_label = self.ids.selected_file_label
-            selected_file_label.text = f"{selected_file}"
-
-        self.file_chooser_popup.dismiss()
         self.ids.extra_info2.text=''
+#------------------------------upload--docs--------------------------
+    # def open_file_chooser(self):
+    #     file_chooser = FileChooserListView(filters=["*.pdf", "*.doc", "*.docx", "*.png", "*.jpg"])
+    #     file_chooser.bind(on_selection=self.file_selected)
+    #
+    #     popup = Popup(title="Choose a file", content=file_chooser, size_hint=(0.9, 0.9))
+    #     popup.open()
+    #
+    #     self.file_chooser_popup = popup
+    #
+    # def file_selected(self, instance, selected_files):
+    #     # Check if any files are selected
+    #     if selected_files:
+    #         selected_file = selected_files[0]  # first selected file
+    #         # Do something with the selected file path, like uploading it to the database
+    #         with open(selected_file, 'rb') as file:
+    #             file_content = file.read()
+    #         print(f"Selected file: {selected_file}")
+    #         selected_file_label = self.ids.selected_file_label
+    #         selected_file_label.text = f"{selected_file}"
+    #
+    #     self.file_chooser_popup.dismiss()
+    def file_manager_open(self):
+        self.connection = sqlite3.connect('users.db')  # Replace with your database name
+        self.cursor = self.connection.cursor()
+        self.cursor.execute('''
+                   CREATE TABLE IF NOT EXISTS documents (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       file_name TEXT,
+                       file_data BLOB
+                   )
+               ''')
+        self.file_manager = MDFileManager(
+            exit_manager=self.exit_manager,
+            select_path=self.select_path,
+        )
+        self.file_manager.show('/')  # Initial directory when the file manager is opened
 
+    def select_path(self, path):
+        self.ids.file_path.text = path
+        self.file_manager.close()
+
+    def upload_file(self):
+        file_path = self.ids.file_path.text
+        if file_path:
+            file_name = os.path.basename(file_path)
+            file_data = self.read_file(file_path)
+            self.save_to_database(file_name, file_data)
+            self.ids.file_path.text = file_name
+
+        # if file_path and os.path.isfile(file_path):
+        #     self.ids.file_display.source = file_path
+
+    def read_file(self, file_path):
+        with open(file_path, 'rb') as file:
+            return file.read()
+
+    def save_to_database(self, file_name, file_data):
+        self.cursor.execute('INSERT INTO documents (file_name, file_data) VALUES (?, ?)', (file_name, file_data))
+        self.connection.commit()
+
+    # def display_file(self, file_path):
+    #     file_display = self.ids.file_display
+    #
+    #     if file_path.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
+    #         # Display image
+    #         image = AsyncImage(source=file_path, allow_stretch=True)
+    #         file_display.clear_widgets()
+    #         file_display.add_widget(image)
+    #     elif file_path.lower().endswith('.pdf'):
+    #         # Display PDF (requires additional dependencies)
+    #         label = Label(text="PDF files are not supported in this example.")
+    #         file_display.clear_widgets()
+    #         file_display.add_widget(label)
+    #     else:
+    #         # Unsupported file type
+    #         label = Label(text="Unsupported file type.")
+    #         file_display.clear_widgets()
+    #         file_display.add_widget(label)
+
+    def exit_manager(self, *args):
+        self.file_manager.close()
+
+
+#----------------------------------registration validation-------------
     def registration_submit_button(self, instance):
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
@@ -269,12 +335,12 @@ class ServiceProvider(MDScreen):
         original_image_size = (dp(290), dp(150))
 
         # Create animation for the button size
-        anim_button = Animation(size=original_button_size, duration=0.2, transition="linear")
-        anim_button += Animation(size=(dp(280), dp(140)), duration=0.2)
+        anim_button = Animation(size=(dp(280), dp(140)),  duration=0.2, transition="linear")
+        anim_button += Animation(size=original_button_size,duration=0.2)
 
         # Create animation for the image size
-        anim_image = Animation(size=original_image_size, duration=0.2, transition="linear")
-        anim_image += Animation(size=(dp(280), dp(140)), duration=0.2)
+        anim_image = Animation( size=(dp(280), dp(140)),duration=0.2, transition="linear")
+        anim_image += Animation(size=original_image_size, duration=0.2)
 
         anim_button.start(self.ids[button_id])
         anim_image.start(self.ids[button_id].children[0])
@@ -297,12 +363,54 @@ class ServiceProvider(MDScreen):
 
 #-------------------service provider main-----------------------
 class ServiceProviderMain(MDScreen):
-    def service_button(self):
-        pass
+    menu = ObjectProperty(None)
+    def service_button(self,button):
+        if not self.menu:
+            cities = ["Settings", "Notification"]
+            items = [
+                {
+                    "text": city,
+                    "viewclass": "OneLineListItem",
+                    "on_release": lambda x=city: self.select_city(x),
+                } for city in cities
+            ]
+
+            # Use the first button from right_action_items as the caller
+
+
+
+            self.menu = MDDropdownMenu(
+                caller=button,
+                items=items,
+                width_mult=3,
+                elevation=2,
+
+                max_height = dp(100),
+
+            )
+        else:
+            self.menu.dismiss()
+
+        self.menu.open()
+
+    def select_city(self, option):
+        # Callback function when a city is selected
+        if option == 'Settings':
+            self.settings()
+        elif option == 'Notification':
+            self.notification_button_action()
+
+        self.menu.dismiss()
+
+    def settings(self):
+        print("Settings")
+
+    def notification_button_action(self):
+        print("Notification")
+
     def profile_button_action(self):
         pass
-    def notification_button_action(self):
-        pass
+
     def slots_button_action(self):
         pass
     def support_button_action(self):

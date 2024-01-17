@@ -6,37 +6,138 @@
             Screen:
                 BoxLayout:
                     orientation: 'vertical'
-
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     MDTopAppBar:
+                        id:topbar
                         title: "Service Provider"
                         font_name: "BPoppins"
                         md_bg_color: 1, 0, 0, 1
                         left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
-                        right_action_items: [["dots-vertical", lambda x: root.service_button()]]
-
+                        right_action_items: [["dots-vertical", lambda x: root.service_button(x)]]
+                        elevation: 2
 
                     ScrollView:
                         GridLayout:
+                            id: grid
                             cols: 1
-                            spacing: dp(30)
                             padding: dp(10)
+                            spacing: dp(20)
                             size_hint_y: None
                             height: self.minimum_height
-
-                            # Main page content here...
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}  # Center the entire content
                             BoxLayout:
-                                orientation:'vertical'
-                                padding:dp(10)
-                                spacing:dp(5)
-                                size_hint_x:dp(70)
-                                md_bg_color:
-                                MDLabel:
-                                    text:'Empty Slots'
-                                    halign:'center'
-                                MDLabel:
-                                    id:'empty_slots'
-                                    text:'0'
-                                    halign:'center'
+                                orientation: 'vertical'
+                                size_hint_y: None
+                                height: dp(40)
+                                md_bg_color: 1, 1, 1, 1
+
+                                MDCard:
+                                    orientation: 'vertical'
+                                    size_hint: None, None
+                                    size: "290dp", "40dp"
+                                    elevation: 2
+                                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                                    GridLayout:
+                                        cols: 2
+                                        padding: dp(10)
+                                        spacing: dp(5)
+                                        size_hint_y: None
+                                        height: dp(40)
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+                                        MDLabel:
+                                            text: 'Empty Slots'
+                                            halign: 'center'
+                                            font_name: 'MPoppins'
+                                            theme_text_color: 'Custom'
+                                            text_color: 0, 0, 0, 1
+                                            size_hint_x: 0.5
+                                            size_hint_y: None
+                                            height: dp(20)
+                                            pos_hint: {'center_x': 0.5}
+
+                                        MDLabel:
+                                            id: empty_slots
+                                            text: '0'
+                                            halign: 'center'
+                                            font_name: 'MPoppins'
+                                            theme_text_color: 'Custom'
+                                            text_color: 0, 0, 0, 1
+                                            size_hint_x: 0.5
+                                            size_hint_y: None
+                                            height: dp(20)
+                                            pos_hint: {'center_x': 0.5}
+                            BoxLayout:
+                                orientation: 'vertical'
+                                size_hint_y: None
+                                height: dp(200)
+                                md_bg_color: 1, 1, 1, 1
+                                MDCard:
+                                    orientation: 'vertical'
+                                    size_hint: None, None
+                                    size: "290dp", "200dp"
+                                    elevation: 2
+                                    md_bg_color: 1, 1, 1, 1
+                                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                    GridLayout:
+                                        id: inner_grid
+                                        cols: 1
+                                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                                        BoxLayout:
+                                            size_hint_y: None
+                                            height: dp(50)
+                                            padding: "5dp"
+                                            spacing: "5dp"
+                                            pos_hint: {'center_x': 0.5}
+                                            canvas.before:
+                                                Color:
+                                                    rgba: 1, 0, 0, 1
+                                                Rectangle:
+                                                    pos: self.pos
+                                                    size: self.size
+                                            BoxLayout:
+                                                size_hint: None, None
+                                                size: dp(50), dp(50)
+                                                pos_hint: {'center_x': 0.5}
+                                                canvas:
+                                                    Color:
+                                                        rgb: 1, 1, 1
+                                                    Ellipse:
+                                                        pos: self.pos
+                                                        size: 50, 50
+                                                        source: 'images/hospital.png'
+                                                        angle_start: 0
+                                                        angle_end: 360
+
+                                            BoxLayout:
+                                                orientation: 'vertical'
+                                                padding: "5dp"
+                                                spacing: "10dp"
+                                                pos_hint: {'center_x': 0.5}
+
+                                                MDLabel:
+                                                    id: pat_username
+                                                    text: "username"
+                                                    font_name: "MPoppins"
+                                                    theme_text_color: 'Custom'
+                                                    text_color: 1, 1, 1, 1
+                                                    pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+
+                                                MDLabel:
+                                                    id: pat_email
+                                                    text: "clientemail@gmail.com"
+                                                    theme_text_color: 'Custom'
+                                                    text_color: 1, 1, 1, 1
+                                                    font_name: "MPoppins"
+                                                    font_size: '12sp'
+                                                    pos_hint: {'center_x': 0.5, 'center_y': 0.1}
+
+
+
+
+
+
 
 
 
@@ -89,14 +190,14 @@
                         spacing: "5dp"
 
                         MDLabel:
-                            id: username
+                            id: srv_username
                             text: "username"
                             font_name: "MPoppins"
                             theme_text_color: "Secondary"
                             pos_hint: {'center_x': 0.5,'center_y': 0.2}
 
                         MDLabel:
-                            id: email
+                            id: srv_email
                             text: "clientemail@gmail.com"
                             theme_text_color: "Hint"
                             font_name: "MPoppins"
@@ -105,74 +206,83 @@
 
             BoxLayout:
                 orientation: 'vertical'
-
                 ScrollView:
                     BoxLayout:
                         orientation: 'vertical'
+                        GridLayout:
+                            cols:1
+                            padding:dp(20)
+                            spacing:dp(10)
+                            MDBoxLayout:
+                                size_hint_y:None
+                                height:dp(40)
+
+                                MDIconButton:
+                                    icon: 'account-circle'
+                                    on_release: root.profile_button_action()
+                                    pos_hint:{'center_x':.3,'center_y':.7}
+                                MDTextButton:
+                                    text: 'Profile'
+                                    on_release: root.profile_button_action()
+                                    font_name: "MPoppins"
+                                    pos_hint:{'center_x':.3,'center_y':.7}
+                            MDBoxLayout:
+                                size_hint_y:None
+                                height:dp(40)
+                                MDIconButton:
+                                    icon: 'bell-outline'
+                                    on_release: root.notification_button_action()
+                                    pos_hint:{'center_x':.3,'center_y':.7}
+                                MDTextButton:
+                                    text: 'Notification'
+                                    on_release: root.notification_button_action()
+                                    font_name: "MPoppins"
+                                    pos_hint:{'center_x':.3,'center_y':.7}
+                            MDBoxLayout:
+                                size_hint_y:None
+                                height:dp(40)
+                                MDIconButton:
+                                    icon: 'book-account-outline'
+                                    on_release: root.slots_button_action()
+                                    pos_hint:{'center_x':.3,'center_y':.7}
+                                MDTextButton:
+                                    text: 'Slots'
+                                    on_release: root.slots_button_action()
+                                    halign: 'center'
+                                    font_name: "MPoppins"
+                                    pos_hint:{'center_x':.3,'center_y':.7}
 
                         GridLayout:
-                            cols: 2
-                            padding: dp(10)
-                            spacing: dp(5)
-
-                            MDIconButton:
-                                icon: 'account-circle'
-                                on_release: root.profile_button_action()
-                            MDTextButton:
-                                padding: "10dp"
-                                text: 'Profile'
-                                on_release: root.profile_button_action()
-                                halign: 'center'
-                                font_name: "MPoppins"
-                                pos_hint: {'center_x': .5, 'center_y': .5}
-                            MDIconButton:
-                                icon: 'bell-outline'
-                                on_release: root.notification_button_action()
-                            MDTextButton:
-                                padding: "10dp"
-                                text: 'Notification'
-                                on_release: root.notification_button_action()
-                                halign: 'center'
-                                font_name: "MPoppins"
-                                pos_hint: {'center_x': .5, 'center_y': .5}
-                            MDIconButton:
-                                icon: 'book-account-outline'
-                                on_release: root.slots_button_action()
-                            MDTextButton:
-                                padding: "10dp"
-                                text: 'Slots'
-                                on_release: root.slots_button_action()
-                                halign: 'center'
-                                font_name: "MPoppins"
-                        # Second GridLayout for additional buttons...
+                            cols:1
+                            padding:dp(40)
+                            spacing:dp(20)
                         GridLayout:
-                            cols: 2
-                            padding: dp(10)
-                            spacing: dp(5)
-
-
-
-                        GridLayout:
-                            cols: 2
-                            spacing: dp(10)
-                            padding: dp(20)
-
-                            MDIconButton:
-                                icon: 'headphones'
-                                on_release: root.support_button_action()
-                            MDTextButton:
-                                padding: "10dp"
-                                text: 'Support'
-                                on_release: root.support_button_action()
-                                halign: 'center'
-                                font_name: "MPoppins"
-                            MDIconButton:
-                                icon: 'logout'
-                                on_release: root.sign_out_button_action()
-                            MDTextButton:
-                                padding: "10dp"
-                                text: 'Sign Out'
-                                on_release: root.sign_out_button_action()
-                                halign: 'center'
-                                font_name: "MPoppins"
+                            cols:1
+                            padding:dp(20)
+                            spacing:dp(10)
+                            MDBoxLayout:
+                                size_hint_y:None
+                                height:dp(40)
+                                MDIconButton:
+                                    icon: 'headphones'
+                                    on_release: root.support_button_action()
+                                    pos_hint:{'center_x':.3,'center_y':.7}
+                                MDTextButton:
+                                    text: 'Support'
+                                    on_release: root.support_button_action()
+                                    pos_hint:{'center_x':.5,'center_y':.7}
+                                    font_name: "MPoppins"
+                            MDBoxLayout:
+                                size_hint_y:None
+                                height:dp(40)
+                                MDIconButton:
+                                    icon: 'logout'
+                                    on_release: root.sign_out_button_action()
+                                    pos_hint:{'center_x':.3,'center_y':.7}
+                                MDTextButton:
+                                    text: 'Sign Out'
+                                    on_release: root.sign_out_button_action()
+                                    pos_hint:{'center_x':.5,'center_y':.7}
+                                    halign: 'center'
+                                    font_name: "MPoppins"
 
