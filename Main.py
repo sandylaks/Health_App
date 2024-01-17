@@ -14,6 +14,8 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
 from datetime import datetime
 import anvil.server
+from anvil.tables import app_tables
+import anvil.tables.query as q
 anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
 
 
@@ -102,12 +104,14 @@ class LoginApp(MDApp):
         password = screen.ids.signup_password.text
         phone = screen.ids.signup_phone.text
         pincode = screen.ids.signup_pincode.text
-        id=1
-        print(username)
-        print(email)
-        print(password)
-        print(phone)
-        print(pincode)
+        # print(username)
+        # print(email)
+        # print(password)
+        # print(phone)
+        # print(pincode)
+        rows = app_tables.users.search()
+        # Get the number of rows
+        id = len(rows)+1
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -143,9 +147,22 @@ class LoginApp(MDApp):
             screen.ids.signup_pincode.error = False
             screen.ids.signup_pincode.helper_text = ""
 
-            anvil.server.call('users', id,username,email,password,phone,pincode)
-            # # Navigate to the success screen
-            # self.root.transition = SlideTransition(direction='left')
+            #clear input texts
+            screen.ids.signup_username.text = ""
+            screen.ids.signup_email.text = ""
+            screen.ids.signup_password.text = ""
+            screen.ids.signup_phone.text = ""
+            screen.ids.signup_pincode.text = ""
+
+            app_tables.users.add_row(
+                id=id,
+                username=username,
+                email=email,
+                password=password,
+                phone=float(phone),
+                pincode=int(pincode))
+            # Navigate to the success screen
+            self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
 
     #password validation
@@ -178,32 +195,36 @@ class LoginApp(MDApp):
         self.screen = Builder.load_file("login.kv")
 
         screen1 = self.root.current_screen
-        login_email = screen1.ids.login_email.text
-        login_password = screen1.ids.login_password.text
+        email = screen1.ids.login_email.text
+        password = screen1.ids.login_password.text
+
+        # phone = float()
+        # pincode = float()
         # Check if the user exists in the database for login
-        cursor.execute('''
-            SELECT * FROM users
-            WHERE email = ? AND password = ?
-        ''', (login_email, login_password))
-        user = cursor.fetchone()
+        user = app_tables.users.get(
+            email=email,
+            password=password,
+        )
 
         if user:
             # Login successful
-            print("Login successful. User details:", user)
-            username = user[1]
-            phone = user[4]
-            pincode = user[5]
+            print("Login successful.")
+
+            username = user['username']
+            phone = str(user['phone'])
+            pincode = str(user['pincode'])
+
             # self.update(login_email, username)
             self.screen = Builder.load_file("menu_profile.kv")
             screen = self.root.get_screen('menu_profile')
             screen.ids.username.text = f"Username : {username}"
-            screen.ids.email.text = f"Email : {login_email}"
+            screen.ids.email.text = f"Email : {email}"
             screen.ids.phone.text = f"Phone no : {phone}"
             screen.ids.pincode.text = f"Pincode : {pincode}"
             self.screen = Builder.load_file("client_services.kv")
             screen2 = self.root.get_screen('client_services')
             screen2.ids.username.text = username
-            screen2.ids.email.text = login_email
+            screen2.ids.email.text = email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
