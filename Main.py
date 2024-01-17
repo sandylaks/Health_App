@@ -1,10 +1,6 @@
 import base64
 import re
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
-
-
-from kivymd.uix.pickers import MDDatePicker
-# from kivyauth.google_auth import initialize_google,login_google,logout_google
 from kivy.lang import Builder
 from kivymd import app
 from kivymd.app import MDApp
@@ -17,10 +13,9 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
 from datetime import datetime
-from kivy.uix.popup import Popup
-from kivymd.uix.selectioncontrol import MDCheckbox
-from kivymd.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
+import anvil.server
+anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+
 
 
 
@@ -66,7 +61,40 @@ class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
 # Create the main app class
 class LoginApp(MDApp):
 
-    def validate_inputs(self, instance, *args):
+    # def google_sign_in(self):
+    #     # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
+    #     client_id = "407290580474-3ffjk8s253pdlsffjlm9io86aejpcq0m.apps.googleusercontent.com"
+    #     client_secret = "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"
+    #     redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+    #
+    #     # Set up the Google OAuth flow
+    #     flow = InstalledAppFlow.from_client_secrets_file(
+    #         "client_secret.json",
+    #         scopes=["https://www.googleapis.com/auth/userinfo.email"]
+    #     )
+    #
+    #     # Get the authorization URL
+    #     auth_url, _ = flow.authorization_url(prompt="select_account")
+    #
+    #     # Open a web browser to the authorization URL
+    #     import webbrowser
+    #     webbrowser.open(auth_url)
+    #
+    #     # Get the authorization code from the user
+    #     authorization_code = input("Enter the authorization code: ")
+    #
+    #     # Exchange the authorization code for credentials
+    #     credentials = flow.fetch_token(
+    #         token_uri="https://oauth2.googleapis.com/token",
+    #         authorization_response=authorization_code
+    #     )
+    #
+    #     # Use the obtained credentials for further Google API requests
+    #     # Example: print the user's email address
+    #     user_email = Credentials(credentials).id_token["email"]
+    #     print(f"User email: {user_email}")
+
+    def users(self, instance, *args):
         self.screen=Builder.load_file("signup.kv")
         screen = self.root.current_screen
         username = screen.ids.signup_username.text
@@ -74,6 +102,7 @@ class LoginApp(MDApp):
         password = screen.ids.signup_password.text
         phone = screen.ids.signup_phone.text
         pincode = screen.ids.signup_pincode.text
+        id=1
         print(username)
         print(email)
         print(password)
@@ -114,19 +143,10 @@ class LoginApp(MDApp):
             screen.ids.signup_pincode.error = False
             screen.ids.signup_pincode.helper_text = ""
 
-            #If validation is successful, insert into the database
-            cursor.execute('''
-                        INSERT INTO users (username, email, password, phone, pincode)
-                        VALUES (?, ?, ?, ?, ?)
-                    ''', (username, email, password, phone, pincode))
-            conn.commit()
-            # Navigate to the success screen
-            self.root.transition = SlideTransition(direction='left')
+            anvil.server.call('users', id,username,email,password,phone,pincode)
+            # # Navigate to the success screen
+            # self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
-    #
-    def login(self, instance, *args):
-        self.screen1 = Builder.load_file("login.kv")
-
 
     #password validation
     def validate_password(self, password):
@@ -503,4 +523,5 @@ class LoginApp(MDApp):
 if __name__ == '__main__':
     LabelBase.register(name="MPoppins", fn_regular="Poppins/Poppins-Medium.ttf")
     LabelBase.register(name="BPoppins", fn_regular="Poppins/Poppins-Bold.ttf")
+    LabelBase.register(name="OpenSans", fn_regular="fonts/Roboto-Regular.ttf")
     LoginApp().run()
