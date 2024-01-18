@@ -430,50 +430,13 @@ class LoginApp(MDApp):
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
         # screen.ids[label_text].md_bg_color = (0, 1, 0, 1)
-
-
-        if label_text == '9am - 11am':
-            screen.ids['9am - 11am'].md_bg_color = (0, 1, 0, 1)
-            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
-        elif label_text == '11am - 1pm':
-            screen.ids['11am - 1pm'].md_bg_color = (0, 1, 0, 1)
-            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
-        elif label_text == '1pm - 3pm':
-            screen.ids['1pm - 3pm'].md_bg_color = (0, 1, 0, 1)
-            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
-        elif label_text == '3pm - 5pm':
-            screen.ids['3pm - 5pm'].md_bg_color = (0, 1, 0, 1)
-            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
-        elif label_text == '5pm - 7pm':
-            screen.ids['5pm - 7pm'].md_bg_color = (0, 1, 0, 1)
-            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
-        elif label_text == '7pm - 9pm':
-            screen.ids['7pm - 9pm'].md_bg_color = (0, 1, 0, 1)
-            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
-            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
+        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+        selected_slot = label_text
+        for slot in time_slots:
+            if slot == selected_slot:
+                screen.ids[slot].md_bg_color = (0, 1, 0, 1)
+            else:
+                screen.ids[slot].md_bg_color = (1, 0, 0, 1)
 
     def slot_save(self, instance, value, date_range):
         # the date string in "year-month-day" format
