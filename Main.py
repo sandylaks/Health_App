@@ -221,7 +221,7 @@ class LoginApp(MDApp):
         cursor.execute('''
                     SELECT * FROM users
                     WHERE email = ? AND password = ?
-                ''', (email, password))
+                    ''', (email, password))
         user = cursor.fetchone()
 
         # phone = float()
@@ -269,18 +269,18 @@ class LoginApp(MDApp):
         screen_manager = ScreenManager()
 
 
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(ServiceProvider("service_provider"))
-        # screen_manager.add_widget(ServiceRegister("service_register_form"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
         screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
@@ -414,39 +414,7 @@ class LoginApp(MDApp):
         screen = self.root.current_screen
         username = screen.ids.name.text
         print(username)
-        # cursor.execute('''
-        #     CREATE TABLE IF NOT EXISTS registration_forms (
-        #         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        #         user_id INTEGER,
-        #         name TEXT NOT NULL,
-        #         email TEXT NOT NULL,
-        #         password TEXT NOT NULL,
-        #         address TEXT NOT NULL,
-        #         nation TEXT NOT NULL,
-        #         state TEXT NOT NULL,
-        #         pin_code INTEGER NOT NULL,
-        #         hospital_name TEXT NOT NULL,
-        #         established_year TEXT NOT NULL,
-        #         uploaded_documents BLOB,  -- New column for uploaded documents as BLOB
-        #         UNIQUE (email)
-        #     )
-        # ''')
-        # conn.commit()
-        # # # Assuming file_data contains binary data of the file you want to upload
-        # # file_data = b"..."
-        # #
-        # # # Encode the file data to base64 before inserting it into the database
-        # # encoded_file_data = base64.b64encode(file_data)
-        # cursor.execute('''
-        #     INSERT INTO registration_forms (
-        #         user_id, name, email, password, address, nation, state,
-        #         pin_code, hospital_name, established_year, uploaded_documents
-        #     )
-        #     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        # ''', (user_id, name, email, password, address, nation, state, pin_code, hospital_name, established_year,
-        #       encoded_file_data))
 
-        conn.commit()
 
     # hospital_Book page logic
     # functionality for back button in hospital book
@@ -625,7 +593,12 @@ class LoginApp(MDApp):
         date_object = datetime.strptime(str(value), "%Y-%m-%d")
         # Format the date as "day-month-year"
         formatted_date = date_object.strftime("%d-%m-%Y")
-        print(value)
+        try:
+            book_slot = app_tables.book_slot.get(book_date=formatted_date)
+            # time = list(book_slot['book_time'])
+            print(book_slot)
+        except Exception :
+            print("not book for this time")
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
         screen.ids.date_choosed.text = formatted_date
@@ -633,7 +606,7 @@ class LoginApp(MDApp):
     def slot_cancel(self, instance, value):
         print("cancel")
         self.screen = Builder.load_file("slot_booking.kv")
-    def slot_date_picker_design2(self):
+    def slot_date_picker(self):
         current_date = datetime.now().date()
         date_dialog = MDDatePicker(year=current_date.year, month=current_date.month, day=current_date.day, size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.slot_save, on_cancel=self.slot_cancel)
@@ -643,9 +616,26 @@ class LoginApp(MDApp):
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
         session_date = screen.ids.date_choosed.text
-
+        # Extract the username from menu_profile
+        self.screen = Builder.load_file("client_services.kv")
+        screen2 = self.root.get_screen('client_services')
+        username = screen2.ids.username.text
+        email = screen2.ids.email.text
+        user = app_tables.users.get(email=email)
+        id = user['id']
+        row = app_tables.book_slot.search()
+        slot_id = len(row)+1
         if len(session_date) == 10 and hasattr(self, 'session_time') and self.session_time:
             print(session_date, self.session_time )
+            app_tables.book_slot.add_row(
+                slot_id=slot_id,
+                user_id=id,
+                username=username,
+                book_date=session_date,
+                book_time=self.session_time
+            )
+            self.root.transition.direction = 'left'
+            self.root.current = 'payment_page'
         elif len(session_date) == 13 and hasattr(self, 'session_time') and self.session_time:
             self.show_validation_dialog("Select Date")
         elif not hasattr(self, 'session_time') and len(session_date) == 10:
