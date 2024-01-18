@@ -1,6 +1,13 @@
 import base64
 import re
+
+from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
+from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
+
+from kivymd.uix.pickers import MDDatePicker
+# from kivyauth.google_auth import initialize_google,login_google,logout_google
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
+
 from kivy.lang import Builder
 from kivymd import app
 from kivymd.app import MDApp
@@ -272,6 +279,10 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
         screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
         screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
+        screen_manager.add_widget(ServiceProfile(name="service_profile"))
+        screen_manager.add_widget(ServiceNotification(name="service_notification"))
+        screen_manager.add_widget(ServiceSlotAdding(name="service_slot_adding"))
+        screen_manager.add_widget(ServiceSupport(name="service_support"))
 
         return screen_manager
 
