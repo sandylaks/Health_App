@@ -38,7 +38,7 @@ import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
 
 
-Window.size = (310, 580)
+Window.size = (320, 580)
 
 # SQLite database setup
 conn = sqlite3.connect("users.db")  # Replace "users.db" with your desired database name
@@ -593,12 +593,12 @@ class LoginApp(MDApp):
         date_object = datetime.strptime(str(value), "%Y-%m-%d")
         # Format the date as "day-month-year"
         formatted_date = date_object.strftime("%d-%m-%Y")
-        try:
-            book_slot = app_tables.book_slot.get(book_date=formatted_date)
-            # time = list(book_slot['book_time'])
-            print(book_slot)
-        except Exception :
-            print("not book for this time")
+        book_slot = app_tables.book_slot.search(book_date=formatted_date)
+        time_list = []
+        for row in book_slot:
+            time_list.append(row['book_time'])
+        print(time_list)
+
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
         screen.ids.date_choosed.text = formatted_date
