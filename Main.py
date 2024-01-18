@@ -22,6 +22,9 @@ from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 
+from razorpay import Razorpay
+import webbrowser
+
 
 
 import sqlite3
@@ -497,6 +500,36 @@ class LoginApp(MDApp):
 
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
+
+#-------------------------------Razorpay-flow------------------------------------
+
+    def pay_now(self, instance):
+        # Replace 'your_api_key' with your Razorpay API key
+        api_key = 'your_api_key'
+
+        # Replace the following details with your actual payment details
+        payment_data = {
+            'amount': 100,  # Replace with the actual amount in paise
+            'currency': 'INR',  # Replace with the actual currency code
+            'description': 'Service Charge',  # Replace with the actual description
+            'order_id': 'order_123',  # Replace with the actual order ID
+            'name': 'Oxyvive',  # Replace with the name of your app
+            'prefill': {
+                'contact': 'username',  # Replace with the user's contact details
+                'email': 'clientemail@gmail.com',  # Replace with the user's email
+            },
+        }
+
+        razorpay_client = Razorpay(api_key)
+        order = razorpay_client.order.create(data=payment_data)
+
+        # Open the Razorpay payment gateway URL in a web browser
+        payment_url = order['short_url']
+        self.open_payment_gateway(payment_url)
+
+    def open_payment_gateway(self, payment_url):
+        # Replace this with actual code to open the payment gateway URL
+        print(f"Opening Razorpay payment gateway: {payment_url}")
 
 
 # Run the app
