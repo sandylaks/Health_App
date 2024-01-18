@@ -14,13 +14,13 @@ MDScreen:
                 root.manager.current = "main"
         MDLabel:
             text: "W e l c o m e!"
-            font_name: "BPoppins"
+            font_name: "Roboto"
             font_size: "23sp"
             pos_hint: {"center_x": .6,"center_y": .85}
             color: rgba(0, 0, 0, 255)
         MDLabel:
             text: "Sign in to continue"
-            font_name: "MPoppins"
+            font_name:"Roboto"
             font_size: "18sp"
             pos_hint: {"center_x": .6, "center_y": .79}
             color: rgba(74, 73, 73, 255)
@@ -31,7 +31,7 @@ MDScreen:
             MDTextField:
                 id: login_email
                 hint_text: "Email"
-                font_name: "MPoppins"
+                font_name:"Roboto"
                 helper_text:''
                 keyboard_suggestions: True
                 helper_text_mode:  'on_error'
@@ -52,7 +52,7 @@ MDScreen:
             MDTextField:
                 id: login_password
                 hint_text: "Password"
-                font_name: "MPoppins"
+                font_name:"Roboto"
                 helper_text:''
                 helper_text_mode:  'on_error'
                 required: True
@@ -88,7 +88,7 @@ MDScreen:
             size_hint: .66, .065
             pos_hint: {"center_x": .5, "center_y": .34}
             background_color: 0, 0, 0, 0
-            font_name: "BPoppins"
+            font_name:"Roboto"
             on_release:
                 app.login_page(self)
             canvas.before:
@@ -104,13 +104,13 @@ MDScreen:
             pos_hint: {"center_x": .5, "center_y": .28}
             color: rgba(250, 87, 87, 255)
             font_size: "12sp"
-            font_name: "BPoppins"
+            font_name:"Roboto"
         MDLabel:
             text: "or"
             color: rgba(74, 73, 73, 255)
             pos_hint: {"center_y": .22}
             font_size: "13sp"
-            font_name: "BPoppins"
+            font_name:"Roboto"
             halign: "center"
         #lines
         MDFloatLayout:
@@ -124,7 +124,7 @@ MDScreen:
         #social media
         MDLabel:
             text: "Social Media Login"
-            font_name: "BPoppins"
+            font_name:"Roboto"
             font_size: "13sp"
             halign: "center"
             pos_hint: {"center_y": .16}
@@ -138,7 +138,7 @@ MDScreen:
             Button:
                 size_hint: .6, .08
                 background_color: (0,0,0,0)
-#                on_release: app.login()
+#                on_release: app.google_sign_in()
         Image:
             size_hint: .5, .1
             pos_hint: {"center_x": .5, "center_y": .1}
@@ -148,7 +148,7 @@ MDScreen:
 
         MDTextButton:
             text: "Don't have an account? Sign up"
-            font_name: "BPoppins"
+            font_name:"Roboto"
             font_size: "11sp"
             pos_hint: {"center_x": .5, "center_y": .05}
             color: rgba(225, 0, 0, 255)
