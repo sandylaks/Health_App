@@ -14,7 +14,7 @@
                 root.manager.current = "service_provider"
         MDLabel:
             text: "Create new account"
-            font_name: "MPoppins"
+            font_name: "Roboto"
             pos_hint: {"center_x":.6,"center_y": .95}
             size_hint_y:.1
             font_size: "18sp"
@@ -34,7 +34,7 @@
                         id: service_provider_name
 #                        required: True
                         hint_text: 'Name'
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
                         height: "25dp"
@@ -50,7 +50,7 @@
                         id:service_provider_email
                         hint_text: "Email"
 #                        required: True
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
                         multiline: False
@@ -66,7 +66,7 @@
                         hint_text: "Enter Password"
 #                        required: True
                         password: True
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
                         height: "30dp"
@@ -82,7 +82,7 @@
                         id:service_provider_phoneno
                         hint_text: "Phone No"
 #                       required: True
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
                         height: "30dp"
@@ -97,7 +97,7 @@
                         id:service_provider_address
                         hint_text: "Address"
 #                        required: True
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
                         height: "30dp"
@@ -150,7 +150,7 @@
                         id:service_provider_pincode
                         hint_text: "PIN Code"
 #                        required: True
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         font_size: "14sp"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
@@ -165,7 +165,7 @@
                         id:extra_info
                         hint_text: "Gym Name"
 #                        required: True
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         font_size: "14sp"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
@@ -180,7 +180,7 @@
                         id:extra_info2
                         hint_text: "Established Year"
 #                        required: True
-                        font_name: "MPoppins"
+                        font_name: "Roboto"
                         font_size: "14sp"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
@@ -200,22 +200,99 @@
                             height:0
 
 
+                    MDLabel:
+                        text:'Upload Required Documents :'
+                        size_hint_y:.1
+                        halign:'center'
+                        font_size: "16sp"
 
-                    MDFlatButton:
-                        id: upload
-                        text: "UPLOAD DOCUMENTS"
-                        size_hint:.6,.5
-                        pos_hint: {"center_x": .5,'center_y':.3}
-                        background_color: 0, 0, 0, 0
-                        font_name: "BPoppins"
-                        font_size: "12sp"
-                        color: rgba(0, 0, 0, 255)
-                        canvas.before:
-                            Color:
-                                rgb: rgba(0, 0, 0, 255)
-                            Line:
-                                width: 1.2
-                                rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        padding: dp(10)
+                        spacing: dp(20)
+                        height: self.minimum_height
+
+                        MDLabel:
+                            id: Doc_1
+                            text: "Gym Registration"
+                            font_name: "Roboto"
+                            font_size: "13sp"
+                            pos_hint: {"center_x": .5,'center_y':.4}
+                            height: "15dp"
+
+                        MDFlatButton:
+                            id: upload
+                            text: "UPLOAD"
+                            size_hint:.4,.5
+                            pos_hint: {"center_x": .8,'center_y':.5}
+                            background_color: 0, 0, 0, 0
+                            font_name: "Roboto"
+                            font_size: "12sp"
+                            background_color: 0, 0, 0, 0
+                            color: rgba(1, 1, 1, 255)
+                            on_release: root.open_file_chooser()
+                            canvas.before:
+                                Color:
+                                    rgb: rgba(255, 0, 0, 255)
+                                Line:
+                                    width: 1.2
+                                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+
+                    MDLabel:
+                        id: selected_file_label
+                        text: "None selected"  # Initial text when no file is selected
+                        italic: True
+                        font_size: "13sp"
+                        color: 0.5, 0.5, 0.5, 1
+                        pos_hint: {"center_x": .545,'center_y':.4}
+                        size_hint_y: None
+                        height: "30dp"
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        padding: dp(10)
+                        spacing: dp(20)
+                        height: self.minimum_height
+
+                        MDLabel:
+                            id: Doc_2
+                            text: "SSI Registration"
+                            font_name: "Roboto"
+                            font_size: "13sp"
+                            pos_hint: {"center_x": .5,'center_y':.4}
+                            height: "15dp"
+
+                        MDFlatButton:
+                            id: upload
+                            text: "UPLOAD"
+                            size_hint:.4,.5
+                            pos_hint: {"center_x": .8,'center_y':.5}
+                            background_color: 0, 0, 0, 0
+                            font_name: "Roboto"
+                            font_size: "12sp"
+                            background_color: 0, 0, 0, 0
+                            color: rgba(1, 1, 1, 255)
+                            on_release: root.open_file_chooser()
+                            canvas.before:
+                                Color:
+                                    rgb: rgba(255, 0, 0, 255)
+                                Line:
+                                    width: 1.2
+                                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+
+                    MDLabel:
+                        id: selected_file_label
+                        text: "None selected"  # Initial text when no file is selected
+                        italic: True
+                        font_size: "13sp"
+                        color: 0.5, 0.5, 0.5, 1
+                        pos_hint: {"center_x": .545,'center_y':.4}
+                        size_hint_y: None
+                        height: "30dp"
+
                     BoxLayout:
                         orientation: 'vertical'
                         size_hint_y: None
@@ -230,7 +307,7 @@
                         height:dp(40)
                         pos_hint: {"center_x": .5, "center_y": .34}
                         background_color: 0, 0, 0, 0
-                        font_name: "BPoppins"
+                        font_name: "Roboto"
                         on_release:
                             root.registration_submit_button(self)
                         canvas.before:

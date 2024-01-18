@@ -16,7 +16,7 @@ MDScreen:
         # Label
         MDLabel:
             text: "Create new account"
-            font_name: "MPoppins"
+            font_name: "Roboto"
             font_size: "18sp"
             pos_hint: {"center_x": .6, "center_y": .89}
             color: rgba(0, 0, 0, 255)
@@ -27,7 +27,7 @@ MDScreen:
             MDTextField:
                 id: signup_username
                 hint_text: "Username"
-                font_name: "MPoppins"
+                font_name: "Roboto"
                 helper_text:'Required'
                 helper_text_mode:  'on_error'
                 keyboard_suggestions: True
@@ -49,7 +49,7 @@ MDScreen:
             MDTextField:
                 id: signup_email
                 hint_text: "Email"
-                font_name: "MPoppins"
+                font_name: "Roboto"
                 helper_text:"Invalid Email"
                 helper_text_mode: 'on_error'
                 keyboard_suggestions: True
@@ -70,7 +70,7 @@ MDScreen:
             MDTextField:
                 id: signup_password
                 hint_text: "Password"
-                font_name: "MPoppins"
+                font_name: "Roboto"
                 helper_text:"Required"
                 helper_text_mode: 'on_error'
                 keyboard_suggestions: True
@@ -88,8 +88,6 @@ MDScreen:
                 id: show_password_button
                 pos_hint: {"center_x": .9, "center_y": 0}
                 active: False  # Initial state is password hidden
-                size_hint: None, None
-                size: dp(48), dp(48)
                 text_color: [0, 0, 0, 1]
                 opposite_colors: True
                 background_palette: "Grey"
@@ -108,7 +106,7 @@ MDScreen:
             MDTextField:
                 id: signup_phone
                 hint_text: "Phone no"
-                font_name: "MPoppins"
+                font_name: "Roboto"
                 helper_text:"Invalid Phone number (10 digits required)"
                 helper_text_mode:  'on_error'
                 required: False
@@ -130,7 +128,7 @@ MDScreen:
             MDTextField:
                 id: signup_pincode
                 hint_text: "Pincode"
-                font_name: "MPoppins"
+                font_name: "Roboto"
                 helper_text:("Invalid Pincode (6 digits required)")
                 helper_text_mode:  'on_error'
                 required: False
@@ -151,8 +149,8 @@ MDScreen:
             size_hint: .66, .065
             pos_hint: {"center_x": .5, "center_y": .3}
             background_color: 0, 0, 0, 0
-            font_name: "BPoppins"
-            on_release: app.validate_inputs(self)
+            font_name: "Roboto"
+            on_press: app.users(self)
 
             canvas.before:
                 Color:
@@ -167,7 +165,7 @@ MDScreen:
             color: rgba(74, 73, 73, 255)
             pos_hint: {"center_y": .22}
             font_size: "13sp"
-            font_name: "BPoppins"
+            font_name: "Roboto"
             halign: "center"
         #lines
         MDFloatLayout:
@@ -181,7 +179,7 @@ MDScreen:
         #social media section
         MDLabel:
             text: "Social Media Login"
-            font_name: "BPoppins"
+            font_name: "Roboto"
             font_size: "13sp"
             halign: "center"
             pos_hint: {"center_y": .16}
@@ -205,7 +203,7 @@ MDScreen:
         #log in button
         MDTextButton:
             text: "Already have an account? Sign in"
-            font_name: "BPoppins"
+            font_name: "Roboto"
             font_size: "11sp"
             pos_hint: {"center_x": .5, "center_y": .05}
             color: rgba(225, 0, 0, 255)
@@ -214,7 +212,7 @@ MDScreen:
                 root.manager.current = "login"
         MDTextButton:
             text: "Are you service provider? Sign in"
-            font_name: "BPoppins"
+            font_name: "Roboto"
             font_size: "11sp"
             pos_hint: {"center_x": .5, "center_y": .98}
             color: rgba(225, 0, 0, 255)
