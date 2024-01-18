@@ -154,6 +154,13 @@ class LoginApp(MDApp):
             screen.ids.signup_phone.text = ""
             screen.ids.signup_pincode.text = ""
 
+            # If validation is successful, insert into the database
+            cursor.execute('''
+                INSERT INTO users (username, email, password, phone, pincode)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (username, email, password, phone, pincode))
+            conn.commit()
+
             app_tables.users.add_row(
                 id=id,
                 username=username,
@@ -197,6 +204,12 @@ class LoginApp(MDApp):
         screen1 = self.root.current_screen
         email = screen1.ids.login_email.text
         password = screen1.ids.login_password.text
+        # Check if the user exists in the database for login
+        cursor.execute('''
+                    SELECT * FROM users
+                    WHERE email = ? AND password = ?
+                ''', (email, password))
+        user = cursor.fetchone()
 
         # phone = float()
         # pincode = float()
