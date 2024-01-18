@@ -17,6 +17,8 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
 from datetime import datetime
+from kivy.uix.togglebutton import ToggleButton
+from kivy.metrics import dp
 from kivy.uix.popup import Popup
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.boxlayout import BoxLayout
@@ -197,18 +199,19 @@ class LoginApp(MDApp):
         # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
 
-        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        screen_manager.add_widget(Builder.load_file("login.kv"))
-        screen_manager.add_widget(Builder.load_file("signup.kv"))
-        screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        screen_manager.add_widget(ServiceProvider("service_provider"))
-        screen_manager.add_widget(ServiceRegister("service_register_form"))
+
+        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        # screen_manager.add_widget(Builder.load_file("login.kv"))
+        # screen_manager.add_widget(Builder.load_file("signup.kv"))
+        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        # screen_manager.add_widget(ServiceProvider("service_provider"))
+        # screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
         screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
@@ -324,102 +327,102 @@ class LoginApp(MDApp):
 
 
     # Slot_Booking page logic
-    def slot_save(self, instance, value, date_range):
-        # the date string in "year-month-day" format
-        # date_object = datetime.strptime(str(value), "%Y-%m-%d")
-        # Format the date as "day-month-year"
-        # formatted_date = date_object.strftime("%d-%m-%Y")
-        self.screen = Builder.load_file("slot_booking.kv")
-        screen = self.root.current_screen
-        book_date= str(value)
-        # Retrieve book_time values for a specific book_date
-        cursor.execute('''
-                SELECT DISTINCT book_time
-                FROM BookSlot
-                WHERE book_date = ?
-            ''', (book_date,))
-        book_time_rows = cursor.fetchall()
-        # Extract book_time values into a list
-        book_times = [row[0] for row in book_time_rows]
-        print(book_times)
-        for date in book_times:
-            print(date)
-            screen.ids[date].disabled = True
-
-        screen.ids.slot_date_label.text = str(value)
-        screen.ids.session_date.text = str(value)
-
-
-    def slot_cancel(self, instance, value):
-        print("cancel")
-        self.screen = Builder.load_file("slot_booking.kv")
-        screen_hos_cancel = self.root.current_screen
-        screen_hos_cancel.ids.slot_date_label.text = "You Clicked Cancel"
-    def slot_date_picker(self):
-        current_date = datetime.now().date()
-        date_dialog = MDDatePicker(year=current_date.year, month=current_date.month, day=current_date.day, size_hint=(None, None), size=(150, 150))
-        date_dialog.bind(on_save=self.slot_save, on_cancel=self.slot_cancel)
-        date_dialog.open()
-
-    def checkbox_click(self, checkbox, value, time):
-        if value:
-            self.screen = Builder.load_file("slot_booking.kv")
-            screen = self.root.current_screen
-            screen.ids.session_time.text = str(time)
-
-    # Adding functionality to Pay now button
-    def pay_now(self, instance, *args):
-        self.screen = Builder.load_file("slot_booking.kv")
-        screen = self.root.current_screen
-        session_date = screen.ids.session_date.text
-        session_time = screen.ids.session_time.text
-        # Extract the username from menu_profile
-        self.screen = Builder.load_file("menu_profile.kv")
-        screen = self.root.get_screen('menu_profile')
-        username = screen.ids.username.text
-        print(username)
-        # Retrieve all book_Date entries from BookSlot table
-        cursor.execute('''
-                    SELECT book_date FROM BookSlot
-                ''')
-        book_date_rows = cursor.fetchall()
-        # Extract book_date values into a list
-        book_dates = [row[0] for row in book_date_rows]
-        # Retrieve all book_time entries from BookSlot table
-        cursor.execute('''
-            SELECT book_time FROM BookSlot
-        ''')
-        book_time_rows = cursor.fetchall()
-        # Extract book_time values into a list
-        book_times = [row[0] for row in book_time_rows]
-
-        # Condition for pay now button
-        if session_time in book_times and session_date in book_dates:
-            self.show_validation_dialog(f'This {session_time}for {session_date} is already booked ')
-
-        elif len(session_date) == 10 and len(session_time) >= 9 :
-            cursor.execute('''
-                                        SELECT id, username FROM users WHERE username = ?
-                                    ''', (username,))
-            user_row = cursor.fetchone()
-
-            # If date and time are successfully Selected, insert into the database
-            user_id, fetched_username = user_row
-            # Insert a new booking into the BookSlot table
-            cursor.execute('''
-                       INSERT INTO BookSlot (user_id, username, book_date, book_time)
-                       VALUES (?, ?, ?, ?)
-                   ''', (user_id, fetched_username, session_date, session_time))
-
-            conn.commit()
-            self.root.transition.direction = 'left'
-            self.root.current = 'payment_page'
-        elif len(session_date) == 4 and len(session_time) >= 9 :
-            self.show_validation_dialog("Select Date")
-        elif len(session_date) == 10 and len(session_time) == 4:
-            self.show_validation_dialog("Select Time")
-        else:
-            self.show_validation_dialog("Select Date and Time")
+    # def slot_save(self, instance, value, date_range):
+    #     # the date string in "year-month-day" format
+    #     # date_object = datetime.strptime(str(value), "%Y-%m-%d")
+    #     # Format the date as "day-month-year"
+    #     # formatted_date = date_object.strftime("%d-%m-%Y")
+    #     self.screen = Builder.load_file("slot_booking.kv")
+    #     screen = self.root.current_screen
+    #     book_date= str(value)
+    #     # Retrieve book_time values for a specific book_date
+    #     cursor.execute('''
+    #             SELECT DISTINCT book_time
+    #             FROM BookSlot
+    #             WHERE book_date = ?
+    #         ''', (book_date,))
+    #     book_time_rows = cursor.fetchall()
+    #     # Extract book_time values into a list
+    #     book_times = [row[0] for row in book_time_rows]
+    #     print(book_times)
+    #     for date in book_times:
+    #         print(date)
+    #         screen.ids[date].disabled = True
+    #
+    #     screen.ids.slot_date_label.text = str(value)
+    #     screen.ids.session_date.text = str(value)
+    #
+    #
+    # def slot_cancel(self, instance, value):
+    #     print("cancel")
+    #     self.screen = Builder.load_file("slot_booking.kv")
+    #     screen_hos_cancel = self.root.current_screen
+    #     screen_hos_cancel.ids.slot_date_label.text = "You Clicked Cancel"
+    # def slot_date_picker(self):
+    #     current_date = datetime.now().date()
+    #     date_dialog = MDDatePicker(year=current_date.year, month=current_date.month, day=current_date.day, size_hint=(None, None), size=(150, 150))
+    #     date_dialog.bind(on_save=self.slot_save, on_cancel=self.slot_cancel)
+    #     date_dialog.open()
+    #
+    # def checkbox_click(self, checkbox, value, time):
+    #     if value:
+    #         self.screen = Builder.load_file("slot_booking.kv")
+    #         screen = self.root.current_screen
+    #         screen.ids.session_time.text = str(time)
+    #
+    # # Adding functionality to Pay now button
+    # def pay_now(self, instance, *args):
+    #     self.screen = Builder.load_file("slot_booking.kv")
+    #     screen = self.root.current_screen
+    #     session_date = screen.ids.session_date.text
+    #     session_time = screen.ids.session_time.text
+    #     # Extract the username from menu_profile
+    #     self.screen = Builder.load_file("menu_profile.kv")
+    #     screen = self.root.get_screen('menu_profile')
+    #     username = screen.ids.username.text
+    #     print(username)
+    #     # Retrieve all book_Date entries from BookSlot table
+    #     cursor.execute('''
+    #                 SELECT book_date FROM BookSlot
+    #             ''')
+    #     book_date_rows = cursor.fetchall()
+    #     # Extract book_date values into a list
+    #     book_dates = [row[0] for row in book_date_rows]
+    #     # Retrieve all book_time entries from BookSlot table
+    #     cursor.execute('''
+    #         SELECT book_time FROM BookSlot
+    #     ''')
+    #     book_time_rows = cursor.fetchall()
+    #     # Extract book_time values into a list
+    #     book_times = [row[0] for row in book_time_rows]
+    #
+    #     # Condition for pay now button
+    #     if session_time in book_times and session_date in book_dates:
+    #         self.show_validation_dialog(f'This {session_time}for {session_date} is already booked ')
+    #
+    #     elif len(session_date) == 10 and len(session_time) >= 9 :
+    #         cursor.execute('''
+    #                                     SELECT id, username FROM users WHERE username = ?
+    #                                 ''', (username,))
+    #         user_row = cursor.fetchone()
+    #
+    #         # If date and time are successfully Selected, insert into the database
+    #         user_id, fetched_username = user_row
+    #         # Insert a new booking into the BookSlot table
+    #         cursor.execute('''
+    #                    INSERT INTO BookSlot (user_id, username, book_date, book_time)
+    #                    VALUES (?, ?, ?, ?)
+    #                ''', (user_id, fetched_username, session_date, session_time))
+    #
+    #         conn.commit()
+    #         self.root.transition.direction = 'left'
+    #         self.root.current = 'payment_page'
+    #     elif len(session_date) == 4 and len(session_time) >= 9 :
+    #         self.show_validation_dialog("Select Date")
+    #     elif len(session_date) == 10 and len(session_time) == 4:
+    #         self.show_validation_dialog("Select Time")
+    #     else:
+    #         self.show_validation_dialog("Select Date and Time")
 
     # payment_page page logic
     # logic for back button in payment_page
@@ -433,10 +436,93 @@ class LoginApp(MDApp):
         cursor.execute("DELETE FROM BookSlot WHERE username = ?", (username,))
         # Commit the changes and close the connection
         conn.commit()
-
-
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
+
+    # Slot_Booking pagelogic
+    def select_timings(self, button, label_text):
+        self.session_time = label_text
+        print(self.session_time)
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen = self.root.current_screen
+        # screen.ids[label_text].md_bg_color = (0, 1, 0, 1)
+
+
+        if label_text == '9am - 11am':
+            screen.ids['9am - 11am'].md_bg_color = (0, 1, 0, 1)
+            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
+        elif label_text == '11am - 1pm':
+            screen.ids['11am - 1pm'].md_bg_color = (0, 1, 0, 1)
+            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
+        elif label_text == '1pm - 3pm':
+            screen.ids['1pm - 3pm'].md_bg_color = (0, 1, 0, 1)
+            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
+        elif label_text == '3pm - 5pm':
+            screen.ids['3pm - 5pm'].md_bg_color = (0, 1, 0, 1)
+            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
+        elif label_text == '5pm - 7pm':
+            screen.ids['5pm - 7pm'].md_bg_color = (0, 1, 0, 1)
+            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['7pm - 9pm'].md_bg_color = (1, 0, 0, 1)
+        elif label_text == '7pm - 9pm':
+            screen.ids['7pm - 9pm'].md_bg_color = (0, 1, 0, 1)
+            screen.ids['9am - 11am'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['11am - 1pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['1pm - 3pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['3pm - 5pm'].md_bg_color = (1, 0, 0, 1)
+            screen.ids['5pm - 7pm'].md_bg_color = (1, 0, 0, 1)
+
+    def slot_save(self, instance, value, date_range):
+        # the date string in "year-month-day" format
+        date_object = datetime.strptime(str(value), "%Y-%m-%d")
+        # Format the date as "day-month-year"
+        formatted_date = date_object.strftime("%d-%m-%Y")
+        print(value)
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen = self.root.current_screen
+        screen.ids.date_choosed.text = formatted_date
+
+    def slot_cancel(self, instance, value):
+        print("cancel")
+        self.screen = Builder.load_file("slot_booking.kv")
+    def slot_date_picker_design2(self):
+        current_date = datetime.now().date()
+        date_dialog = MDDatePicker(year=current_date.year, month=current_date.month, day=current_date.day, size_hint=(None, None), size=(150, 150))
+        date_dialog.bind(on_save=self.slot_save, on_cancel=self.slot_cancel)
+        date_dialog.open()
+
+    def pay_now(self, instance, *args):
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen = self.root.current_screen
+        session_date = screen.ids.date_choosed.text
+
+        if len(session_date) == 10 and hasattr(self, 'session_time') and self.session_time:
+            print(session_date, self.session_time )
+        elif len(session_date) == 13 and hasattr(self, 'session_time') and self.session_time:
+            self.show_validation_dialog("Select Date")
+        elif not hasattr(self, 'session_time') and len(session_date) == 10:
+            self.show_validation_dialog("Select Time")
+        else:
+            self.show_validation_dialog("Select Date and Time")
 
 
 # Run the app
