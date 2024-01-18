@@ -157,6 +157,7 @@ class BaseRegistrationScreen(MDScreen):
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=self.select_path,
+
         )
         self.file_manager.show('/')  # Initial directory when the file manager is opened
 
@@ -408,12 +409,17 @@ class ServiceProviderMain(MDScreen):
     def notification_button_action(self):
         print("Notification")
 
-    def profile_button_action(self):
-        pass
 
-    def slots_button_action(self):
-        pass
-    def support_button_action(self):
-        pass
     def sign_out_button_action(self):
-        pass
+        app = MDApp.get_running_app()
+        app.root.transition.direction = "left"
+        app.root.current = "login"
+class ServiceProfile(MDScreen):
+    pass
+
+class ServiceNotification(MDScreen):
+    pass
+class ServiceSlotAdding(BaseRegistrationScreen):
+    pass
+class ServiceSupport(MDScreen):
+    pass
