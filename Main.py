@@ -1,5 +1,7 @@
 import base64
+import json
 import re
+
 
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
@@ -108,6 +110,7 @@ class LoginApp(MDApp):
     #     # Example: print the user's email address
     #     user_email = Credentials(credentials).id_token["email"]
     #     print(f"User email: {user_email}")
+
 
     def users(self, instance, *args):
         self.screen=Builder.load_file("signup.kv")
@@ -263,11 +266,7 @@ class LoginApp(MDApp):
 
 
     def build(self):
-        # client_id = open("client_id.txt")
-        # client_secret = open("client_secret.txt")
-        # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
-
 
         screen_manager.add_widget(Builder.load_file("main_sc.kv"))
         screen_manager.add_widget(Builder.load_file("login.kv"))
@@ -292,18 +291,23 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceSupport(name="service_support"))
 
         return screen_manager
+    def logout(self):
+        self.root.transition.direction = 'left'
+        self.root.current = 'login'
 
     def show_customer_support_dialog(self):
         dialog = MDDialog(
             title="Contact Customer Support",
-            text="Call Customer Support at: +1-800-123-4567"
+            text="Call Customer Support at: +1-800-123-4567",
+            elevation = 0
         )
         dialog.open()
 
     def show_doctor_dialog(self):
         dialog = MDDialog(
             title="Call On-Call Doctor",
-            text="Call On-Call Doctor at: +1-888-765-4321"
+            text="Call On-Call Doctor at: +1-888-765-4321",
+            elevation=0
         )
         dialog.open()
 
@@ -334,6 +338,7 @@ class LoginApp(MDApp):
         # Create and show the popup
         ticket_popup = MDDialog(
             title="Ticket Raised",
+            elevation=0,
             text=f"Ticket with content '{submitted_text}' has been raised.",
             buttons=[
                 MDFlatButton(
@@ -354,6 +359,7 @@ class LoginApp(MDApp):
         # Display a dialog for invalid login or sign up
         dialog = MDDialog(
             text=message,
+            elevation=0,
             buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
         )
         dialog.open()
@@ -552,4 +558,6 @@ if __name__ == '__main__':
     LabelBase.register(name="MPoppins", fn_regular="Poppins/Poppins-Medium.ttf")
     LabelBase.register(name="BPoppins", fn_regular="Poppins/Poppins-Bold.ttf")
     LabelBase.register(name="OpenSans", fn_regular="fonts/Roboto-Regular.ttf")
-    LoginApp().run()
+    app = LoginApp()
+    Window.bind(on_request_close=app.stop)
+    app.run()
