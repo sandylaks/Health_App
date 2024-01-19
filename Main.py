@@ -75,7 +75,6 @@ class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
 
 # Create the main app class
 class LoginApp(MDApp):
-
     # def google_sign_in(self):
     #     # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
     #     client_id = "407290580474-3ffjk8s253pdlsffjlm9io86aejpcq0m.apps.googleusercontent.com"
@@ -273,12 +272,12 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("login.kv"))
         screen_manager.add_widget(Builder.load_file("signup.kv"))
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
         screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
         screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
         screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
         screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
@@ -508,6 +507,26 @@ class LoginApp(MDApp):
         conn.commit()
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
+
+    # def custom_method(self):
+    #     screen_manager = self.root
+    #     current_screen = screen_manager.current
+    #     print(current_screen)
+    #
+    #
+    #     if current_screen == 'hospital_book':
+    #         target_screen = 'hospital_book'
+    #         screen_manager.transition.direction = "right"
+    #         screen_manager.current = target_screen
+    #     elif current_screen == 'menu_profile':
+    #         target_screen1 = 'client_services'
+    #         screen_manager.transition.direction = "right"
+    #         screen_manager.current = target_screen1
+    #     else:
+    #         # Handle other screens if necessary
+    #         pass
+
+
 
 
 # Run the app
