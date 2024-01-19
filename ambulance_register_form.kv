@@ -199,99 +199,165 @@
                             size_hint:.3,None
                             height:0
 
-                    MDLabel:
-                        text:'Upload Required Documents :'
-                        size_hint_y:.1
-                        halign:'center'
-                        font_size: "16sp"
-
-
-                    MDBoxLayout:
-                        orientation: 'horizontal'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: 0
                         size_hint_y: None
-                        padding: dp(10)
-                        spacing: dp(20)
-                        height: self.minimum_height
+                        height: dp(60)
+                        md_bg_color: 1, 1, 1, 1
 
                         MDLabel:
-                            id: Doc_1
-                            text: " Vehicle's RC"
-                            font_name: "Roboto"
-                            font_size: "13sp"
-                            pos_hint: {"center_x": .5,'center_y':.4}
-#                            size_hint_y: None
-                            height: "15dp"
+                            text:'Upload Required Documents'
+                            size_hint_y:.1
+                            halign:'center'
+                            bold: True
+                            font_size: "16sp"
+                            pos_hint: {"top": 1, "center_x": 0.5}
 
-                        MDFlatButton:
-                            id: upload
-                            text: "UPLOAD"
-                            size_hint:.4,.5
-                            pos_hint: {"center_x": .8,'center_y':.5}
-                            background_color: 0, 0, 0, 0
-                            font_name: "Roboto"
-                            font_size: "12sp"
-                            background_color: 0, 0, 0, 0
-                            color: rgba(1, 1, 1, 255)
-                            on_release: root.open_file_chooser()
-                            canvas.before:
-                                Color:
-                                    rgb: rgba(255, 0, 0, 255)
-                                Line:
-                                    width: 1.2
-                                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
-
-                    MDLabel:
-                        id: selected_file_label
-                        text: "None selected"
-                        italic: True
-                        font_size: "13sp"
-                        color: 0.5, 0.5, 0.5, 1
-                        pos_hint: {"center_x": .545,'center_y':.4}
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: 0
                         size_hint_y: None
-                        height: "30dp"
-
-                    MDBoxLayout:
-                        orientation: 'horizontal'
-                        size_hint_y: None
-                        padding: dp(10)
-                        spacing: dp(20)
-                        height: self.minimum_height
+                        height: dp(60)
+                        padding: dp(20)
+                        spacing: dp(10)
+                        md_bg_color: 1, 1, 1, 1
 
                         MDLabel:
-                            id: Doc_2
+                            text: "Vehicle's RC"
+                            size_hint_y: 1
+                            font_name: "Roboto"
+                            halign: "left"
+#                                valign: "top"
+                            color: 0, 0, 0, 1
+
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            pos_hint: {"center_x": .5,'center_y':.3}
+
+                            MDFlatButton:
+                                size_hint: None, None
+                                size: dp(150), dp(35)  # Adjusted size
+                                halign: "left"
+                                md_bg_color: 0, 0, 0, 0
+                                on_release: root.file_manager_open()
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    MDLabel:
+                                        id: file_selected_1
+                                        text: "Select file"
+                                        italic: True
+                                        multiline: False
+                                        text_color: 0, 0, 0, 1
+                                        theme_text_color: "Custom"
+
+                                        canvas.before:
+                                            Color:
+                                                rgba: 0.5, 0.5, 0.5, 1
+                                            Line:
+                                                points: self.x, self.y, self.x + self.width, self.y
+                                                width: 1
+
+                                    MDIcon:
+                                        icon: "file-upload"
+                                        theme_text_color: "Custom"
+                                        text_color: 1, 0, 0, 1
+                                        size_hint_x: None
+                                        width: dp(24)
+
+                            MDFlatButton:
+                                id: upload
+                                text: "UPLOAD"
+                                size_hint:.4,.5
+                                pos_hint: {"center_x": .8,'center_y':.5}
+                                background_color: 0, 0, 0, 0
+                                font_name: "Roboto"
+                                font_size: "12sp"
+                                background_color: 0, 0, 0, 0
+                                color: rgba(1, 1, 1, 255)
+                                on_release: root.upload_file()
+                                canvas.before:
+                                    Color:
+                                        rgb: rgba(255, 0, 0, 255)
+                                    Line:
+                                        width: 1.2
+                                        rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        spacing: 0
+                        size_hint_y: None
+                        height: dp(60)
+                        padding: dp(20)
+                        spacing: dp(10)
+                        md_bg_color: 1, 1, 1, 1
+
+                        MDLabel:
                             text: "Driver's DL"
+                            size_hint_y: 1
                             font_name: "Roboto"
-                            font_size: "13sp"
-                            pos_hint: {"center_x": .5,'center_y':.4}
-                            height: "15dp"
+                            halign: "left"
+#                                valign: "top"
+                            color: 0, 0, 0, 1
 
-                        MDFlatButton:
-                            id: upload
-                            text: "UPLOAD"
-                            size_hint:.4,.5
-                            pos_hint: {"center_x": .8,'center_y':.5}
-                            background_color: 0, 0, 0, 0
-                            font_name: "Roboto"
-                            font_size: "12sp"
-                            background_color: 0, 0, 0, 0
-                            color: rgba(1, 1, 1, 255)
-                            on_release: root.open_file_chooser()
-                            canvas.before:
-                                Color:
-                                    rgb: rgba(255, 0, 0, 255)
-                                Line:
-                                    width: 1.2
-                                    rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
+                        BoxLayout:
+                            orientation: 'horizontal'
+                            size_hint_y: None
+                            height: self.minimum_height
+                            pos_hint: {"center_x": .5,'center_y':.3}
 
-                    MDLabel:
-                        id: selected_file_label
-                        text: "None selected"
-                        italic: True
-                        font_size: "13sp"
-                        color: 0.5, 0.5, 0.5, 1
-                        pos_hint: {"center_x": .545,'center_y':.4}
-                        size_hint_y: None
-                        height: "30dp"
+
+                            MDFlatButton:
+                                size_hint: None, None
+                                size: dp(150), dp(35)  # Adjusted size
+                                halign: "left"
+                                md_bg_color: 0, 0, 0, 0
+                                on_release: root.file_manager_open()
+
+                                BoxLayout:
+                                    orientation: 'horizontal'
+                                    MDLabel:
+                                        id: file_selected_2
+                                        text: "Select file"
+                                        italic: True
+                                        multiline: False
+                                        text_color: 0, 0, 0, 1
+                                        theme_text_color: "Custom"
+
+                                        canvas.before:
+                                            Color:
+                                                rgba: 0.5, 0.5, 0.5, 1
+                                            Line:
+                                                points: self.x, self.y, self.x + self.width, self.y
+                                                width: 1
+
+                                    MDIcon:
+                                        icon: "file-upload"
+                                        theme_text_color: "Custom"
+                                        text_color: 1, 0, 0, 1
+                                        size_hint_x: None
+                                        width: dp(24)
+
+                            MDFlatButton:
+                                id: upload
+                                text: "UPLOAD"
+                                size_hint:.4,.5
+                                pos_hint: {"center_x": .8,'center_y':.5}
+                                background_color: 0, 0, 0, 0
+                                font_name: "Roboto"
+                                font_size: "12sp"
+                                background_color: 0, 0, 0, 0
+                                color: rgba(1, 1, 1, 255)
+                                on_release: root.upload_file()
+                                canvas.before:
+                                    Color:
+                                        rgb: rgba(255, 0, 0, 255)
+                                    Line:
+                                        width: 1.2
+                                        rounded_rectangle: self.x, self.y, self.width, self.height, 5, 5, 5, 5, 100
 
                     BoxLayout:
                         orientation: 'vertical'
