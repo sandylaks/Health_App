@@ -144,6 +144,12 @@ class BaseRegistrationScreen(MDScreen):
     #         selected_file_label.text = f"{selected_file}"
     #
     #     self.file_chooser_popup.dismiss()
+
+    def show_tooltip(self, text, tooltip_text):
+        tooltip = MDTooltip(text=tooltip_text)
+        tooltip.ids.container.add_widget(MDLabel(text=text))
+        tooltip.show()
+
     def file_manager_open(self):
         self.connection = sqlite3.connect('users.db')  # Replace with your database name
         self.cursor = self.connection.cursor()
@@ -162,16 +168,26 @@ class BaseRegistrationScreen(MDScreen):
         self.file_manager.show('/')  # Initial directory when the file manager is opened
 
     def select_path(self, path):
-        self.ids.file_path.text = path
-        self.file_manager.close()
+        if self.ids == "file_selected_1":
+            self.ids.file_selected_1.text = path
+            self.file_manager.close()
+        else:
+            self.ids.file_selected_2.text = path
+            self.file_manager.close()
 
     def upload_file(self):
-        file_path = self.ids.file_path.text
+        if self.ids == "file_selected_1":
+            file_path = self.ids.file_selected_1.text
+        else:
+            file_path = self.ids.file_selected_2.text
         if file_path:
             file_name = os.path.basename(file_path)
             file_data = self.read_file(file_path)
             self.save_to_database(file_name, file_data)
-            self.ids.file_path.text = file_name
+            if self.ids == "file_selected_1":
+                self.ids.file_selected_1.text = f'{file_name} uploded'
+            else:
+                self.ids.file_selected_2.text = f'{file_name} uploded'
 
         # if file_path and os.path.isfile(file_path):
         #     self.ids.file_display.source = file_path
