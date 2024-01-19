@@ -39,6 +39,7 @@
                         size_hint:.9,None
                         height: "25dp"
                         multiline: False
+                        write_tab: False
                         color_mode: 'custom'
                         line_color_focus: 0, 0, 0, 1
                         text_color_focus:0,0,0,1
@@ -54,28 +55,46 @@
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
                         multiline: False
+                        write_tab: False
                         color_mode: 'custom'
                         line_color_focus: 0, 0, 0, 1
                         text_color_focus:0,0,0,1
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
 
-
-                    MDTextField:
-                        id:service_provider_password
-                        hint_text: "Enter Password"
-#                        required: True
-                        password: True
-                        font_name: "Roboto"
+                    MDFloatLayout:
+                        size_hint: .9,None
                         pos_hint:{'center_x':.5}
-                        size_hint:.9,None
-                        height: "30dp"
-                        multiline: False
-                        color_mode: 'custom'
-                        line_color_focus: 0, 0, 0, 1
-                        text_color_focus:0,0,0,1
-                        hint_text_color:0,0,0,1
-                        hint_text_color_focus:0,0,0,.5
+                        MDTextField:
+                            id:service_provider_password
+                            hint_text: "Enter Password"
+    #                        required: True
+                            password: True
+                            font_name: "Roboto"
+                            pos_hint:{'center_x':.5}
+                            size_hint:1,None
+                            height: "30dp"
+                            multiline: False
+                            write_tab: False
+                            color_mode: 'custom'
+                            line_color_focus: 0, 0, 0, 1
+                            text_color_focus:0,0,0,1
+                            hint_text_color:0,0,0,1
+                            hint_text_color_focus:0,0,0,.5
+                        MDIconButton:
+                            id: show_password_button
+                            pos_hint: {"center_x": .9, "center_y": .25}
+                            active: False  # Initial state is password hidden
+                            text_color: [0, 0, 0, 1]
+                            opposite_colors: True
+                            background_palette: "Grey"
+                            background_hue: "500"
+                            elevation_normal: 10
+                            on_release:
+                                self.active = not self.active
+                                service_provider_password.password = not self.active
+                            Image:
+                                source: "images/eye-off.png" if not show_password_button.active else "images/eye.png"
 
 
                     MDTextField:
@@ -87,6 +106,7 @@
                         size_hint:.9,None
                         height: "30dp"
                         multiline: False
+                        write_tab: False
                         color_mode: 'custom'
                         line_color_focus: 0, 0, 0, 1
                         text_color_focus:0,0,0,1
@@ -102,6 +122,7 @@
                         size_hint:.9,None
                         height: "30dp"
                         multiline: False
+                        write_tab: False
                         color_mode: 'custom'
                         line_color_focus: 0, 0, 0, 1
                         text_color_focus:0,0,0,1
@@ -118,6 +139,7 @@
                         size_hint:.9,None
                         cursor_width: "2sp"
                         readonly: True
+                        write_tab: False
                         theme_text_color: "Custom"
                         icon_right: 'chevron-down'
                         color_mode: 'custom'
@@ -135,6 +157,7 @@
                         size_hint:.9,None
                         cursor_width: "2sp"
                         readonly: True
+                        write_tab: False
                         theme_text_color: "Custom"
                         icon_right: 'chevron-down'
                         color_mode: 'custom'
@@ -156,19 +179,21 @@
                         size_hint:.9,None
                         height: "30dp"
                         multiline: False
+                        write_tab: False
                         color_mode: 'custom'
                         line_color_focus: 0, 0, 0, 1
                         text_color_focus:0,0,0,1
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
                     MDTextField:
-                        id:extra_info
+                        id:hospital_name
                         hint_text: "Hospital Name"
 #                        required: True
                         font_name: "Roboto"
                         font_size: "14sp"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
+                        write_tab: False
                         height: "30dp"
                         multiline: False
                         color_mode: 'custom'
@@ -177,13 +202,14 @@
                         hint_text_color:0,0,0,1
                         hint_text_color_focus:0,0,0,.5
                     MDTextField:
-                        id:extra_info2
+                        id:established_year
                         hint_text: "Established Year"
 #                        required: True
                         font_name: "Roboto"
                         font_size: "14sp"
                         pos_hint:{'center_x':.5}
                         size_hint:.9,None
+                        write_tab: False
                         height: "30dp"
                         multiline: False
                         color_mode: 'custom'
@@ -302,7 +328,7 @@
                         background_color: 0, 0, 0, 0
                         font_name: "Roboto"
                         on_release:
-                            root.registration_submit_button(self)
+                            root.hospital_submit_button(self)
                         canvas.before:
                             Color:
                                 rgb: rgba(255, 0, 0, 255)

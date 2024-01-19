@@ -42,7 +42,7 @@ class BaseRegistrationScreen(MDScreen):
     def open_dropdown(self, widget):
         if not self.menu:
             # Dropdown items
-            cities = ["India", "America", "Russia", "China"]
+            cities = ["India"]
             items = [
                 {
                     "text": city,
@@ -110,7 +110,7 @@ class BaseRegistrationScreen(MDScreen):
 
 
     def on_save(self, instance, value, date_range):
-        self.ids.extra_info2.text = str(value)
+        self.ids.established_year.text = str(value)
 
     # click Cancel
     def on_cancel(self, instance, value):
@@ -121,7 +121,7 @@ class BaseRegistrationScreen(MDScreen):
         date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
-        self.ids.extra_info2.text=''
+        self.ids.established_year.text=''
 #------------------------------upload--docs--------------------------
     # def open_file_chooser(self):
     #     file_chooser = FileChooserListView(filters=["*.pdf", "*.doc", "*.docx", "*.png", "*.jpg"])
@@ -208,17 +208,82 @@ class BaseRegistrationScreen(MDScreen):
 
 
 #----------------------------------registration validation-------------
-    def registration_submit_button(self, instance):
+    def hospital_submit_button(self, instance):
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
         service_provider_password = self.ids.service_provider_password.text
         service_provider_phoneno = self.ids.service_provider_phoneno.text
         service_provider_address = self.ids.service_provider_address.text
-        dropdown_nation=self.ids.dropdown_nation.text
-        dropdown_state=self.ids.dropdown_state.text
-        service_provider_pincode=self.ids.service_provider_pincode.text
-        extra_info=self.ids.extra_info.text
-        extra_info2=self.ids.extra_info2.text
+        dropdown_nation = self.ids.dropdown_nation.text
+        dropdown_state = self.ids.dropdown_state.text
+        service_provider_pincode = self.ids.service_provider_pincode.text
+        hospital_name = self.ids.hospital_name.text
+        established_year = self.ids.established_year.text
+
+
+
+        # Validation logic
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        is_valid_password, password_error_message = self.validate_password(service_provider_password)
+
+        if not service_provider_name:
+            self.ids.service_provider_name.error = True
+            self.ids.service_provider_name.helper_text = "This field is required."
+            self.ids.service_provider_name.required = True
+        elif not service_provider_email or not re.match(email_regex, service_provider_email):
+            self.ids.service_provider_email.error = True
+            self.ids.service_provider_email.helper_text = "Invalid email format."
+            self.ids.service_provider_email.required = True
+        elif not is_valid_password:
+            self.ids.service_provider_password.error = True
+            self.ids.service_provider_password.helper_text =  password_error_message
+            self.ids.service_provider_password.required = True
+        elif not service_provider_phoneno or len(service_provider_phoneno) != 10:
+            self.ids.service_provider_phoneno.error = True
+            self.ids.service_provider_phoneno.helper_text = "Invalid phone number (10 digits required)."
+            self.ids.service_provider_phoneno.required = True
+        elif not service_provider_address:
+            self.ids.service_provider_address.error = True
+            self.ids.service_provider_address.helper_text = "This field is required."
+            self.ids.service_provider_address.required = True
+        elif not dropdown_nation:
+            self.ids.dropdown_nation.error = True
+            self.ids.dropdown_nation.helper_text = "Please select a nation."
+            # self.ids.dropdown_nation.required = True
+        elif not dropdown_state:
+            self.ids.dropdown_state.error = True
+            self.ids.dropdown_state.helper_text = "Please select a state."
+            # self.ids.dropdown_state.required = True
+        elif not service_provider_pincode or len(service_provider_pincode) != 6:
+            self.ids.service_provider_pincode.error = True
+            self.ids.service_provider_pincode.helper_text = "Invalid pincode (6 digits required)."
+            self.ids.service_provider_pincode.required = True
+        elif not hospital_name:
+            self.ids.extra_info.error = True
+            self.ids.extra_info.helper_text = "This field is required."
+            self.ids.extra_info.required = True
+        elif not established_year:
+            self.ids.extra_info2.error = True
+            self.ids.extra_info2.helper_text = "This field is required."
+            # self.ids.est_year.required = True
+
+        else:
+
+            app = MDApp.get_running_app()
+            # app.root.transition.direction = "left"
+            # app.root.current = "login"
+
+    def ambulance_submit_button(self, instance):
+        service_provider_name = self.ids.service_provider_name.text
+        service_provider_email = self.ids.service_provider_email.text
+        service_provider_password = self.ids.service_provider_password.text
+        service_provider_phoneno = self.ids.service_provider_phoneno.text
+        service_provider_address = self.ids.service_provider_address.text
+        dropdown_nation = self.ids.dropdown_nation.text
+        dropdown_state = self.ids.dropdown_state.text
+        service_provider_pincode = self.ids.service_provider_pincode.text
+        extra_info = self.ids.extra_info.text
+        extra_info2 = self.ids.extra_info2.text
         # print(service_provider_name)
         # print(service_provider_email)
         # print(service_provider_password)
@@ -276,14 +341,78 @@ class BaseRegistrationScreen(MDScreen):
             # self.ids.est_year.required = True
 
         else:
-            # All validations passed; proceed with registration process
-            #If validation is successful, insert into the database
-            # cursor.execute('''
-            #             INSERT INTO users (username, email, password, phone, pincode)
-            #             VALUES (?, ?, ?, ?, ?)
-            #         ''', (username, email, password, phone, pincode))
-            # conn.commit()
-            # Navigate to the success screen
+            app = MDApp.get_running_app()
+            app.root.transition.direction = "left"
+            app.root.current = "login"
+
+    def gym_submit_button(self, instance):
+        service_provider_name = self.ids.service_provider_name.text
+        service_provider_email = self.ids.service_provider_email.text
+        service_provider_password = self.ids.service_provider_password.text
+        service_provider_phoneno = self.ids.service_provider_phoneno.text
+        service_provider_address = self.ids.service_provider_address.text
+        dropdown_nation = self.ids.dropdown_nation.text
+        dropdown_state = self.ids.dropdown_state.text
+        service_provider_pincode = self.ids.service_provider_pincode.text
+        extra_info = self.ids.extra_info.text
+        extra_info2 = self.ids.extra_info2.text
+        # print(service_provider_name)
+        # print(service_provider_email)
+        # print(service_provider_password)
+        # print(service_provider_address)
+        # print(service_provider_phoneno)
+        # print(dropdown_nation)
+        # print(dropdown_state)
+        # print(service_provider_pincode)
+        # print(extra_info)
+        # print(extra_info2)
+
+        # Validation logic
+        email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        is_valid_password, password_error_message = self.validate_password(service_provider_password)
+
+        if not service_provider_name:
+            self.ids.service_provider_name.error = True
+            self.ids.service_provider_name.helper_text = "This field is required."
+            self.ids.service_provider_name.required = True
+        elif not service_provider_email or not re.match(email_regex, service_provider_email):
+            self.ids.service_provider_email.error = True
+            self.ids.service_provider_email.helper_text = "Invalid email format."
+            self.ids.service_provider_email.required = True
+        elif not is_valid_password:
+            self.ids.service_provider_password.error = True
+            self.ids.service_provider_password.helper_text =  password_error_message
+            self.ids.service_provider_password.required = True
+        elif not service_provider_phoneno or len(service_provider_phoneno) != 10:
+            self.ids.service_provider_phoneno.error = True
+            self.ids.service_provider_phoneno.helper_text = "Invalid phone number (10 digits required)."
+            self.ids.service_provider_phoneno.required = True
+        elif not service_provider_address:
+            self.ids.service_provider_address.error = True
+            self.ids.service_provider_address.helper_text = "This field is required."
+            self.ids.service_provider_address.required = True
+        elif not dropdown_nation:
+            self.ids.dropdown_nation.error = True
+            self.ids.dropdown_nation.helper_text = "Please select a nation."
+            # self.ids.dropdown_nation.required = True
+        elif not dropdown_state:
+            self.ids.dropdown_state.error = True
+            self.ids.dropdown_state.helper_text = "Please select a state."
+            # self.ids.dropdown_state.required = True
+        elif not service_provider_pincode or len(service_provider_pincode) != 6:
+            self.ids.service_provider_pincode.error = True
+            self.ids.service_provider_pincode.helper_text = "Invalid pincode (6 digits required)."
+            self.ids.service_provider_pincode.required = True
+        elif not extra_info:
+            self.ids.extra_info.error = True
+            self.ids.extra_info.helper_text = "This field is required."
+            self.ids.extra_info.required = True
+        elif not extra_info2:
+            self.ids.extra_info2.error = True
+            self.ids.extra_info2.helper_text = "This field is required."
+            # self.ids.est_year.required = True
+
+        else:
             app = MDApp.get_running_app()
             app.root.transition.direction = "left"
             app.root.current = "login"

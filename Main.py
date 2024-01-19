@@ -253,6 +253,10 @@ class LoginApp(MDApp):
             screen2 = self.root.get_screen('client_services')
             screen2.ids.username.text = username
             screen2.ids.email.text = email
+            self.screen = Builder.load_file("hospital_book.kv")
+            screen2 = self.root.get_screen('hospital_book')
+            screen2.ids.username.text = username
+            screen2.ids.email.text = email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
@@ -267,17 +271,17 @@ class LoginApp(MDApp):
     def build(self):
         screen_manager = ScreenManager()
 
-        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        screen_manager.add_widget(Builder.load_file("login.kv"))
-        screen_manager.add_widget(Builder.load_file("signup.kv"))
-        screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        screen_manager.add_widget(ServiceProvider("service_provider"))
+        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        # screen_manager.add_widget(Builder.load_file("login.kv"))
+        # screen_manager.add_widget(Builder.load_file("signup.kv"))
+        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        # screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
