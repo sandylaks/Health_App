@@ -31,7 +31,8 @@ from anvil.tables import app_tables
 import anvil.tables.query as q
 anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
 
-
+# import razorpay
+# import webbrowser
 
 
 import sqlite3
@@ -269,18 +270,18 @@ class LoginApp(MDApp):
         screen_manager = ScreenManager()
 
 
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(ServiceProvider("service_provider"))
-        # screen_manager.add_widget(ServiceRegister("service_register_form"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
         screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
@@ -652,6 +653,36 @@ class LoginApp(MDApp):
             self.show_validation_dialog("Select Time")
         else:
             self.show_validation_dialog("Select Date and Time")
+
+#-------------------------------Razorpay-flow------------------------------------
+
+    # def razor_pay(self, instance):
+    #     # Replace 'your_api_key' with your Razorpay API key
+    #     api_key = 'your_api_key'
+    #
+    #     # Replace the following details with your actual payment details
+    #     payment_data = {
+    #         'amount': 100,  # Replace with the actual amount in paise
+    #         'currency': 'INR',  # Replace with the actual currency code
+    #         'description': 'Service Charge',  # Replace with the actual description
+    #         'order_id': 'order_123',  # Replace with the actual order ID
+    #         'name': 'Oxyvive',  # Replace with the name of your app
+    #         'prefill': {
+    #             'contact': 'username',  # Replace with the user's contact details
+    #             'email': 'clientemail@gmail.com',  # Replace with the user's email
+    #         },
+    #     }
+    #
+    #     razorpay_client = razorpay(api_key)
+    #     order = razorpay_client.order.create(data=payment_data)
+    #
+    #     # Open the Razorpay payment gateway URL in a web browser
+    #     payment_url = order['short_url']
+    #     self.open_payment_gateway(payment_url)
+    #
+    # def open_payment_gateway(self, payment_url):
+    #     # Replace this with actual code to open the payment gateway URL
+    #     print(f"Opening Razorpay payment gateway: {payment_url}")
 
 
 # Run the app
