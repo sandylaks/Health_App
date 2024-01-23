@@ -28,6 +28,7 @@ from kivy.uix.popup import Popup
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
+from ws4py.websocket import WebSocket
 import anvil.server
 from anvil.tables import app_tables
 import anvil.tables.query as q
@@ -250,7 +251,20 @@ class LoginApp(MDApp):
             screen.ids.email.text = f"Email : {email}"
             screen.ids.phone.text = f"Phone no : {phone}"
             screen.ids.pincode.text = f"Pincode : {pincode}"
+            self.screen = Builder.load_file("menu_profile_second.kv")
+            screen2 = self.root.get_screen('menu_profile_second')
+            screen2.ids.username.text = f"Username : {username}"
+            screen2.ids.email.text = f"Email : {email}"
+            screen2.ids.phone.text = f"Phone no : {phone}"
+            screen2.ids.pincode.text = f"Pincode : {pincode}"
             self.screen = Builder.load_file("client_services.kv")
+            screen3 = self.root.get_screen('client_services')
+            screen3.ids.username.text = username
+            screen3.ids.email.text = email
+            self.screen = Builder.load_file("hospital_book.kv")
+            screen4 = self.root.get_screen('hospital_book')
+            screen4.ids.username.text = username
+            screen4.ids.email.text = email
             screen2 = self.root.get_screen('client_services')
             screen2.ids.username.text = username
             screen2.ids.email.text = email
@@ -281,6 +295,11 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
         screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
         screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
         screen_manager.add_widget(Builder.load_file("menu_support.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(ServiceProvider("service_provider"))
@@ -548,26 +567,6 @@ class LoginApp(MDApp):
         conn.commit()
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
-
-    # def custom_method(self):
-    #     screen_manager = self.root
-    #     current_screen = screen_manager.current
-    #     print(current_screen)
-    #
-    #
-    #     if current_screen == 'hospital_book':
-    #         target_screen = 'hospital_book'
-    #         screen_manager.transition.direction = "right"
-    #         screen_manager.current = target_screen
-    #     elif current_screen == 'menu_profile':
-    #         target_screen1 = 'client_services'
-    #         screen_manager.transition.direction = "right"
-    #         screen_manager.current = target_screen1
-    #     else:
-    #         # Handle other screens if necessary
-    #         pass
-
-
 
 
 # Run the app

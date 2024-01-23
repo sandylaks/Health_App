@@ -224,6 +224,8 @@ class BaseRegistrationScreen(MDScreen):
 
 
 #----------------------------------registration validation-------------
+    def registration_submit_button(self, instance):
+
     def hospital_submit_button(self, instance):
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
@@ -431,7 +433,7 @@ class BaseRegistrationScreen(MDScreen):
         else:
             app = MDApp.get_running_app()
             app.root.transition.direction = "left"
-            app.root.current = "login"
+            app.root.current = "service_provider_main_page"
 
     # password validation
     def validate_password(self, password):
