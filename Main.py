@@ -28,12 +28,14 @@ from kivy.uix.popup import Popup
 from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
+from ws4py.websocket import WebSocket
 import anvil.server
 from anvil.tables import app_tables
 import anvil.tables.query as q
 anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
 
-
+# import razorpay
+# import webbrowser
 
 
 import sqlite3
@@ -249,7 +251,20 @@ class LoginApp(MDApp):
             screen.ids.email.text = f"Email : {email}"
             screen.ids.phone.text = f"Phone no : {phone}"
             screen.ids.pincode.text = f"Pincode : {pincode}"
+            self.screen = Builder.load_file("menu_profile_second.kv")
+            screen2 = self.root.get_screen('menu_profile_second')
+            screen2.ids.username.text = f"Username : {username}"
+            screen2.ids.email.text = f"Email : {email}"
+            screen2.ids.phone.text = f"Phone no : {phone}"
+            screen2.ids.pincode.text = f"Pincode : {pincode}"
             self.screen = Builder.load_file("client_services.kv")
+            screen3 = self.root.get_screen('client_services')
+            screen3.ids.username.text = username
+            screen3.ids.email.text = email
+            self.screen = Builder.load_file("hospital_book.kv")
+            screen4 = self.root.get_screen('hospital_book')
+            screen4.ids.username.text = username
+            screen4.ids.email.text = email
             screen2 = self.root.get_screen('client_services')
             screen2.ids.username.text = username
             screen2.ids.email.text = email
@@ -271,17 +286,23 @@ class LoginApp(MDApp):
     def build(self):
         screen_manager = ScreenManager()
 
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        # screen_manager.add_widget(ServiceProvider("service_provider"))
+
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
@@ -503,6 +524,35 @@ class LoginApp(MDApp):
         else:
             self.show_validation_dialog("Select Date and Time")
 
+#-------------------------------Razorpay-flow------------------------------------
+
+    # def razor_pay(self, instance):
+    #     # Replace 'your_api_key' with your Razorpay API key
+    #     api_key = 'your_api_key'
+    #
+    #     # Replace the following details with your actual payment details
+    #     payment_data = {
+    #         'amount': 100,  # Replace with the actual amount in paise
+    #         'currency': 'INR',  # Replace with the actual currency code
+    #         'description': 'Service Charge',  # Replace with the actual description
+    #         'order_id': 'order_123',  # Replace with the actual order ID
+    #         'name': 'Oxyvive',  # Replace with the name of your app
+    #         'prefill': {
+    #             'contact': 'username',  # Replace with the user's contact details
+    #             'email': 'clientemail@gmail.com',  # Replace with the user's email
+    #         },
+    #     }
+    #
+    #     razorpay_client = razorpay(api_key)
+    #     order = razorpay_client.order.create(data=payment_data)
+    #
+    #     # Open the Razorpay payment gateway URL in a web browser
+    #     payment_url = order['short_url']
+    #     self.open_payment_gateway(payment_url)
+    #
+    # def open_payment_gateway(self, payment_url):
+    #     # Replace this with actual code to open the payment gateway URL
+    #     print(f"Opening Razorpay payment gateway: {payment_url}")
     # payment_page page logic
     # logic for back button in payment_page
     def payment_page_backButton(self):
@@ -517,26 +567,6 @@ class LoginApp(MDApp):
         conn.commit()
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
-
-    # def custom_method(self):
-    #     screen_manager = self.root
-    #     current_screen = screen_manager.current
-    #     print(current_screen)
-    #
-    #
-    #     if current_screen == 'hospital_book':
-    #         target_screen = 'hospital_book'
-    #         screen_manager.transition.direction = "right"
-    #         screen_manager.current = target_screen
-    #     elif current_screen == 'menu_profile':
-    #         target_screen1 = 'client_services'
-    #         screen_manager.transition.direction = "right"
-    #         screen_manager.current = target_screen1
-    #     else:
-    #         # Handle other screens if necessary
-    #         pass
-
-
 
 
 # Run the app

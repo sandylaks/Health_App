@@ -165,8 +165,6 @@ class BaseRegistrationScreen(MDScreen):
                 self.save_to_database(file_name, file_data)
                 setattr(self.field_id, 'text', file_name)
                 print(file_name)
-
-
     def read_file(self, file_path):
         with open(file_path, 'rb') as file:
             return file.read()
@@ -181,6 +179,7 @@ class BaseRegistrationScreen(MDScreen):
 
 #----------------------------------registration validation-------------
     def registration_submit_button(self, register_id):
+
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
         service_provider_password = self.ids.service_provider_password.text
@@ -309,6 +308,7 @@ class BaseRegistrationScreen(MDScreen):
             # app = MDApp.get_running_app()
             # app.root.transition.direction = "left"
             # app.root.current = "login"
+
 
     # password validation
     def validate_password(self, password):
