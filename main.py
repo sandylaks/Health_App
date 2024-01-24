@@ -31,8 +31,9 @@ from kivy.uix.widget import Widget
 from ws4py.websocket import WebSocket
 import anvil.server
 from anvil.tables import app_tables
+import requests
 import anvil.tables.query as q
-anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+
 
 # import razorpay
 # import webbrowser
@@ -215,34 +216,64 @@ class LoginApp(MDApp):
         # All checks passed; the password is valid
         return True, "Password is valid"
 
-    def login_page(self,  instance, *args):
+    def login_page(self, instance, *args):
         self.screen = Builder.load_file("login.kv")
-
         screen1 = self.root.current_screen
         email = screen1.ids.login_email.text
         password = screen1.ids.login_password.text
-        # Check if the user exists in the database for login
-        cursor.execute('''
-                    SELECT * FROM users
-                    WHERE email = ? AND password = ?
-                    ''', (email, password))
-        user = cursor.fetchone()
 
-        # phone = float()
-        # pincode = float()
-        # Check if the user exists in the database for login
-        user = app_tables.users.get(
-            email=email,
-            password=password,
-        )
+        # Check internet
+        def is_connected():
+            try:
+                # Attempt to make a simple HTTP request to check connectivity
+                response = requests.get('https://www.google.com', timeout=5)
+                response.raise_for_status()  # Raise an exception for HTTP errors
+                return True
+            except requests.RequestException:
+                return False
 
-        if user:
-            # Login successful
+        def get_database_connection():
+            if is_connected():
+                # Use Anvil's database connection
+                return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+            else:
+                # Use SQLite database connection
+                return sqlite3.connect('users.db')
+
+        connection = get_database_connection()
+        user_anvil = None
+        user_sqlite = None
+        try:
+            if is_connected():
+                # Fetch user from Anvil's database
+                user_anvil = app_tables.users.get(
+                    email=email,
+                    password=password,
+                )
+            else:
+                # Fetch user from SQLite database
+                cursor = connection.cursor()
+                cursor.execute('''
+                            SELECT * FROM users
+                            WHERE email = ? AND password = ?
+                        ''', (email, password))
+                user_sqlite = cursor.fetchone()
+        finally:
+            # Close the connection
+            if connection and is_connected():
+                connection.close()
+        if user_anvil or user_sqlite:
             print("Login successful.")
-
-            username = user['username']
-            phone = str(user['phone'])
-            pincode = str(user['pincode'])
+            if user_anvil:
+                username = str(user_anvil["username"])
+                email = str(user_anvil["email"])
+                phone = str(user_anvil["phone"])
+                pincode = str(user_anvil["pincode"])
+            elif user_sqlite:
+                username = str(user_sqlite[1])
+                email = str(user_sqlite[2])
+                phone = str(user_sqlite[4])
+                pincode = str(user_sqlite[5])
 
             self.screen = Builder.load_file("menu_profile.kv")
             screen = self.root.get_screen('menu_profile')
@@ -264,13 +295,6 @@ class LoginApp(MDApp):
             screen4 = self.root.get_screen('hospital_book')
             screen4.ids.username.text = username
             screen4.ids.email.text = email
-            screen2 = self.root.get_screen('client_services')
-            screen2.ids.username.text = username
-            screen2.ids.email.text = email
-            self.screen = Builder.load_file("hospital_book.kv")
-            screen2 = self.root.get_screen('hospital_book')
-            screen2.ids.username.text = username
-            screen2.ids.email.text = email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
@@ -280,7 +304,6 @@ class LoginApp(MDApp):
             screen1.ids.login_email.error = True
             screen1.ids.login_email.helper_text = "Invalid email or password"
             screen1.ids.login_password.error = True
-
 
     def build(self):
         screen_manager = ScreenManager()
@@ -572,7 +595,7 @@ class LoginApp(MDApp):
 if __name__ == '__main__':
     LabelBase.register(name="MPoppins", fn_regular="Poppins/Poppins-Medium.ttf")
     LabelBase.register(name="BPoppins", fn_regular="Poppins/Poppins-Bold.ttf")
-    LabelBase.register(name="OpenSans", fn_regular="fonts/Roboto-Regular.ttf")
+
     app = LoginApp()
     Window.bind(on_request_close=app.stop)
     app.run()

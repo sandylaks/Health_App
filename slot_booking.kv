@@ -28,7 +28,6 @@ MDScreen:
                     spacing: 0
                     size_hint_y: None
                     height: dp(60)
-                    md_bg_color: 1, 1, 1, 1
 
                     MDCard:
                         orientation: 'vertical'
@@ -45,6 +44,7 @@ MDScreen:
 
                         MDLabel:
                             text: "Book a Slot"
+                            font_name: "Roboto"
                             size_hint_x: 1
                             halign: "center"
                             valign: "top"
@@ -64,6 +64,7 @@ MDScreen:
                                 MDLabel:
                                     id: date_choosed
                                     text: "Choose a date"
+                                    font_name: "Roboto"
                                     text_color: 0, 0, 0, 1
                                     theme_text_color: "Custom"
 
@@ -87,6 +88,7 @@ MDScreen:
                     height: "45dp"
                     MDLabel:
                         text: "Select Timings"
+                        font_name: "Roboto"
                         size_hint_x: 1
                         halign: "center"
                         valign: "top"
@@ -155,6 +157,7 @@ MDScreen:
                                     MDLabel:
                                         id: FirstSlot
                                         text: "9am - 11am"
+                                        font_name: "Roboto"
                                         halign: "center"
                                         text_color: 0, 0, 0, 1
                                         theme_text_color: "Custom"
@@ -188,6 +191,7 @@ MDScreen:
                                     MDLabel:
                                         id: SecondSlot
                                         text: "11am - 1pm"
+                                        font_name: "Roboto"
                                         halign: "center"
                                         text_color: 0, 0, 0, 1
                                         theme_text_color: "Custom"
@@ -221,6 +225,7 @@ MDScreen:
                                     MDLabel:
                                         id: ThirdSlot
                                         text: "1pm - 3pm"
+                                        font_name: "Roboto"
                                         halign: "center"
                                         text_color: 0, 0, 0, 1
                                         theme_text_color: "Custom"
@@ -253,6 +258,7 @@ MDScreen:
                                     MDLabel:
                                         id: ForthSlot
                                         text: "3pm - 5pm"
+                                        font_name: "Roboto"
                                         halign: "center"
                                         text_color: 0, 0, 0, 1
                                         theme_text_color: "Custom"
@@ -287,6 +293,7 @@ MDScreen:
                                     MDLabel:
                                         id: FifthSlot
                                         text: "5pm - 7pm"
+                                        font_name: "Roboto"
                                         halign: "center"
                                         text_color: 0, 0, 0, 1
                                         theme_text_color: "Custom"
@@ -319,6 +326,7 @@ MDScreen:
                                     MDLabel:
                                         id: SixthSlot
                                         text: "7pm - 9pm"
+                                        font_name: "Roboto"
                                         halign: "center"
                                         text_color: 0, 0, 0, 1
                                         theme_text_color: "Custom"
@@ -329,7 +337,8 @@ MDScreen:
             size_hint_y:.1
             size_hint_y: .1
             background_color: 0, 0, 0, 0
-            font_name: "BPoppins"
+            font_name: "Roboto"
+            bold: True
             on_release:
                 app.pay_now(self)
             canvas.before:
