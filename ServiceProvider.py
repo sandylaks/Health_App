@@ -1,5 +1,10 @@
+import io
+
 import kivy
 import re
+
+from anvil import BlobMedia
+from anvil.tables import app_tables
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -21,13 +26,19 @@ from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.button import Button
 from kivymd.uix.filemanager import MDFileManager
 import sqlite3
-import os
-import base64
 from kivy.uix.image import AsyncImage
 from kivy.uix.image import Image
 from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivymd.uix.behaviors import CommonElevationBehavior
+import anvil.server
+anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+import anvil.media
+import os
+import base64
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
 
 
 Builder.load_file("service_register_form.kv")
@@ -69,7 +80,7 @@ class BaseRegistrationScreen(MDScreen):
 
     def select_city(self, selected_city):
         # Callback function when a city is selected
-        self.ids.dropdown_nation.text = selected_city  # Update the text field
+        self.ids.Nation.text = selected_city  # Update the text field
         self.menu.dismiss()
     def open_dropdown2(self,widget):
 
@@ -103,13 +114,13 @@ class BaseRegistrationScreen(MDScreen):
             self.menu2.dismiss()  # Dismiss if already open
 
         # Set the caller and open the dropdown menu
-        self.menu2.caller = self.ids.dropdown_state
+        self.menu2.caller = self.ids.State
         self.menu2.open()
 
     def select_state(self, select_state):
         # Callback function when a city is selected
         #print(select_state)
-        self.ids.dropdown_state.text = select_state  # Update the text field
+        self.ids.State.text = select_state  # Update the text field
         self.menu2.dismiss()  # Dismiss the menu
 
 
@@ -130,19 +141,9 @@ class BaseRegistrationScreen(MDScreen):
     field_id=None
     def file_manager_open(self, field_id):
         self.field_id = getattr(self.ids, field_id)
-        self.connection = sqlite3.connect('users.db')  # Replace with your database name
-        self.cursor = self.connection.cursor()
-        self.cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS documents (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       file_name TEXT,
-                       file_data BLOB
-                   )
-               ''')
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=self.select_path,
-
 
         )
         self.file_manager.show('/')  # Initial directory when the file manager is opened
@@ -152,54 +153,46 @@ class BaseRegistrationScreen(MDScreen):
         self.path=path
         setattr(self.field_id, 'text', path)
         self.file_manager.close()
+    file_data1 = None
+    file_data2 = None
+    file_name1 = None
+    file_name2 = None
 
-    def upload_file(self):
-        file_path = None
-        if getattr(self.field_id, 'text', '') == self.path:
-            print("Setting path for file_path")
-            file_path = getattr(self.field_id, 'text', '')
-            if file_path:
-                file_name = os.path.basename(file_path)
-                print(file_name)
-                file_data = self.read_file(file_path)
-                self.save_to_database(file_name, file_data)
-                setattr(self.field_id, 'text', file_name)
-                print(file_name)
+    def upload_file(self, upload_id):
+        file_path = getattr(self.field_id, 'text', '')
+        if file_path:
+            file_name = os.path.basename(file_path)
+            file_data = self.read_file(file_path)
+            setattr(self.field_id, 'text', file_name)
+
+            if upload_id == "file_path":
+                self.file_data1 = file_data
+                self.file_name1 = file_name
+                pdf_output_path = "output.pdf"
+            elif upload_id == "file_path2":
+                self.file_data2 = file_data
+                self.file_name2 = file_name
     def read_file(self, file_path):
         with open(file_path, 'rb') as file:
             return file.read()
-
-    def save_to_database(self, file_name, file_data):
-        self.cursor.execute('INSERT INTO documents (file_name, file_data) VALUES (?, ?)', (file_name, file_data))
-        self.connection.commit()
 
     def exit_manager(self, *args):
         self.file_manager.close()
 
 
 #----------------------------------registration validation-------------
-    def registration_submit_button(self, register_id):
+    def hospital_register_form(self, register_id):
 
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
         service_provider_password = self.ids.service_provider_password.text
         service_provider_phoneno = self.ids.service_provider_phoneno.text
         service_provider_address = self.ids.service_provider_address.text
-        dropdown_nation=self.ids.dropdown_nation.text
-        dropdown_state=self.ids.dropdown_state.text
+        Nation=self.ids.Nation.text
+        State=self.ids.State.text
         service_provider_pincode=self.ids.service_provider_pincode.text
         extra_info=self.ids.extra_info.text
         extra_info2=self.ids.extra_info2.text
-        # print(service_provider_name)
-        # print(service_provider_email)
-        # print(service_provider_password)
-        # print(service_provider_address)
-        # print(service_provider_phoneno)
-        # print(dropdown_nation)
-        # print(dropdown_state)
-        # print(service_provider_pincode)
-        # print(extra_info)
-        # print(extra_info2)
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -225,13 +218,13 @@ class BaseRegistrationScreen(MDScreen):
             self.ids.service_provider_address.error = True
             self.ids.service_provider_address.helper_text = "This field is required."
             self.ids.service_provider_address.required = True
-        elif not dropdown_nation:
-            self.ids.dropdown_nation.error = True
-            self.ids.dropdown_nation.helper_text = "Please select a nation."
+        elif not Nation:
+            self.ids.Nation.error = True
+            self.ids.Nation.helper_text = "Please select a nation."
             # self.ids.dropdown_nation.required = True
-        elif not dropdown_state:
-            self.ids.dropdown_state.error = True
-            self.ids.dropdown_state.helper_text = "Please select a state."
+        elif not State:
+            self.ids.State.error = True
+            self.ids.State.helper_text = "Please select a state."
             # self.ids.dropdown_state.required = True
         elif not service_provider_pincode or len(service_provider_pincode) != 6:
             self.ids.service_provider_pincode.error = True
@@ -249,65 +242,90 @@ class BaseRegistrationScreen(MDScreen):
         else:
 
             app = MDApp.get_running_app()
-            print("Screen Name : ",app.root.current)
-            print(register_id)
             if app.root.current=="service_register_form":
                 print("------------------hospital_manager--------------")
-                print(service_provider_name)
-                print(service_provider_email)
-                print(service_provider_password)
-                print(service_provider_address)
-                print(service_provider_phoneno)
-                print(dropdown_nation)
-                print(dropdown_state)
-                print(service_provider_pincode)
-                print(extra_info)
-                print(extra_info2)
+                rows = app_tables.hospital_register_form.search()
+                # Get the number of rows
+                num = len(rows) + 1
+                id = f"SP-{num}"
+                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                   content=self.file_data1)
+                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                   content=self.file_data2)
+                app_tables.hospital_register_form.add_row(
+                    service_provider_id=id,
+                    service_provider_name=service_provider_name,
+                    service_provider_email=service_provider_email,
+                    service_provider_password=service_provider_password,
+                    service_provider_phoneno=float(service_provider_phoneno),
+                    service_provider_address=service_provider_address,
+                    Nation=Nation,
+                    State=State,
+                    service_provider_pincode=int(service_provider_pincode),
+                    hospital_name=extra_info,
+                    establisted_year=extra_info2,
+                    Medical_Practitioner_License=media1,
+                    Building_Permit_and_License=media2
+                )
                 app = MDApp.get_running_app()
                 app.root.transition.direction = "left"
                 app.root.current = "login"
             elif app.root.current=="ambulance_register_form":
                 print("----------------ambulance_manager--------------------")
-                print(service_provider_name)
-                print(service_provider_email)
-                print(service_provider_password)
-                print(service_provider_address)
-                print(service_provider_phoneno)
-                print(dropdown_nation)
-                print(dropdown_state)
-                print(service_provider_pincode)
-                print(extra_info)
-                print(extra_info2)
+                rows = app_tables.ambulance_register_form.search()
+                # Get the number of rows
+                num = len(rows) + 1
+                id = f"SP-{num}"
+                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                   content=self.file_data1)
+                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                   content=self.file_data2)
+                app_tables.ambulance_register_form.add_row(
+                    service_provider_id=id,
+                    service_provider_name=service_provider_name,
+                    service_provider_email=service_provider_email,
+                    service_provider_password=service_provider_password,
+                    service_provider_phoneno=float(service_provider_phoneno),
+                    service_provider_address=service_provider_address,
+                    Nation=Nation,
+                    State=State,
+                    service_provider_pincode=int(service_provider_pincode),
+                    Vehicle_No=extra_info,
+                    registered_year=extra_info2,
+                    Vehicle_RC=media1,
+                    Driver_DL=media2
+                )
                 app = MDApp.get_running_app()
                 app.root.transition.direction = "left"
                 app.root.current = "login"
             elif app.root.current=="gym_register_form":
                 print("---------------------gym_manager---------------------------")
-                print(service_provider_name)
-                print(service_provider_email)
-                print(service_provider_password)
-                print(service_provider_address)
-                print(service_provider_phoneno)
-                print(dropdown_nation)
-                print(dropdown_state)
-                print(service_provider_pincode)
-                print(extra_info)
-                print(extra_info2)
+                rows = app_tables.gym_register_form.search()
+                # Get the number of rows
+                num = len(rows) + 1
+                id = f"SP-{num}"
+                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                   content=self.file_data1)
+                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                   content=self.file_data2)
+                app_tables.gym_register_form.add_row(
+                    service_provider_id=id,
+                    service_provider_name=service_provider_name,
+                    service_provider_email=service_provider_email,
+                    service_provider_password=service_provider_password,
+                    service_provider_phoneno=float(service_provider_phoneno),
+                    service_provider_address=service_provider_address,
+                    Nation=Nation,
+                    State=State,
+                    service_provider_pincode=int(service_provider_pincode),
+                    Gym_Name=extra_info,
+                    establisted_year=extra_info2,
+                    Gym_Registration=media1,
+                    SSI_Registration=media2
+                )
                 app = MDApp.get_running_app()
                 app.root.transition.direction = "left"
                 app.root.current = "login"
-
-            # All validations passed; proceed with registration process
-            #If validation is successful, insert into the database
-            # cursor.execute('''
-            #             INSERT INTO users (username, email, password, phone, pincode)
-            #             VALUES (?, ?, ?, ?, ?)
-            #         ''', (username, email, password, phone, pincode))
-            # conn.commit()
-            # Navigate to the success screen
-            # app = MDApp.get_running_app()
-            # app.root.transition.direction = "left"
-            # app.root.current = "login"
 
 
     # password validation

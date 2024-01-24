@@ -244,7 +244,6 @@ class LoginApp(MDApp):
             phone = str(user['phone'])
             pincode = str(user['pincode'])
 
-            # self.update(login_email, username)
             self.screen = Builder.load_file("menu_profile.kv")
             screen = self.root.get_screen('menu_profile')
             screen.ids.username.text = f"Username : {username}"
