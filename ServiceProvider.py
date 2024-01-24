@@ -149,29 +149,40 @@ class BaseRegistrationScreen(MDScreen):
         self.file_manager.show('/')  # Initial directory when the file manager is opened
 
     path = None
+
     def select_path(self, path):
-        self.path=path
-        setattr(self.field_id, 'text', path)
+        if path.lower().endswith(('.jpg', '.jpeg', '.png', '.pdf')):
+            self.path = path
+            setattr(self.field_id, 'text', path)
+            self.file_manager.close()
+        else:
+            msg = "Please select a JPG, PNG, or PDF file."
+            setattr(self.field_id, 'text', msg)
         self.file_manager.close()
+
     file_data1 = None
     file_data2 = None
     file_name1 = None
     file_name2 = None
 
     def upload_file(self, upload_id):
-        file_path = getattr(self.field_id, 'text', '')
-        if file_path:
-            file_name = os.path.basename(file_path)
-            file_data = self.read_file(file_path)
-            setattr(self.field_id, 'text', file_name)
+        try:
+            file_path = getattr(self.field_id, 'text', '')
+            if file_path:
+                file_name = os.path.basename(file_path)
+                file_data = self.read_file(file_path)
+                setattr(self.field_id, 'text', file_name)
 
-            if upload_id == "file_path":
-                self.file_data1 = file_data
-                self.file_name1 = file_name
-                pdf_output_path = "output.pdf"
-            elif upload_id == "file_path2":
-                self.file_data2 = file_data
-                self.file_name2 = file_name
+                if upload_id == "file_path":
+                    self.file_data1 = file_data
+                    self.file_name1 = file_name
+                    pdf_output_path = "output.pdf"
+                elif upload_id == "file_path2":
+                    self.file_data2 = file_data
+                    self.file_name2 = file_name
+        except:
+            msg = "Please select a file."
+            setattr(self.field_id, 'text', msg)
     def read_file(self, file_path):
         with open(file_path, 'rb') as file:
             return file.read()
