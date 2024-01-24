@@ -29,8 +29,8 @@ from kivy.uix.widget import Widget
 from ws4py.websocket import WebSocket
 import anvil.server
 from anvil.tables import app_tables
-import anvil.tables.query as q
-anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+import requests
+# anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
 import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
 
@@ -207,36 +207,64 @@ class LoginApp(MDApp):
         # All checks passed; the password is valid
         return True, "Password is valid"
 
+
     def login_page(self,  instance, *args):
         self.screen = Builder.load_file("login.kv")
-
         screen1 = self.root.current_screen
         email = screen1.ids.login_email.text
         password = screen1.ids.login_password.text
-        # Check if the user exists in the database for login
-        cursor.execute('''
-                    SELECT * FROM users
-                    WHERE email = ? AND password = ?
-                    ''', (email, password))
-        user = cursor.fetchone()
+        # Check internet
+        def is_connected():
+            try:
+                # Attempt to make a simple HTTP request to check connectivity
+                response = requests.get('https://www.google.com', timeout=5)
+                response.raise_for_status()  # Raise an exception for HTTP errors
+                return True
+            except requests.RequestException:
+                return False
+        def get_database_connection():
+            if is_connected():
+                # Use Anvil's database connection
+                return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+            else:
+                # Use SQLite database connection
+                return sqlite3.connect('users.db')
 
-        # phone = float()
-        # pincode = float()
-        # Check if the user exists in the database for login
-        user = app_tables.users.get(
-            email=email,
-            password=password,
-        )
-
-        if user:
-            # Login successful
+        connection = get_database_connection()
+        user_anvil = None
+        user_sqlite = None
+        try:
+            if is_connected():
+                # Fetch user from Anvil's database
+                user_anvil = app_tables.users.get(
+                    email=email,
+                    password=password,
+                )
+            else:
+                # Fetch user from SQLite database
+                cursor = connection.cursor()
+                cursor.execute('''
+                            SELECT * FROM users
+                            WHERE email = ? AND password = ?
+                        ''', (email, password))
+                user_sqlite = cursor.fetchone()
+        finally:
+            # Close the connection
+            if connection and is_connected():
+                connection.close()
+        if user_anvil or user_sqlite :
             print("Login successful.")
+            if user_anvil:
+                username = str(user_anvil["username"])
+                email = str(user_anvil["email"])
+                phone = str(user_anvil["phone"])
+                pincode = str(user_anvil["pincode"])
+            elif user_sqlite:
+                username = str(user_sqlite[1])
+                email = str(user_sqlite[2])
+                phone = str(user_sqlite[4])
+                pincode = str(user_sqlite[5])
 
-            username = user['username']
-            phone = str(user['phone'])
-            pincode = str(user['pincode'])
-
-            # self.update(login_email, username)
             self.screen = Builder.load_file("menu_profile.kv")
             screen = self.root.get_screen('menu_profile')
             screen.ids.username.text = f"Username : {username}"
