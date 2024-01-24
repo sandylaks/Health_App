@@ -35,9 +35,7 @@ import anvil.server
 anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
 import anvil.media
 import os
-import base64
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
+
 
 
 
