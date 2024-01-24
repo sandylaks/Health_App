@@ -1,5 +1,7 @@
 import base64
+import json
 import re
+
 
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
@@ -29,8 +31,13 @@ from kivy.uix.widget import Widget
 from ws4py.websocket import WebSocket
 import anvil.server
 from anvil.tables import app_tables
-import requests
-# anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+import anvil.tables.query as q
+anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+
+# import razorpay
+# import webbrowser
+
+
 import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
 
@@ -104,6 +111,7 @@ class LoginApp(MDApp):
     #     # Example: print the user's email address
     #     user_email = Credentials(credentials).id_token["email"]
     #     print(f"User email: {user_email}")
+
 
     def users(self, instance, *args):
         self.screen=Builder.load_file("signup.kv")
@@ -207,63 +215,34 @@ class LoginApp(MDApp):
         # All checks passed; the password is valid
         return True, "Password is valid"
 
-
     def login_page(self,  instance, *args):
         self.screen = Builder.load_file("login.kv")
+
         screen1 = self.root.current_screen
         email = screen1.ids.login_email.text
         password = screen1.ids.login_password.text
-        # Check internet
-        def is_connected():
-            try:
-                # Attempt to make a simple HTTP request to check connectivity
-                response = requests.get('https://www.google.com', timeout=5)
-                response.raise_for_status()  # Raise an exception for HTTP errors
-                return True
-            except requests.RequestException:
-                return False
-        def get_database_connection():
-            if is_connected():
-                # Use Anvil's database connection
-                return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
-            else:
-                # Use SQLite database connection
-                return sqlite3.connect('users.db')
+        # Check if the user exists in the database for login
+        cursor.execute('''
+                    SELECT * FROM users
+                    WHERE email = ? AND password = ?
+                    ''', (email, password))
+        user = cursor.fetchone()
 
-        connection = get_database_connection()
-        user_anvil = None
-        user_sqlite = None
-        try:
-            if is_connected():
-                # Fetch user from Anvil's database
-                user_anvil = app_tables.users.get(
-                    email=email,
-                    password=password,
-                )
-            else:
-                # Fetch user from SQLite database
-                cursor = connection.cursor()
-                cursor.execute('''
-                            SELECT * FROM users
-                            WHERE email = ? AND password = ?
-                        ''', (email, password))
-                user_sqlite = cursor.fetchone()
-        finally:
-            # Close the connection
-            if connection and is_connected():
-                connection.close()
-        if user_anvil or user_sqlite :
+        # phone = float()
+        # pincode = float()
+        # Check if the user exists in the database for login
+        user = app_tables.users.get(
+            email=email,
+            password=password,
+        )
+
+        if user:
+            # Login successful
             print("Login successful.")
-            if user_anvil:
-                username = str(user_anvil["username"])
-                email = str(user_anvil["email"])
-                phone = str(user_anvil["phone"])
-                pincode = str(user_anvil["pincode"])
-            elif user_sqlite:
-                username = str(user_sqlite[1])
-                email = str(user_sqlite[2])
-                phone = str(user_sqlite[4])
-                pincode = str(user_sqlite[5])
+
+            username = user['username']
+            phone = str(user['phone'])
+            pincode = str(user['pincode'])
 
             self.screen = Builder.load_file("menu_profile.kv")
             screen = self.root.get_screen('menu_profile')
@@ -285,6 +264,13 @@ class LoginApp(MDApp):
             screen4 = self.root.get_screen('hospital_book')
             screen4.ids.username.text = username
             screen4.ids.email.text = email
+            screen2 = self.root.get_screen('client_services')
+            screen2.ids.username.text = username
+            screen2.ids.email.text = email
+            self.screen = Builder.load_file("hospital_book.kv")
+            screen2 = self.root.get_screen('hospital_book')
+            screen2.ids.username.text = username
+            screen2.ids.email.text = email
             self.root.transition.direction = 'left'
             self.root.current = 'client_services'
         else:
@@ -297,9 +283,6 @@ class LoginApp(MDApp):
 
 
     def build(self):
-        # client_id = open("client_id.txt")
-        # client_secret = open("client_secret.txt")
-        # initialize_google(self.after_login(), self.error_listener, client_id.read(),client_secret.read())
         screen_manager = ScreenManager()
 
 
@@ -307,7 +290,6 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("login.kv"))
         screen_manager.add_widget(Builder.load_file("signup.kv"))
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
         screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
         screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
@@ -318,6 +300,7 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
         screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
         screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
         screen_manager.add_widget(ServiceProvider("service_provider"))
         screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
@@ -331,18 +314,23 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceSupport(name="service_support"))
 
         return screen_manager
+    def logout(self):
+        self.root.transition.direction = 'left'
+        self.root.current = 'login'
 
     def show_customer_support_dialog(self):
         dialog = MDDialog(
             title="Contact Customer Support",
-            text="Call Customer Support at: +1-800-123-4567"
+            text="Call Customer Support at: +1-800-123-4567",
+            elevation = 0
         )
         dialog.open()
 
     def show_doctor_dialog(self):
         dialog = MDDialog(
             title="Call On-Call Doctor",
-            text="Call On-Call Doctor at: +1-888-765-4321"
+            text="Call On-Call Doctor at: +1-888-765-4321",
+            elevation=0
         )
         dialog.open()
 
@@ -373,6 +361,7 @@ class LoginApp(MDApp):
         # Create and show the popup
         ticket_popup = MDDialog(
             title="Ticket Raised",
+            elevation=0,
             text=f"Ticket with content '{submitted_text}' has been raised.",
             buttons=[
                 MDFlatButton(
@@ -393,6 +382,7 @@ class LoginApp(MDApp):
         # Display a dialog for invalid login or sign up
         dialog = MDDialog(
             text=message,
+            elevation=0,
             buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
         )
         dialog.open()
@@ -533,6 +523,35 @@ class LoginApp(MDApp):
         else:
             self.show_validation_dialog("Select Date and Time")
 
+#-------------------------------Razorpay-flow------------------------------------
+
+    # def razor_pay(self, instance):
+    #     # Replace 'your_api_key' with your Razorpay API key
+    #     api_key = 'your_api_key'
+    #
+    #     # Replace the following details with your actual payment details
+    #     payment_data = {
+    #         'amount': 100,  # Replace with the actual amount in paise
+    #         'currency': 'INR',  # Replace with the actual currency code
+    #         'description': 'Service Charge',  # Replace with the actual description
+    #         'order_id': 'order_123',  # Replace with the actual order ID
+    #         'name': 'Oxyvive',  # Replace with the name of your app
+    #         'prefill': {
+    #             'contact': 'username',  # Replace with the user's contact details
+    #             'email': 'clientemail@gmail.com',  # Replace with the user's email
+    #         },
+    #     }
+    #
+    #     razorpay_client = razorpay(api_key)
+    #     order = razorpay_client.order.create(data=payment_data)
+    #
+    #     # Open the Razorpay payment gateway URL in a web browser
+    #     payment_url = order['short_url']
+    #     self.open_payment_gateway(payment_url)
+    #
+    # def open_payment_gateway(self, payment_url):
+    #     # Replace this with actual code to open the payment gateway URL
+    #     print(f"Opening Razorpay payment gateway: {payment_url}")
     # payment_page page logic
     # logic for back button in payment_page
     def payment_page_backButton(self):
@@ -554,4 +573,6 @@ if __name__ == '__main__':
     LabelBase.register(name="MPoppins", fn_regular="Poppins/Poppins-Medium.ttf")
     LabelBase.register(name="BPoppins", fn_regular="Poppins/Poppins-Bold.ttf")
     LabelBase.register(name="OpenSans", fn_regular="fonts/Roboto-Regular.ttf")
-    LoginApp().run()
+    app = LoginApp()
+    Window.bind(on_request_close=app.stop)
+    app.run()

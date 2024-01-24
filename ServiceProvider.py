@@ -1,6 +1,17 @@
+import io
+
 import kivy
 import re
+
+from anvil import BlobMedia
+from anvil.tables import app_tables
 from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.datatables import MDDataTable
+from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
@@ -13,17 +24,21 @@ from kivy.metrics import dp
 from kivy.uix.popup import Popup
 from kivy.uix.filechooser import FileChooserListView
 from kivy.uix.button import Button
-#from plyer import filechooser
 from kivymd.uix.filemanager import MDFileManager
 import sqlite3
-import os
-import base64
 from kivy.uix.image import AsyncImage
 from kivy.uix.image import Image
-
 from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivymd.uix.behaviors import CommonElevationBehavior
+import anvil.server
+anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+import anvil.media
+import os
+import base64
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
 
 
 Builder.load_file("service_register_form.kv")
@@ -42,7 +57,7 @@ class BaseRegistrationScreen(MDScreen):
     def open_dropdown(self, widget):
         if not self.menu:
             # Dropdown items
-            cities = ["India", "America", "Russia", "China"]
+            cities = ["India"]
             items = [
                 {
                     "text": city,
@@ -65,7 +80,7 @@ class BaseRegistrationScreen(MDScreen):
 
     def select_city(self, selected_city):
         # Callback function when a city is selected
-        self.ids.dropdown_nation.text = selected_city  # Update the text field
+        self.ids.Nation.text = selected_city  # Update the text field
         self.menu.dismiss()
     def open_dropdown2(self,widget):
 
@@ -99,13 +114,13 @@ class BaseRegistrationScreen(MDScreen):
             self.menu2.dismiss()  # Dismiss if already open
 
         # Set the caller and open the dropdown menu
-        self.menu2.caller = self.ids.dropdown_state
+        self.menu2.caller = self.ids.State
         self.menu2.open()
 
     def select_state(self, select_state):
         # Callback function when a city is selected
         #print(select_state)
-        self.ids.dropdown_state.text = select_state  # Update the text field
+        self.ids.State.text = select_state  # Update the text field
         self.menu2.dismiss()  # Dismiss the menu
 
 
@@ -123,37 +138,9 @@ class BaseRegistrationScreen(MDScreen):
         date_dialog.open()
         self.ids.extra_info2.text=''
 #------------------------------upload--docs--------------------------
-    # def open_file_chooser(self):
-    #     file_chooser = FileChooserListView(filters=["*.pdf", "*.doc", "*.docx", "*.png", "*.jpg"])
-    #     file_chooser.bind(on_selection=self.file_selected)
-    #
-    #     popup = Popup(title="Choose a file", content=file_chooser, size_hint=(0.9, 0.9))
-    #     popup.open()
-    #
-    #     self.file_chooser_popup = popup
-    #
-    # def file_selected(self, instance, selected_files):
-    #     # Check if any files are selected
-    #     if selected_files:
-    #         selected_file = selected_files[0]  # first selected file
-    #         # Do something with the selected file path, like uploading it to the database
-    #         with open(selected_file, 'rb') as file:
-    #             file_content = file.read()
-    #         print(f"Selected file: {selected_file}")
-    #         selected_file_label = self.ids.selected_file_label
-    #         selected_file_label.text = f"{selected_file}"
-    #
-    #     self.file_chooser_popup.dismiss()
-    def file_manager_open(self):
-        self.connection = sqlite3.connect('users.db')  # Replace with your database name
-        self.cursor = self.connection.cursor()
-        self.cursor.execute('''
-                   CREATE TABLE IF NOT EXISTS documents (
-                       id INTEGER PRIMARY KEY AUTOINCREMENT,
-                       file_name TEXT,
-                       file_data BLOB
-                   )
-               ''')
+    field_id=None
+    def file_manager_open(self, field_id):
+        self.field_id = getattr(self.ids, field_id)
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=self.select_path,
@@ -161,75 +148,62 @@ class BaseRegistrationScreen(MDScreen):
         )
         self.file_manager.show('/')  # Initial directory when the file manager is opened
 
+    path = None
+
     def select_path(self, path):
-        self.ids.file_path.text = path
+        if path.lower().endswith(('.jpg', '.jpeg', '.png', '.pdf')):
+            self.path = path
+            setattr(self.field_id, 'text', path)
+            self.file_manager.close()
+        else:
+            msg = "Please select a JPG, PNG, or PDF file."
+            setattr(self.field_id, 'text', msg)
         self.file_manager.close()
 
-    def upload_file(self):
-        file_path = self.ids.file_path.text
-        if file_path:
-            file_name = os.path.basename(file_path)
-            file_data = self.read_file(file_path)
-            self.save_to_database(file_name, file_data)
-            self.ids.file_path.text = file_name
+    file_data1 = None
+    file_data2 = None
+    file_name1 = None
+    file_name2 = None
 
-        # if file_path and os.path.isfile(file_path):
-        #     self.ids.file_display.source = file_path
+    def upload_file(self, upload_id):
+        try:
+            file_path = getattr(self.field_id, 'text', '')
+            if file_path:
+                file_name = os.path.basename(file_path)
+                file_data = self.read_file(file_path)
+                setattr(self.field_id, 'text', file_name)
 
+                if upload_id == "file_path":
+                    self.file_data1 = file_data
+                    self.file_name1 = file_name
+                    pdf_output_path = "output.pdf"
+                elif upload_id == "file_path2":
+                    self.file_data2 = file_data
+                    self.file_name2 = file_name
+        except:
+            msg = "Please select a file."
+            setattr(self.field_id, 'text', msg)
     def read_file(self, file_path):
         with open(file_path, 'rb') as file:
             return file.read()
-
-    def save_to_database(self, file_name, file_data):
-        self.cursor.execute('INSERT INTO documents (file_name, file_data) VALUES (?, ?)', (file_name, file_data))
-        self.connection.commit()
-
-    # def display_file(self, file_path):
-    #     file_display = self.ids.file_display
-    #
-    #     if file_path.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-    #         # Display image
-    #         image = AsyncImage(source=file_path, allow_stretch=True)
-    #         file_display.clear_widgets()
-    #         file_display.add_widget(image)
-    #     elif file_path.lower().endswith('.pdf'):
-    #         # Display PDF (requires additional dependencies)
-    #         label = Label(text="PDF files are not supported in this example.")
-    #         file_display.clear_widgets()
-    #         file_display.add_widget(label)
-    #     else:
-    #         # Unsupported file type
-    #         label = Label(text="Unsupported file type.")
-    #         file_display.clear_widgets()
-    #         file_display.add_widget(label)
 
     def exit_manager(self, *args):
         self.file_manager.close()
 
 
 #----------------------------------registration validation-------------
-    def registration_submit_button(self, instance):
+    def hospital_register_form(self, register_id):
 
         service_provider_name = self.ids.service_provider_name.text
         service_provider_email = self.ids.service_provider_email.text
         service_provider_password = self.ids.service_provider_password.text
         service_provider_phoneno = self.ids.service_provider_phoneno.text
         service_provider_address = self.ids.service_provider_address.text
-        dropdown_nation=self.ids.dropdown_nation.text
-        dropdown_state=self.ids.dropdown_state.text
+        Nation=self.ids.Nation.text
+        State=self.ids.State.text
         service_provider_pincode=self.ids.service_provider_pincode.text
         extra_info=self.ids.extra_info.text
         extra_info2=self.ids.extra_info2.text
-        # print(service_provider_name)
-        # print(service_provider_email)
-        # print(service_provider_password)
-        # print(service_provider_address)
-        # print(service_provider_phoneno)
-        # print(dropdown_nation)
-        # print(dropdown_state)
-        # print(service_provider_pincode)
-        # print(extra_info)
-        # print(extra_info2)
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -255,13 +229,13 @@ class BaseRegistrationScreen(MDScreen):
             self.ids.service_provider_address.error = True
             self.ids.service_provider_address.helper_text = "This field is required."
             self.ids.service_provider_address.required = True
-        elif not dropdown_nation:
-            self.ids.dropdown_nation.error = True
-            self.ids.dropdown_nation.helper_text = "Please select a nation."
+        elif not Nation:
+            self.ids.Nation.error = True
+            self.ids.Nation.helper_text = "Please select a nation."
             # self.ids.dropdown_nation.required = True
-        elif not dropdown_state:
-            self.ids.dropdown_state.error = True
-            self.ids.dropdown_state.helper_text = "Please select a state."
+        elif not State:
+            self.ids.State.error = True
+            self.ids.State.helper_text = "Please select a state."
             # self.ids.dropdown_state.required = True
         elif not service_provider_pincode or len(service_provider_pincode) != 6:
             self.ids.service_provider_pincode.error = True
@@ -277,17 +251,93 @@ class BaseRegistrationScreen(MDScreen):
             # self.ids.est_year.required = True
 
         else:
-            # All validations passed; proceed with registration process
-            #If validation is successful, insert into the database
-            # cursor.execute('''
-            #             INSERT INTO users (username, email, password, phone, pincode)
-            #             VALUES (?, ?, ?, ?, ?)
-            #         ''', (username, email, password, phone, pincode))
-            # conn.commit()
-            # Navigate to the success screen
+
             app = MDApp.get_running_app()
-            app.root.transition.direction = "left"
-            app.root.current = "service_provider_main_page"
+            if app.root.current=="service_register_form":
+                print("------------------hospital_manager--------------")
+                rows = app_tables.hospital_register_form.search()
+                # Get the number of rows
+                num = len(rows) + 1
+                id = f"SP-{num}"
+                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                   content=self.file_data1)
+                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                   content=self.file_data2)
+                app_tables.hospital_register_form.add_row(
+                    service_provider_id=id,
+                    service_provider_name=service_provider_name,
+                    service_provider_email=service_provider_email,
+                    service_provider_password=service_provider_password,
+                    service_provider_phoneno=float(service_provider_phoneno),
+                    service_provider_address=service_provider_address,
+                    Nation=Nation,
+                    State=State,
+                    service_provider_pincode=int(service_provider_pincode),
+                    hospital_name=extra_info,
+                    establisted_year=extra_info2,
+                    Medical_Practitioner_License=media1,
+                    Building_Permit_and_License=media2
+                )
+                app = MDApp.get_running_app()
+                app.root.transition.direction = "left"
+                app.root.current = "login"
+            elif app.root.current=="ambulance_register_form":
+                print("----------------ambulance_manager--------------------")
+                rows = app_tables.ambulance_register_form.search()
+                # Get the number of rows
+                num = len(rows) + 1
+                id = f"SP-{num}"
+                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                   content=self.file_data1)
+                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                   content=self.file_data2)
+                app_tables.ambulance_register_form.add_row(
+                    service_provider_id=id,
+                    service_provider_name=service_provider_name,
+                    service_provider_email=service_provider_email,
+                    service_provider_password=service_provider_password,
+                    service_provider_phoneno=float(service_provider_phoneno),
+                    service_provider_address=service_provider_address,
+                    Nation=Nation,
+                    State=State,
+                    service_provider_pincode=int(service_provider_pincode),
+                    Vehicle_No=extra_info,
+                    registered_year=extra_info2,
+                    Vehicle_RC=media1,
+                    Driver_DL=media2
+                )
+                app = MDApp.get_running_app()
+                app.root.transition.direction = "left"
+                app.root.current = "login"
+            elif app.root.current=="gym_register_form":
+                print("---------------------gym_manager---------------------------")
+                rows = app_tables.gym_register_form.search()
+                # Get the number of rows
+                num = len(rows) + 1
+                id = f"SP-{num}"
+                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                   content=self.file_data1)
+                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                   content=self.file_data2)
+                app_tables.gym_register_form.add_row(
+                    service_provider_id=id,
+                    service_provider_name=service_provider_name,
+                    service_provider_email=service_provider_email,
+                    service_provider_password=service_provider_password,
+                    service_provider_phoneno=float(service_provider_phoneno),
+                    service_provider_address=service_provider_address,
+                    Nation=Nation,
+                    State=State,
+                    service_provider_pincode=int(service_provider_pincode),
+                    Gym_Name=extra_info,
+                    establisted_year=extra_info2,
+                    Gym_Registration=media1,
+                    SSI_Registration=media2
+                )
+                app = MDApp.get_running_app()
+                app.root.transition.direction = "left"
+                app.root.current = "login"
+
 
     # password validation
     def validate_password(self, password):
@@ -420,7 +470,114 @@ class ServiceProfile(MDScreen):
 
 class ServiceNotification(MDScreen):
     pass
+
+import tempfile
+from PIL import Image as PilImage
+from io import BytesIO
+
 class ServiceSlotAdding(BaseRegistrationScreen):
-    pass
+    def imageview(self):
+        self.connection = sqlite3.connect('users.db')
+        self.cursor = self.connection.cursor()
+
+        image_info = self.fetch_image_info()
+
+        if image_info:
+            file_name, image_data = image_info
+
+            # Determine the file format based on the file name extension
+            file_extension = file_name.split('.')[-1].lower()
+            pil_image = PilImage.open(BytesIO(image_data))
+
+            # Save image data to a temporary file
+            temp_file_path = tempfile.mktemp(suffix=f'.{file_extension}')
+            pil_image.save(temp_file_path)
+
+            # Load the image from the temporary file using AsyncImage
+            image = AsyncImage(source=temp_file_path, allow_stretch=True)
+
+            # Create a layout and add the AsyncImage widget to it
+            layout = BoxLayout(orientation='vertical')
+            layout.add_widget(image)
+        else:
+            layout = BoxLayout(orientation='vertical')
+            layout.add_widget(Label(text="No image found in the database."))
+
+        return layout
+
+    def fetch_image_info(self):
+        self.cursor.execute(
+            'SELECT file_name, file_data FROM documents WHERE file_name LIKE "%.png%" OR file_name LIKE "%.jpg%" LIMIT 1')
+        result = self.cursor.fetchone()
+
+        return result
+
+    def on_stop(self):
+        self.connection.close()
+    # def __init__(self, **kwargs):
+    #     super(ServiceSlotAdding, self).__init__(**kwargs)
+    #     self.data_tables = MDDataTable(
+    #         pos_hint={"center_y": 0.5, "center_x": 0.5},
+    #         size_hint=(0.9, 0.6),
+    #         use_pagination=False,
+    #         check=True,
+    #         column_data=[
+    #             ("No.", dp(30)),
+    #             ("Column 1", dp(40)),
+    #             ("Column 2", dp(40)),
+    #             ("Column 3", dp(40)),
+    #         ],
+    #         row_data=[("1", "1", "2", "3")],
+    #     )
+    #
+    #     # Creating control buttons.
+    #     button_box = MDBoxLayout(
+    #         pos_hint={"center_x": 0.5},
+    #         adaptive_size=True,
+    #         padding="24dp",
+    #         spacing="24dp",
+    #     )
+    #
+    #     for button_text in ["Add row", "Remove row", "Delete Checked Row"]:
+    #         button_box.add_widget(
+    #             MDRaisedButton(
+    #                 text=button_text, on_release=self.on_button_press
+    #             )
+    #         )
+    #
+    #     layout = MDFloatLayout()  # root layout
+    #     layout.add_widget(self.data_tables)
+    #     layout.add_widget(button_box)
+    #     self.add_widget(layout)
+    #
+    # def on_button_press(self, instance_button):
+    #     try:
+    #         {
+    #             "Add row": self.add_row,
+    #             "Remove row": self.remove_row,
+    #             "Delete Checked Row": self.delete_checked_rows,
+    #         }[instance_button.text]()
+    #     except KeyError:
+    #         pass
+    #
+    # def add_row(self):
+    #     last_num_row = int(self.data_tables.row_data[-1][0])
+    #     new_row_data = (str(last_num_row + 1), "1", "2", "3")
+    #     self.data_tables.row_data.append(list(new_row_data))
+    #
+    # def remove_row(self):
+    #     if len(self.data_tables.row_data) > 1:
+    #         self.data_tables.remove_row(self.data_tables.row_data[-1])
+    #
+    # def delete_checked_rows(self):
+    #     def deselect_rows(*args):
+    #         self.data_tables.table_data.select_all("normal")
+    #
+    #     checked_rows = self.data_tables.get_row_checks()
+    #     for checked_row in checked_rows:
+    #         if checked_row in self.data_tables.row_data:
+    #             self.data_tables.row_data.remove(checked_row)
+    #
+    #     Clock.schedule_once(deselect_rows)
 class ServiceSupport(MDScreen):
     pass
