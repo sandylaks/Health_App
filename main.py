@@ -2,6 +2,8 @@ import base64
 import json
 import re
 
+from kivymd.uix.navigationdrawer import MDNavigationLayout
+
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
 
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
@@ -72,6 +74,8 @@ conn.commit()
 
 
 class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
+    pass
+class MDNavigationLayout(MDNavigationLayout):
     pass
 
 # Create the main app class
@@ -623,6 +627,7 @@ class LoginApp(MDApp):
 if __name__ == '__main__':
     LabelBase.register(name="MPoppins", fn_regular="Poppins/Poppins-Medium.ttf")
     LabelBase.register(name="BPoppins", fn_regular="Poppins/Poppins-Bold.ttf")
+    LabelBase.register(name="B_Poppins", fn_regular="Poppins/Poppins-ExtraBold.ttf")
 
     app = LoginApp()
     Window.bind(on_request_close=app.stop)
