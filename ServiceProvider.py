@@ -174,7 +174,6 @@ class BaseRegistrationScreen(MDScreen):
                 if upload_id == "file_path":
                     self.file_data1 = file_data
                     self.file_name1 = file_name
-                    pdf_output_path = "output.pdf"
                 elif upload_id == "file_path2":
                     self.file_data2 = file_data
                     self.file_name2 = file_name
