@@ -1,12 +1,18 @@
 import base64
 import json
 import re
+
+from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
+
+from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
+
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
 
 from kivymd.uix.pickers import MDDatePicker
 # from kivyauth.google_auth import initialize_google,login_google,logout_google
 from ServiceProvider import ServiceRegister, ServiceProvider, ServiceRegisterAmbulance, ServiceRegisterGym, ServiceProviderMain
+
 
 from kivy.lang import Builder
 from kivymd import app
@@ -20,18 +26,12 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
 from datetime import datetime
-from kivy.uix.togglebutton import ToggleButton
-from kivy.metrics import dp
-from kivy.uix.popup import Popup
-from kivymd.uix.selectioncontrol import MDCheckbox
-from kivymd.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from ws4py.websocket import WebSocket
 import anvil.server
 from anvil.tables import app_tables
 import requests
-import anvil.tables.query as q
-
+from google_auth_oauthlib.flow import InstalledAppFlow
+import webbrowser
+from google.auth.credentials import Credentials
 
 import razorpay
 # import webbrowser
@@ -76,38 +76,57 @@ class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
 
 # Create the main app class
 class LoginApp(MDApp):
-    # def google_sign_in(self):
-    #     # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
-    #     client_id = "407290580474-3ffjk8s253pdlsffjlm9io86aejpcq0m.apps.googleusercontent.com"
-    #     client_secret = "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"
-    #     redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
-    #
-    #     # Set up the Google OAuth flow
-    #     flow = InstalledAppFlow.from_client_secrets_file(
-    #         "client_secret.json",
-    #         scopes=["https://www.googleapis.com/auth/userinfo.email"]
-    #     )
-    #
-    #     # Get the authorization URL
-    #     auth_url, _ = flow.authorization_url(prompt="select_account")
-    #
-    #     # Open a web browser to the authorization URL
-    #     import webbrowser
-    #     webbrowser.open(auth_url)
-    #
-    #     # Get the authorization code from the user
-    #     authorization_code = input("Enter the authorization code: ")
-    #
-    #     # Exchange the authorization code for credentials
-    #     credentials = flow.fetch_token(
-    #         token_uri="https://oauth2.googleapis.com/token",
-    #         authorization_response=authorization_code
-    #     )
-    #
-    #     # Use the obtained credentials for further Google API requests
-    #     # Example: print the user's email address
-    #     user_email = Credentials(credentials).id_token["email"]
-    #     print(f"User email: {user_email}")
+
+    def google_sign_in(self):
+        # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
+        client_id = "749362207551-tdoq2d8787csqqnbvpdgcc3m2sdtsnd1.apps.googleusercontent.com"
+        client_secret = "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"
+        redirect_uri = "https://oxivive.com/oauth/callback"
+
+        # Set up the Google OAuth flow
+        flow = InstalledAppFlow.from_client_secrets_file(
+            "client_secret.json",
+            scopes=["https://www.googleapis.com/auth/userinfo.email"],
+            redirect_uri=redirect_uri
+        )
+
+        # Get the authorization URL
+        auth_url, _ = flow.authorization_url(prompt="select_account")
+        print(f"Authorization URL: {auth_url}")
+
+        # Open a web browser to the authorization URL
+        webbrowser.open(auth_url)
+
+        # Get the authorization code from the user
+        authorization_code = input("Enter the authorization code: ")
+
+        # Exchange the authorization code for credentials
+        credentials = flow.fetch_token(
+            token_uri="https://oauth2.googleapis.com/token",
+            authorization_response=authorization_code
+        )
+
+        # Use the obtained credentials for further Google API requests
+        # Example: print the user's email address
+        user_email = credentials.id_token["email"]
+        print(f"User email: {user_email}")
+
+    def exchange_code_for_tokens(self, authorization_code):
+        token_url = "https://oauth2.googleapis.com/token"
+
+        params = {
+            "code": authorization_code,
+            "client_id": "your_client_id",
+            "client_secret": "your_client_secret",
+            "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+            "grant_type": "authorization_code"
+        }
+
+        response = requests.post(token_url, data=params)
+        token_data = response.json()
+
+        return token_data
+
     # Check internet
     def is_connected(self):
         try:
