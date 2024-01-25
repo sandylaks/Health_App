@@ -9,8 +9,9 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.button import MDRaisedButton, MDFlatButton
 from kivymd.uix.datatables import MDDataTable
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.menu import MDDropdownMenu
@@ -32,9 +33,11 @@ from kivymd.app import MDApp
 from kivy.clock import Clock
 from kivymd.uix.behaviors import CommonElevationBehavior
 import anvil.server
-anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+# anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
 import anvil.media
 import os
+import requests
+
 
 
 
@@ -189,6 +192,24 @@ class BaseRegistrationScreen(MDScreen):
 
 
 #----------------------------------registration validation-------------
+
+    def is_connected(self):
+        try:
+            # Attempt to make a simple HTTP request to check connectivity
+            response = requests.get('https://www.google.com', timeout=5)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            return True
+        except requests.RequestException:
+            return False
+
+    def show_validation_dialog(self, message):
+        # Display a dialog for invalid login or sign up
+        dialog = MDDialog(
+            text=message,
+            elevation=0,
+            buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
+        )
+        dialog.open()
     def hospital_register_form(self, register_id):
 
         service_provider_name = self.ids.service_provider_name.text
@@ -248,93 +269,127 @@ class BaseRegistrationScreen(MDScreen):
             # self.ids.est_year.required = True
 
         else:
-
             app = MDApp.get_running_app()
             if app.root.current=="service_register_form":
                 print("------------------hospital_manager--------------")
-                rows = app_tables.hospital_register_form.search()
-                # Get the number of rows
-                num = len(rows) + 1
-                id = f"SP-{num}"
-                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
-                                   content=self.file_data1)
-                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
-                                   content=self.file_data2)
-                app_tables.hospital_register_form.add_row(
-                    service_provider_id=id,
-                    service_provider_name=service_provider_name,
-                    service_provider_email=service_provider_email,
-                    service_provider_password=service_provider_password,
-                    service_provider_phoneno=float(service_provider_phoneno),
-                    service_provider_address=service_provider_address,
-                    Nation=Nation,
-                    State=State,
-                    service_provider_pincode=int(service_provider_pincode),
-                    hospital_name=extra_info,
-                    establisted_year=extra_info2,
-                    Medical_Practitioner_License=media1,
-                    Building_Permit_and_License=media2
-                )
-                app = MDApp.get_running_app()
-                app.root.transition.direction = "left"
-                app.root.current = "login"
+                try:
+                    media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                       content=self.file_data1)
+                    media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                       content=self.file_data2)
+                    if self.is_connected():
+                        anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                        rows = app_tables.hospital_register_form.search()
+                        # Get the number of rows
+                        num = len(rows) + 1
+                        id = f"SP-{num}"
+                        app_tables.hospital_register_form.add_row(
+                            service_provider_id=id,
+                            service_provider_name=service_provider_name,
+                            service_provider_email=service_provider_email,
+                            service_provider_password=service_provider_password,
+                            service_provider_phoneno=float(service_provider_phoneno),
+                            service_provider_address=service_provider_address,
+                            Nation=Nation,
+                            State=State,
+                            service_provider_pincode=int(service_provider_pincode),
+                            hospital_name=extra_info,
+                            establisted_year=extra_info2,
+                            Medical_Practitioner_License=media1,
+                            Building_Permit_and_License=media2
+                        )
+                        app = MDApp.get_running_app()
+                        app.root.transition.direction = "left"
+                        app.root.current = "login"
+                    else:
+                        self.show_validation_dialog("No internet connection")
+                except Exception as e:
+                    print(e)
+                    self.show_validation_dialog("Select file")
+
             elif app.root.current=="ambulance_register_form":
                 print("----------------ambulance_manager--------------------")
-                rows = app_tables.ambulance_register_form.search()
-                # Get the number of rows
-                num = len(rows) + 1
-                id = f"SP-{num}"
-                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
-                                   content=self.file_data1)
-                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
-                                   content=self.file_data2)
-                app_tables.ambulance_register_form.add_row(
-                    service_provider_id=id,
-                    service_provider_name=service_provider_name,
-                    service_provider_email=service_provider_email,
-                    service_provider_password=service_provider_password,
-                    service_provider_phoneno=float(service_provider_phoneno),
-                    service_provider_address=service_provider_address,
-                    Nation=Nation,
-                    State=State,
-                    service_provider_pincode=int(service_provider_pincode),
-                    Vehicle_No=extra_info,
-                    registered_year=extra_info2,
-                    Vehicle_RC=media1,
-                    Driver_DL=media2
-                )
-                app = MDApp.get_running_app()
-                app.root.transition.direction = "left"
-                app.root.current = "login"
+                try:
+                    media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                       content=self.file_data1)
+                    media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                       content=self.file_data2)
+                    if self.is_connected():
+                        anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                        rows = app_tables.ambulance_register_form.search()
+                        # Get the number of rows
+                        num = len(rows) + 1
+                        id = f"SP-{num}"
+                        app_tables.ambulance_register_form.add_row(
+                            service_provider_id=id,
+                            service_provider_name=service_provider_name,
+                            service_provider_email=service_provider_email,
+                            service_provider_password=service_provider_password,
+                            service_provider_phoneno=float(service_provider_phoneno),
+                            service_provider_address=service_provider_address,
+                            Nation=Nation,
+                            State=State,
+                            service_provider_pincode=int(service_provider_pincode),
+                            Vehicle_No=extra_info,
+                            registered_year=extra_info2,
+                            Vehicle_RC=media1,
+                            Driver_DL=media2
+                        )
+                        app = MDApp.get_running_app()
+                        app.root.transition.direction = "left"
+                        app.root.current = "login"
+                    else:
+                        self.show_validation_dialog("No internet connection")
+                except Exception as e:
+                    print(e)
+                    self.show_validation_dialog("Select file")
+
             elif app.root.current=="gym_register_form":
                 print("---------------------gym_manager---------------------------")
-                rows = app_tables.gym_register_form.search()
-                # Get the number of rows
-                num = len(rows) + 1
-                id = f"SP-{num}"
-                media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
-                                   content=self.file_data1)
-                media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
-                                   content=self.file_data2)
-                app_tables.gym_register_form.add_row(
-                    service_provider_id=id,
-                    service_provider_name=service_provider_name,
-                    service_provider_email=service_provider_email,
-                    service_provider_password=service_provider_password,
-                    service_provider_phoneno=float(service_provider_phoneno),
-                    service_provider_address=service_provider_address,
-                    Nation=Nation,
-                    State=State,
-                    service_provider_pincode=int(service_provider_pincode),
-                    Gym_Name=extra_info,
-                    establisted_year=extra_info2,
-                    Gym_Registration=media1,
-                    SSI_Registration=media2
-                )
-                app = MDApp.get_running_app()
-                app.root.transition.direction = "left"
-                app.root.current = "login"
-
+                try:
+                    media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
+                                       content=self.file_data1)
+                    media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
+                                       content=self.file_data2)
+                    if self.is_connected():
+                        anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                        rows = app_tables.gym_register_form.search()
+                        # Get the number of rows
+                        num = len(rows) + 1
+                        id = f"SP-{num}"
+                        app_tables.gym_register_form.add_row(
+                            service_provider_id=id,
+                            service_provider_name=service_provider_name,
+                            service_provider_email=service_provider_email,
+                            service_provider_password=service_provider_password,
+                            service_provider_phoneno=float(service_provider_phoneno),
+                            service_provider_address=service_provider_address,
+                            Nation=Nation,
+                            State=State,
+                            service_provider_pincode=int(service_provider_pincode),
+                            Gym_Name=extra_info,
+                            establisted_year=extra_info2,
+                            Gym_Registration=media1,
+                            SSI_Registration=media2
+                        )
+                        app = MDApp.get_running_app()
+                        app.root.transition.direction = "left"
+                        app.root.current = "login"
+                    else:
+                        self.show_validation_dialog("No internet connection")
+                except Exception as e:
+                    print(e)
+                    self.show_validation_dialog("Select file")
+            self.ids.service_provider_name.text = ""
+            self.ids.service_provider_email.text = ""
+            self.ids.service_provider_password.text =""
+            self.ids.service_provider_phoneno.text = ""
+            self.ids.service_provider_address.text = ""
+            self.ids.Nation.text = ""
+            self.ids.State.text = ""
+            self.ids.service_provider_pincode.text = ""
+            self.ids.extra_info.text = ""
+            self.ids.extra_info2.text = ""
 
     # password validation
     def validate_password(self, password):
@@ -468,113 +523,74 @@ class ServiceProfile(MDScreen):
 class ServiceNotification(MDScreen):
     pass
 
-import tempfile
-from PIL import Image as PilImage
-from io import BytesIO
 
-class ServiceSlotAdding(BaseRegistrationScreen):
-    def imageview(self):
-        self.connection = sqlite3.connect('users.db')
-        self.cursor = self.connection.cursor()
 
-        image_info = self.fetch_image_info()
+class ServiceSlotAdding(MDScreen):
+    def __init__(self, **kwargs):
+        super(ServiceSlotAdding, self).__init__(**kwargs)
+        self.data_tables = MDDataTable(
+            pos_hint={"center_y": 0.5, "center_x": 0.5},
+            size_hint=(0.9, 0.6),
+            use_pagination=True,
+            check=True,
+            column_data=[
+                ("No.", dp(30)),
+                ("Slot No", dp(40)),
+                ("Applied Date", dp(40)),
+                ("Status", dp(40)),
+            ],
+            row_data=[("1", "A1", "01-01-2024", ([1, 0, 0, 1],'pedding'))],
+        )
 
-        if image_info:
-            file_name, image_data = image_info
+        # Creating control buttons.
+        button_box = MDBoxLayout(
+            pos_hint={"center_x": 0.5},
+            adaptive_size=True,
+            padding="24dp",
+            spacing="24dp",
+        )
 
-            # Determine the file format based on the file name extension
-            file_extension = file_name.split('.')[-1].lower()
-            pil_image = PilImage.open(BytesIO(image_data))
+        for button_text in ["Add Slot",  "Delete Checked Slots"]:
+            button_box.add_widget(
+                MDRaisedButton(
+                    text=button_text, on_release=self.on_button_press
+                )
+            )
 
-            # Save image data to a temporary file
-            temp_file_path = tempfile.mktemp(suffix=f'.{file_extension}')
-            pil_image.save(temp_file_path)
+        layout = MDFloatLayout()  # root layout
+        layout.add_widget(self.data_tables)
+        layout.add_widget(button_box)
+        self.add_widget(layout)
 
-            # Load the image from the temporary file using AsyncImage
-            image = AsyncImage(source=temp_file_path, allow_stretch=True)
+    def on_button_press(self, instance_button):
+        try:
+            {
+                "Add Slot": self.add_row,
+                "Delete Checked Slots": self.delete_checked_rows,
+            }[instance_button.text]()
+        except KeyError:
+            pass
 
-            # Create a layout and add the AsyncImage widget to it
-            layout = BoxLayout(orientation='vertical')
-            layout.add_widget(image)
-        else:
-            layout = BoxLayout(orientation='vertical')
-            layout.add_widget(Label(text="No image found in the database."))
+    def add_row(self):
+        last_num_row = int(self.data_tables.row_data[-1][0])
+        new_row_data = (
+            str(last_num_row + 1),
+            "C1",
+            "03-03-2024",
+            ([1, 1, 0, 0], 'in progress')
+        )
+        self.data_tables.row_data.append(list(new_row_data))
 
-        return layout
+    def delete_checked_rows(self):
+        def deselect_rows(*args):
+            self.data_tables.table_data.select_all("normal")
 
-    def fetch_image_info(self):
-        self.cursor.execute(
-            'SELECT file_name, file_data FROM documents WHERE file_name LIKE "%.png%" OR file_name LIKE "%.jpg%" LIMIT 1')
-        result = self.cursor.fetchone()
+        checked_rows = self.data_tables.get_row_checks()
+        for checked_row in checked_rows:
+            if checked_row in self.data_tables.row_data:
+                self.data_tables.row_data.remove(checked_row)
 
-        return result
+        Clock.schedule_once(deselect_rows)
 
-    def on_stop(self):
-        self.connection.close()
-    # def __init__(self, **kwargs):
-    #     super(ServiceSlotAdding, self).__init__(**kwargs)
-    #     self.data_tables = MDDataTable(
-    #         pos_hint={"center_y": 0.5, "center_x": 0.5},
-    #         size_hint=(0.9, 0.6),
-    #         use_pagination=False,
-    #         check=True,
-    #         column_data=[
-    #             ("No.", dp(30)),
-    #             ("Column 1", dp(40)),
-    #             ("Column 2", dp(40)),
-    #             ("Column 3", dp(40)),
-    #         ],
-    #         row_data=[("1", "1", "2", "3")],
-    #     )
-    #
-    #     # Creating control buttons.
-    #     button_box = MDBoxLayout(
-    #         pos_hint={"center_x": 0.5},
-    #         adaptive_size=True,
-    #         padding="24dp",
-    #         spacing="24dp",
-    #     )
-    #
-    #     for button_text in ["Add row", "Remove row", "Delete Checked Row"]:
-    #         button_box.add_widget(
-    #             MDRaisedButton(
-    #                 text=button_text, on_release=self.on_button_press
-    #             )
-    #         )
-    #
-    #     layout = MDFloatLayout()  # root layout
-    #     layout.add_widget(self.data_tables)
-    #     layout.add_widget(button_box)
-    #     self.add_widget(layout)
-    #
-    # def on_button_press(self, instance_button):
-    #     try:
-    #         {
-    #             "Add row": self.add_row,
-    #             "Remove row": self.remove_row,
-    #             "Delete Checked Row": self.delete_checked_rows,
-    #         }[instance_button.text]()
-    #     except KeyError:
-    #         pass
-    #
-    # def add_row(self):
-    #     last_num_row = int(self.data_tables.row_data[-1][0])
-    #     new_row_data = (str(last_num_row + 1), "1", "2", "3")
-    #     self.data_tables.row_data.append(list(new_row_data))
-    #
-    # def remove_row(self):
-    #     if len(self.data_tables.row_data) > 1:
-    #         self.data_tables.remove_row(self.data_tables.row_data[-1])
-    #
-    # def delete_checked_rows(self):
-    #     def deselect_rows(*args):
-    #         self.data_tables.table_data.select_all("normal")
-    #
-    #     checked_rows = self.data_tables.get_row_checks()
-    #     for checked_row in checked_rows:
-    #         if checked_row in self.data_tables.row_data:
-    #             self.data_tables.row_data.remove(checked_row)
-    #
-    #     Clock.schedule_once(deselect_rows)
 class ServiceSupport(MDScreen):
     pass

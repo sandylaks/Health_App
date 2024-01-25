@@ -144,7 +144,7 @@ class LoginApp(MDApp):
     def get_database_connection(self):
         if self.is_connected():
             # Use Anvil's database connection
-                return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+            return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
         else:
             # Use SQLite database connection
             return sqlite3.connect('users.db')
@@ -162,9 +162,7 @@ class LoginApp(MDApp):
         # print(password)
         # print(phone)
         # print(pincode)
-        rows = app_tables.users.search()
-        # Get the number of rows
-        id = len(rows)+1
+
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -209,9 +207,13 @@ class LoginApp(MDApp):
 
             # If validation is successful, insert into the database
 
-            connection = self.get_database_connection()
+
             try:
                 if self.is_connected():
+                    anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                    rows = app_tables.users.search()
+                    # Get the number of rows
+                    id = len(rows) + 1
                     app_tables.users.add_row(
                         id=id,
                         username=username,
@@ -227,6 +229,8 @@ class LoginApp(MDApp):
                                 ''', (username, email, password, phone, pincode))
                     connection.commit()
                     connection.close()
+                else:
+                    self.show_validation_dialog("No internet connection")
 
             except Exception as e:
                 print(e)
@@ -338,27 +342,27 @@ class LoginApp(MDApp):
         screen_manager = ScreenManager()
 
 
-        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        screen_manager.add_widget(Builder.load_file("login.kv"))
-        screen_manager.add_widget(Builder.load_file("signup.kv"))
-        screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        screen_manager.add_widget(ServiceProvider("service_provider"))
-        screen_manager.add_widget(ServiceRegister("service_register_form"))
-        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        screen_manager.add_widget(Builder.load_file("payment_page.kv"))
-        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
-        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
+        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        # screen_manager.add_widget(Builder.load_file("login.kv"))
+        # screen_manager.add_widget(Builder.load_file("signup.kv"))
+        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        # screen_manager.add_widget(ServiceProvider("service_provider"))
+        # screen_manager.add_widget(ServiceRegister("service_register_form"))
+        # screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
+        # screen_manager.add_widget(Builder.load_file("payment_page.kv"))
+        # screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
+        # screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
         screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
         screen_manager.add_widget(ServiceProfile(name="service_profile"))
         screen_manager.add_widget(ServiceNotification(name="service_notification"))
