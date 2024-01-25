@@ -1,14 +1,12 @@
 import base64
 import json
 import re
-
-
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
 
 from kivymd.uix.pickers import MDDatePicker
 # from kivyauth.google_auth import initialize_google,login_google,logout_google
-from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
+from ServiceProvider import ServiceRegister, ServiceProvider, ServiceRegisterAmbulance, ServiceRegisterGym, ServiceProviderMain
 
 from kivy.lang import Builder
 from kivymd import app
@@ -35,10 +33,8 @@ import requests
 import anvil.tables.query as q
 
 
-# import razorpay
+import razorpay
 # import webbrowser
-
-
 import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
 
@@ -112,7 +108,23 @@ class LoginApp(MDApp):
     #     # Example: print the user's email address
     #     user_email = Credentials(credentials).id_token["email"]
     #     print(f"User email: {user_email}")
+    # Check internet
+    def is_connected(self):
+        try:
+            # Attempt to make a simple HTTP request to check connectivity
+            response = requests.get('https://www.google.com', timeout=5)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            return True
+        except requests.RequestException:
+            return False
 
+    def get_database_connection(self):
+        if self.is_connected():
+            # Use Anvil's database connection
+                return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+        else:
+            # Use SQLite database connection
+            return sqlite3.connect('users.db')
 
     def users(self, instance, *args):
         self.screen=Builder.load_file("signup.kv")
@@ -173,19 +185,31 @@ class LoginApp(MDApp):
             screen.ids.signup_pincode.text = ""
 
             # If validation is successful, insert into the database
-            cursor.execute('''
-                INSERT INTO users (username, email, password, phone, pincode)
-                VALUES (?, ?, ?, ?, ?)
-            ''', (username, email, password, phone, pincode))
-            conn.commit()
 
-            app_tables.users.add_row(
-                id=id,
-                username=username,
-                email=email,
-                password=password,
-                phone=float(phone),
-                pincode=int(pincode))
+            connection = self.get_database_connection()
+            try:
+                if self.is_connected():
+                    app_tables.users.add_row(
+                        id=id,
+                        username=username,
+                        email=email,
+                        password=password,
+                        phone=float(phone),
+                        pincode=int(pincode))
+                    connection = sqlite3.connect('users.db')
+                    cursor = connection.cursor()
+                    cursor.execute('''
+                                    INSERT INTO users (username, email, password, phone, pincode)
+                                    VALUES (?, ?, ?, ?, ?)
+                                ''', (username, email, password, phone, pincode))
+                    connection.commit()
+                    connection.close()
+
+            except Exception as e:
+                print(e)
+                self.show_validation_dialog("No internet connection")
+
+
             # Navigate to the success screen
             self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
@@ -222,29 +246,11 @@ class LoginApp(MDApp):
         email = screen1.ids.login_email.text
         password = screen1.ids.login_password.text
 
-        # Check internet
-        def is_connected():
-            try:
-                # Attempt to make a simple HTTP request to check connectivity
-                response = requests.get('https://www.google.com', timeout=5)
-                response.raise_for_status()  # Raise an exception for HTTP errors
-                return True
-            except requests.RequestException:
-                return False
-
-        def get_database_connection():
-            if is_connected():
-                # Use Anvil's database connection
-                return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
-            else:
-                # Use SQLite database connection
-                return sqlite3.connect('users.db')
-
-        connection = get_database_connection()
+        connection = self.get_database_connection()
         user_anvil = None
         user_sqlite = None
         try:
-            if is_connected():
+            if self.is_connected():
                 # Fetch user from Anvil's database
                 user_anvil = app_tables.users.get(
                     email=email,
@@ -260,7 +266,7 @@ class LoginApp(MDApp):
                 user_sqlite = cursor.fetchone()
         finally:
             # Close the connection
-            if connection and is_connected():
+            if connection and self.is_connected():
                 connection.close()
         if user_anvil or user_sqlite:
             print("Login successful.")
@@ -550,7 +556,8 @@ class LoginApp(MDApp):
 
     # def razor_pay(self, instance):
     #     # Replace 'your_api_key' with your Razorpay API key
-    #     api_key = 'your_api_key'
+    #     api_key = 'rzp_test_kOpS7Ythlfb1Ho'
+    #     s_key = 'OzPZyPbsOV0AlADilk4wkgv9'
     #
     #     # Replace the following details with your actual payment details
     #     payment_data = {
@@ -565,7 +572,7 @@ class LoginApp(MDApp):
     #         },
     #     }
     #
-    #     razorpay_client = razorpay(api_key)
+    #     razorpay_client = razorpay.Client(auth=(api_key, s_key))
     #     order = razorpay_client.order.create(data=payment_data)
     #
     #     # Open the Razorpay payment gateway URL in a web browser
@@ -575,6 +582,8 @@ class LoginApp(MDApp):
     # def open_payment_gateway(self, payment_url):
     #     # Replace this with actual code to open the payment gateway URL
     #     print(f"Opening Razorpay payment gateway: {payment_url}")
+
+
     # payment_page page logic
     # logic for back button in payment_page
     def payment_page_backButton(self):
