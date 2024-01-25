@@ -510,7 +510,6 @@ class LoginApp(MDApp):
         print(self.session_time)
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
-        # screen.ids[label_text].md_bg_color = (0, 1, 0, 1)
         time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
         selected_slot = label_text
         for slot in time_slots:
@@ -528,11 +527,20 @@ class LoginApp(MDApp):
         screen = self.root.current_screen
         book_slot = app_tables.book_slot.search(book_date=formatted_date)
         book_times = [row['book_time'] for row in book_slot]
-        print(book_times)
-        for date in book_times:
-            print(date)
-            screen.ids[date].disabled = True
-
+        print(formatted_date, book_times)
+        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+        for slots in time_slots:
+                screen.ids[slots].disabled = False
+                if not book_times:
+                    print(book_times)
+                    time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+                    for slots in time_slots:
+                        screen.ids[slots].disabled = False
+                elif book_times:
+                    for slots in book_times:
+                       screen.ids[slots].disabled = True
+                else:
+                    pass
         screen.ids.date_choosed.text = formatted_date
 
     def slot_cancel(self, instance, value):
