@@ -2,13 +2,19 @@ import base64
 import json
 import re
 
+from kivymd.uix.navigationdrawer import MDNavigationLayout
+
+from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
+
+from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
 
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
 
 from kivymd.uix.pickers import MDDatePicker
 # from kivyauth.google_auth import initialize_google,login_google,logout_google
-from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
+from ServiceProvider import ServiceRegister, ServiceProvider, ServiceRegisterAmbulance, ServiceRegisterGym, ServiceProviderMain
+
 
 from kivy.lang import Builder
 from kivymd import app
@@ -22,23 +28,15 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
 from datetime import datetime
-from kivy.uix.togglebutton import ToggleButton
-from kivy.metrics import dp
-from kivy.uix.popup import Popup
-from kivymd.uix.selectioncontrol import MDCheckbox
-from kivymd.uix.boxlayout import BoxLayout
-from kivy.uix.widget import Widget
-from ws4py.websocket import WebSocket
 import anvil.server
 from anvil.tables import app_tables
 import requests
-import anvil.tables.query as q
-
+from google_auth_oauthlib.flow import InstalledAppFlow
+import webbrowser
+from google.auth.credentials import Credentials
 
 import razorpay
-import webbrowser
-
-
+# import webbrowser
 import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
 
@@ -77,42 +75,79 @@ conn.commit()
 
 class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
     pass
+class MDNavigationLayout(MDNavigationLayout):
+    pass
 
 # Create the main app class
 class LoginApp(MDApp):
-    # def google_sign_in(self):
-    #     # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
-    #     client_id = "407290580474-3ffjk8s253pdlsffjlm9io86aejpcq0m.apps.googleusercontent.com"
-    #     client_secret = "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"
-    #     redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
-    #
-    #     # Set up the Google OAuth flow
-    #     flow = InstalledAppFlow.from_client_secrets_file(
-    #         "client_secret.json",
-    #         scopes=["https://www.googleapis.com/auth/userinfo.email"]
-    #     )
-    #
-    #     # Get the authorization URL
-    #     auth_url, _ = flow.authorization_url(prompt="select_account")
-    #
-    #     # Open a web browser to the authorization URL
-    #     import webbrowser
-    #     webbrowser.open(auth_url)
-    #
-    #     # Get the authorization code from the user
-    #     authorization_code = input("Enter the authorization code: ")
-    #
-    #     # Exchange the authorization code for credentials
-    #     credentials = flow.fetch_token(
-    #         token_uri="https://oauth2.googleapis.com/token",
-    #         authorization_response=authorization_code
-    #     )
-    #
-    #     # Use the obtained credentials for further Google API requests
-    #     # Example: print the user's email address
-    #     user_email = Credentials(credentials).id_token["email"]
-    #     print(f"User email: {user_email}")
 
+    def google_sign_in(self):
+        # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
+        client_id = "749362207551-tdoq2d8787csqqnbvpdgcc3m2sdtsnd1.apps.googleusercontent.com"
+        client_secret = "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"
+        redirect_uri = "https://oxivive.com/oauth/callback"
+
+        # Set up the Google OAuth flow
+        flow = InstalledAppFlow.from_client_secrets_file(
+            "client_secret.json",
+            scopes=["https://www.googleapis.com/auth/userinfo.email"],
+            redirect_uri=redirect_uri
+        )
+
+        # Get the authorization URL
+        auth_url, _ = flow.authorization_url(prompt="select_account")
+        print(f"Authorization URL: {auth_url}")
+
+        # Open a web browser to the authorization URL
+        webbrowser.open(auth_url)
+
+        # Get the authorization code from the user
+        authorization_code = input("Enter the authorization code: ")
+
+        # Exchange the authorization code for credentials
+        credentials = flow.fetch_token(
+            token_uri="https://oauth2.googleapis.com/token",
+            authorization_response=authorization_code
+        )
+
+        # Use the obtained credentials for further Google API requests
+        # Example: print the user's email address
+        user_email = credentials.id_token["email"]
+        print(f"User email: {user_email}")
+
+    def exchange_code_for_tokens(self, authorization_code):
+        token_url = "https://oauth2.googleapis.com/token"
+
+        params = {
+            "code": authorization_code,
+            "client_id": "your_client_id",
+            "client_secret": "your_client_secret",
+            "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+            "grant_type": "authorization_code"
+        }
+
+        response = requests.post(token_url, data=params)
+        token_data = response.json()
+
+        return token_data
+
+    # Check internet
+    def is_connected(self):
+        try:
+            # Attempt to make a simple HTTP request to check connectivity
+            response = requests.get('https://www.google.com', timeout=5)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            return True
+        except requests.RequestException:
+            return False
+
+    def get_database_connection(self):
+        if self.is_connected():
+            # Use Anvil's database connection
+            return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+        else:
+            # Use SQLite database connection
+            return sqlite3.connect('users.db')
 
     def users(self, instance, *args):
         self.screen=Builder.load_file("signup.kv")
@@ -127,9 +162,7 @@ class LoginApp(MDApp):
         # print(password)
         # print(phone)
         # print(pincode)
-        rows = app_tables.users.search()
-        # Get the number of rows
-        id = len(rows)+1
+
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -173,19 +206,37 @@ class LoginApp(MDApp):
             screen.ids.signup_pincode.text = ""
 
             # If validation is successful, insert into the database
-            cursor.execute('''
-                INSERT INTO users (username, email, password, phone, pincode)
-                VALUES (?, ?, ?, ?, ?)
-            ''', (username, email, password, phone, pincode))
-            conn.commit()
 
-            app_tables.users.add_row(
-                id=id,
-                username=username,
-                email=email,
-                password=password,
-                phone=float(phone),
-                pincode=int(pincode))
+
+            try:
+                if self.is_connected():
+                    anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                    rows = app_tables.users.search()
+                    # Get the number of rows
+                    id = len(rows) + 1
+                    app_tables.users.add_row(
+                        id=id,
+                        username=username,
+                        email=email,
+                        password=password,
+                        phone=float(phone),
+                        pincode=int(pincode))
+                    connection = sqlite3.connect('users.db')
+                    cursor = connection.cursor()
+                    cursor.execute('''
+                                    INSERT INTO users (username, email, password, phone, pincode)
+                                    VALUES (?, ?, ?, ?, ?)
+                                ''', (username, email, password, phone, pincode))
+                    connection.commit()
+                    connection.close()
+                else:
+                    self.show_validation_dialog("No internet connection")
+
+            except Exception as e:
+                print(e)
+                self.show_validation_dialog("No internet connection")
+
+
             # Navigate to the success screen
             self.root.transition = SlideTransition(direction='left')
             self.root.current = 'login'
@@ -222,29 +273,11 @@ class LoginApp(MDApp):
         email = screen1.ids.login_email.text
         password = screen1.ids.login_password.text
 
-        # Check internet
-        def is_connected():
-            try:
-                # Attempt to make a simple HTTP request to check connectivity
-                response = requests.get('https://www.google.com', timeout=5)
-                response.raise_for_status()  # Raise an exception for HTTP errors
-                return True
-            except requests.RequestException:
-                return False
-
-        def get_database_connection():
-            if is_connected():
-                # Use Anvil's database connection
-                return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
-            else:
-                # Use SQLite database connection
-                return sqlite3.connect('users.db')
-
-        connection = get_database_connection()
+        connection = self.get_database_connection()
         user_anvil = None
         user_sqlite = None
         try:
-            if is_connected():
+            if self.is_connected():
                 # Fetch user from Anvil's database
                 user_anvil = app_tables.users.get(
                     email=email,
@@ -260,7 +293,7 @@ class LoginApp(MDApp):
                 user_sqlite = cursor.fetchone()
         finally:
             # Close the connection
-            if connection and is_connected():
+            if connection and self.is_connected():
                 connection.close()
         if user_anvil or user_sqlite:
             print("Login successful.")
@@ -309,27 +342,27 @@ class LoginApp(MDApp):
         screen_manager = ScreenManager()
 
 
-        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        screen_manager.add_widget(Builder.load_file("login.kv"))
-        screen_manager.add_widget(Builder.load_file("signup.kv"))
-        screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
-        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        screen_manager.add_widget(ServiceProvider("service_provider"))
-        screen_manager.add_widget(ServiceRegister("service_register_form"))
-        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        screen_manager.add_widget(Builder.load_file("payment_page.kv"))
-        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
-        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
+        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        # screen_manager.add_widget(Builder.load_file("login.kv"))
+        # screen_manager.add_widget(Builder.load_file("signup.kv"))
+        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
+        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        # screen_manager.add_widget(ServiceProvider("service_provider"))
+        # screen_manager.add_widget(ServiceRegister("service_register_form"))
+        # screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
+        # screen_manager.add_widget(Builder.load_file("payment_page.kv"))
+        # screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
+        # screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
         screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
         screen_manager.add_widget(ServiceProfile(name="service_profile"))
         screen_manager.add_widget(ServiceNotification(name="service_notification"))
@@ -481,7 +514,6 @@ class LoginApp(MDApp):
         print(self.session_time)
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
-        # screen.ids[label_text].md_bg_color = (0, 1, 0, 1)
         time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
         selected_slot = label_text
         for slot in time_slots:
@@ -499,11 +531,20 @@ class LoginApp(MDApp):
         screen = self.root.current_screen
         book_slot = app_tables.book_slot.search(book_date=formatted_date)
         book_times = [row['book_time'] for row in book_slot]
-        print(book_times)
-        for date in book_times:
-            print(date)
-            screen.ids[date].disabled = True
-
+        print(formatted_date, book_times)
+        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+        for slots in time_slots:
+                screen.ids[slots].disabled = False
+                if not book_times:
+                    print(book_times)
+                    time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+                    for slots in time_slots:
+                        screen.ids[slots].disabled = False
+                elif book_times:
+                    for slots in book_times:
+                       screen.ids[slots].disabled = True
+                else:
+                    pass
         screen.ids.date_choosed.text = formatted_date
 
     def slot_cancel(self, instance, value):
@@ -548,37 +589,36 @@ class LoginApp(MDApp):
 
 #-------------------------------Razorpay-flow------------------------------------
 
-    def razor_pay(self, instance):
-        client = razorpay.Client(auth=('rzp_test_kOpS7Ythlfb1Ho', 'OzPZyPbsOV0AlADilk4wkgv9'))
+    # def razor_pay(self, instance):
+    #     # Replace 'your_api_key' with your Razorpay API key
+    #     api_key = 'rzp_test_kOpS7Ythlfb1Ho'
+    #     s_key = 'OzPZyPbsOV0AlADilk4wkgv9'
+    #
+    #     # Replace the following details with your actual payment details
+    #     payment_data = {
+    #         'amount': 100,  # Replace with the actual amount in paise
+    #         'currency': 'INR',  # Replace with the actual currency code
+    #         'description': 'Service Charge',  # Replace with the actual description
+    #         'order_id': 'order_123',  # Replace with the actual order ID
+    #         'name': 'Oxyvive',  # Replace with the name of your app
+    #         'prefill': {
+    #             'contact': 'username',  # Replace with the user's contact details
+    #             'email': 'clientemail@gmail.com',  # Replace with the user's email
+    #         },
+    #     }
+    #
+    #     razorpay_client = razorpay.Client(auth=(api_key, s_key))
+    #     order = razorpay_client.order.create(data=payment_data)
+    #
+    #     # Open the Razorpay payment gateway URL in a web browser
+    #     payment_url = order['short_url']
+    #     self.open_payment_gateway(payment_url)
+    #
+    # def open_payment_gateway(self, payment_url):
+    #     # Replace this with actual code to open the payment gateway URL
+    #     print(f"Opening Razorpay payment gateway: {payment_url}")
 
-        # Create an order
-        order_amount = 1000  # Amount in paise (e.g., 50000 paise = 500 INR)
-        order_currency = 'INR'
-        order_receipt = 'order_rcptid_11'
 
-        order_data = {
-            'amount': order_amount,
-            'currency': order_currency,
-            'receipt': order_receipt,
-            'payment_capture': 1  # Automatically capture payment when order is created
-        }
-
-        order = client.order.create(data=order_data)
-
-        # Get the order ID
-        order_id = order['id']
-
-        # Display the payment URL
-        try:
-            payment_url = order['short_url']
-            print("Payment URL:", payment_url)
-        except KeyError:
-            print("Short URL not found in the response. Check the response structure.")
-            print("Response:", order)
-
-    def open_payment_gateway(self, payment_url):
-        # Replace this with actual code to open the payment gateway URL
-        print(f"Opening Razorpay payment gateway: {payment_url}")
     # payment_page page logic
     # logic for back button in payment_page
     def payment_page_backButton(self):
@@ -599,6 +639,7 @@ class LoginApp(MDApp):
 if __name__ == '__main__':
     LabelBase.register(name="MPoppins", fn_regular="Poppins/Poppins-Medium.ttf")
     LabelBase.register(name="BPoppins", fn_regular="Poppins/Poppins-Bold.ttf")
+    LabelBase.register(name="B_Poppins", fn_regular="Poppins/Poppins-ExtraBold.ttf")
 
     app = LoginApp()
     Window.bind(on_request_close=app.stop)
