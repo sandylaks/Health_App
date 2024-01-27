@@ -35,8 +35,8 @@ import requests
 import anvil.tables.query as q
 
 
-# import razorpay
-# import webbrowser
+import razorpay
+import webbrowser
 
 
 import sqlite3
@@ -548,33 +548,37 @@ class LoginApp(MDApp):
 
 #-------------------------------Razorpay-flow------------------------------------
 
-    # def razor_pay(self, instance):
-    #     # Replace 'your_api_key' with your Razorpay API key
-    #     api_key = 'your_api_key'
-    #
-    #     # Replace the following details with your actual payment details
-    #     payment_data = {
-    #         'amount': 100,  # Replace with the actual amount in paise
-    #         'currency': 'INR',  # Replace with the actual currency code
-    #         'description': 'Service Charge',  # Replace with the actual description
-    #         'order_id': 'order_123',  # Replace with the actual order ID
-    #         'name': 'Oxyvive',  # Replace with the name of your app
-    #         'prefill': {
-    #             'contact': 'username',  # Replace with the user's contact details
-    #             'email': 'clientemail@gmail.com',  # Replace with the user's email
-    #         },
-    #     }
-    #
-    #     razorpay_client = razorpay(api_key)
-    #     order = razorpay_client.order.create(data=payment_data)
-    #
-    #     # Open the Razorpay payment gateway URL in a web browser
-    #     payment_url = order['short_url']
-    #     self.open_payment_gateway(payment_url)
-    #
-    # def open_payment_gateway(self, payment_url):
-    #     # Replace this with actual code to open the payment gateway URL
-    #     print(f"Opening Razorpay payment gateway: {payment_url}")
+    def razor_pay(self, instance):
+        client = razorpay.Client(auth=('rzp_test_kOpS7Ythlfb1Ho', 'OzPZyPbsOV0AlADilk4wkgv9'))
+
+        # Create an order
+        order_amount = 1000  # Amount in paise (e.g., 50000 paise = 500 INR)
+        order_currency = 'INR'
+        order_receipt = 'order_rcptid_11'
+
+        order_data = {
+            'amount': order_amount,
+            'currency': order_currency,
+            'receipt': order_receipt,
+            'payment_capture': 1  # Automatically capture payment when order is created
+        }
+
+        order = client.order.create(data=order_data)
+
+        # Get the order ID
+        order_id = order['id']
+
+        # Display the payment URL
+        try:
+            payment_url = order['short_url']
+            print("Payment URL:", payment_url)
+        except KeyError:
+            print("Short URL not found in the response. Check the response structure.")
+            print("Response:", order)
+
+    def open_payment_gateway(self, payment_url):
+        # Replace this with actual code to open the payment gateway URL
+        print(f"Opening Razorpay payment gateway: {payment_url}")
     # payment_page page logic
     # logic for back button in payment_page
     def payment_page_backButton(self):
