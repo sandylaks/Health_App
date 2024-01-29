@@ -35,9 +35,9 @@ from datetime import datetime
 import anvil.server
 from anvil.tables import app_tables
 import requests
-from google_auth_oauthlib.flow import InstalledAppFlow
-import webbrowser
-from google.auth.credentials import Credentials
+# from google_auth_oauthlib.flow import InstalledAppFlow
+# import webbrowser
+# from google.auth.credentials import Credentials
 
 import razorpay
 # import webbrowser
@@ -89,6 +89,7 @@ class LoginApp(MDApp):
     #     # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
     #     client_id = "749362207551-tdoq2d8787csqqnbvpdgcc3m2sdtsnd1.apps.googleusercontent.com"
     #     client_secret = "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"
+    #     redirect_uri = "https://oxivive.com/oauth/callback"
     #     redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
     #
     #     # Set up the Google OAuth flow
@@ -344,7 +345,6 @@ class LoginApp(MDApp):
 
     def build(self):
         screen_manager = ScreenManager()
-
 
         screen_manager.add_widget(Builder.load_file("main_sc.kv"))
         screen_manager.add_widget(Builder.load_file("login.kv"))
@@ -604,37 +604,40 @@ class LoginApp(MDApp):
 
 #-------------------------------Razorpay-flow------------------------------------
 
-    # def razor_pay(self, instance):
-    #     # Replace 'your_api_key' with your Razorpay API key
-    #     api_key = 'rzp_test_kOpS7Ythlfb1Ho'
-    #     s_key = 'OzPZyPbsOV0AlADilk4wkgv9'
-    #
-    #     # Replace the following details with your actual payment details
-    #     payment_data = {
-    #         'amount': 100,  # Replace with the actual amount in paise
-    #         'currency': 'INR',  # Replace with the actual currency code
-    #         'description': 'Service Charge',  # Replace with the actual description
-    #         'order_id': 'order_123',  # Replace with the actual order ID
-    #         'name': 'Oxyvive',  # Replace with the name of your app
-    #         'prefill': {
-    #             'contact': 'username',  # Replace with the user's contact details
-    #             'email': 'clientemail@gmail.com',  # Replace with the user's email
-    #         },
-    #     }
-    #
-    #     razorpay_client = razorpay.Client(auth=(api_key, s_key))
-    #     order = razorpay_client.order.create(data=payment_data)
-    #
-    #     # Open the Razorpay payment gateway URL in a web browser
-    #     payment_url = order['short_url']
-    #     self.open_payment_gateway(payment_url)
-    #
-    # def open_payment_gateway(self, payment_url):
-    #     # Replace this with actual code to open the payment gateway URL
-    #     print(f"Opening Razorpay payment gateway: {payment_url}")
+    def razor_pay(self, instance):
+        client = razorpay.Client(auth=('rzp_test_kOpS7Ythlfb1Ho', 'OzPZyPbsOV0AlADilk4wkgv9'))
 
+        # Create an order
+        order_amount = 1000  # Amount in paise (e.g., 50000 paise = 500 INR)
+        order_currency = 'INR'
+        order_receipt = 'order_rcptid_11'
+
+        order_data = {
+            'amount': order_amount,
+            'currency': order_currency,
+            'receipt': order_receipt,
+            'payment_capture': 1  # Automatically capture payment when order is created
+        }
+
+        try:
+            order = client.order.create(data=order_data)
+
+            # Get the order ID
+            order_id = order['id']
+
+            # Construct the payment URL
+            payment_url = f"https://rzp_test_kOpS7Ythlfb1Ho.api.razorpay.com/v1/checkout/{order_id}"
+
+            print("Payment URL:", payment_url)
+        except Exception as e:
+            print("An error occurred while creating the order:", str(e))
+
+    def open_payment_gateway(self, payment_url):
+        # Replace this with actual code to open the payment gateway URL
+        print(f"Opening Razorpay payment gateway: {payment_url}")
 
     # payment_page page logic
+
     # logic for back button in payment_page
     def payment_page_backButton(self):
         # Extract the username from menu_profile
