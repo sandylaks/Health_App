@@ -513,6 +513,17 @@ class LoginApp(MDApp):
 
 
     # Slot_Booking pagelogic
+
+    def slot_booking_back_button(self, instance):
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen = self.root.current_screen
+        screen.ids.date_choosed.text = "Choose a date"
+        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+        for slots in time_slots:
+            screen.ids[slots].disabled = False
+
+        self.root.transition = SlideTransition(direction='right')
+        self.root.current = 'hospital_book'
     def select_timings(self, button, label_text):
         self.session_time = label_text
         print(self.session_time)
@@ -637,6 +648,7 @@ class LoginApp(MDApp):
         conn.commit()
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
+
 
 
 # Run the app
