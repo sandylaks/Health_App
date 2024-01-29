@@ -210,6 +210,16 @@ MDScreen:
                         id: md_list
                         MDList:
                             OneLineIconListItem:
+                                text: "Home"
+                                on_release:
+                                    root.manager.transition.direction = "right"
+                                    root.manager.current = "client_services"
+                                IconLeftWidget:
+                                    icon: "home"
+                                    on_release:
+                                        root.manager.transition.direction = "right"
+                                        root.manager.current = "client_services"
+                            OneLineIconListItem:
                                 text: "Profile"
                                 on_release:
                                     root.manager.transition.direction = "left"
@@ -263,11 +273,6 @@ MDScreen:
                                     on_release:
                                         root.manager.transition.direction = "left"
                                         root.manager.current = "menu_support_second"
-
-                            OneLineIconListItem:
-                                text: "Settings"
-                                IconLeftWidget:
-                                    icon: "cog"
 
                             OneLineIconListItem:
                                 text: "Logout"

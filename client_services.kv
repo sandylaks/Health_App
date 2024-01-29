@@ -12,7 +12,7 @@ MDScreen:
                         font_name: "Roboto"
                         md_bg_color: 1, 0, 0, 1
                         left_action_items: [["menu", lambda x: nav_drawer.set_state()]]
-                        right_action_items: [["map-marker", lambda x: app.client_location_button()]]
+                        right_action_items: [["map-marker", lambda x: app.client_services1()]]
 
 
                     ScrollView:
@@ -308,6 +308,16 @@ MDScreen:
                         id: md_list
                         MDList:
                             OneLineIconListItem:
+                                text: "Home"
+                                on_release:
+                                    root.manager.transition.direction = "right"
+                                    root.manager.current = "client_services"
+                                IconLeftWidget:
+                                    icon: "home"
+                                    on_release:
+                                        root.manager.transition.direction = "right"
+                                        root.manager.current = "client_services"
+                            OneLineIconListItem:
                                 text: "Profile"
                                 on_release:
                                     root.manager.transition.direction = "left"
@@ -361,11 +371,6 @@ MDScreen:
                                     on_release:
                                         root.manager.transition.direction = "left"
                                         root.manager.current = "menu_support"
-
-                            OneLineIconListItem:
-                                text: "Settings"
-                                IconLeftWidget:
-                                    icon: "cog"
 
                             OneLineIconListItem:
                                 text: "Logout"

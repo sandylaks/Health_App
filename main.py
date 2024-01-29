@@ -343,6 +343,22 @@ class LoginApp(MDApp):
             screen1.ids.login_email.helper_text = "Invalid email or password"
             screen1.ids.login_password.error = True
 
+    def fetch_pincode(self):
+        self.screen = Builder.load_file("client_services1.kv")
+        screen = self.root.current_screen
+        pincode = screen.ids.pincode.text
+        if not pincode or len(pincode) != 6:
+            screen.ids.pincode.error = True
+            screen.ids.pincode.helper_text = "Invalid Pincode (6 digits required)"
+        else:
+            screen.ids.pincode.error = False
+            screen.ids.pincode.helper_text = ""
+
+            screen.ids.pincode.text = ""
+
+            self.root.transition.direction = 'left'
+            self.root.current = 'client_services'
+
     def build(self):
         screen_manager = ScreenManager()
 
@@ -350,6 +366,7 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("login.kv"))
         screen_manager.add_widget(Builder.load_file("signup.kv"))
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services1.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
         screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
         screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
@@ -374,6 +391,29 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceSupport(name="service_support"))
 
         return screen_manager
+    def client_services1(self):
+        self.root.transition.direction = 'left'
+        self.root.current = 'client_services1'
+    def show_dropdown_menu(self, widget):
+        menu_items = [{"text": "Get the current location", "on_release":self.menu_callback}]
+        self.menu = MDDropdownMenu(items=menu_items, width_mult=4)
+        # menu.bind(on_release=self.menu_callback)
+        self.menu.caller = widget
+        self.menu.open()
+
+    def menu_callback(self):
+        import json
+        from urllib.request import urlopen
+
+        url = 'http://ipinfo.io/json'
+        response = urlopen(url)
+        data = json.load(response)
+        pincode = data["postal"]
+        self.screen = Builder.load_file("client_services1.kv")
+        screen = self.root.current_screen
+        screen.ids.pincode.text = pincode
+        self.menu.dismiss()
+
     def logout(self):
         self.root.transition.direction = 'left'
         self.root.current = 'login'
