@@ -22,8 +22,6 @@ MDScreen:
                 padding: dp(10)
                 size_hint_y: None
                 height: self.minimum_height
-
-
                 BoxLayout:
                     orientation: 'vertical'
                     spacing: 0
@@ -341,7 +339,6 @@ MDScreen:
             bold: True
             on_release:
                 app.pay_now(self)
-                app.razor_pay(self)
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)

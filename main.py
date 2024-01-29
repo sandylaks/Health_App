@@ -2,6 +2,7 @@ import base64
 import json
 import re
 
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
@@ -40,7 +41,7 @@ import requests
 # from google.auth.credentials import Credentials
 
 import razorpay
-# import webbrowser
+# from crosswalk import WebView
 import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
 
@@ -625,14 +626,20 @@ class LoginApp(MDApp):
         row = app_tables.book_slot.search()
         slot_id = len(row)+1
         if len(session_date) == 10 and hasattr(self, 'session_time') and self.session_time:
-            print(session_date, self.session_time )
-            app_tables.book_slot.add_row(
-                slot_id=slot_id,
-                user_id=id,
-                username=username,
-                book_date=session_date,
-                book_time=self.session_time
-            )
+            print(username,session_date, self.session_time )
+            self.root.current = 'payment_page'
+            current_screen = self.root.current_screen
+            current_screen.ids.user_name.text = username
+            current_screen.ids.session_date.text = session_date
+            current_screen.ids.session_time.text = self.session_time
+
+            # app_tables.book_slot.add_row(
+            #     slot_id=slot_id,
+            #     user_id=id,
+            #     username=username,
+            #     book_date=session_date,
+            #     book_time=self.session_time
+            # )
             self.root.transition.direction = 'left'
             self.root.current = 'payment_page'
         elif len(session_date) == 13 and hasattr(self, 'session_time') and self.session_time:
@@ -651,7 +658,6 @@ class LoginApp(MDApp):
         order_amount = 1000  # Amount in paise (e.g., 50000 paise = 500 INR)
         order_currency = 'INR'
         order_receipt = 'order_rcptid_11'
-
         order_data = {
             'amount': order_amount,
             'currency': order_currency,
@@ -667,17 +673,28 @@ class LoginApp(MDApp):
 
             # Construct the payment URL
             payment_url = f"https://rzp_test_kOpS7Ythlfb1Ho.api.razorpay.com/v1/checkout/{order_id}"
+            self.open_payment_gateway(payment_url)
 
-            print("Payment URL:", payment_url)
         except Exception as e:
             print("An error occurred while creating the order:", str(e))
 
     def open_payment_gateway(self, payment_url):
         # Replace this with actual code to open the payment gateway URL
         print(f"Opening Razorpay payment gateway: {payment_url}")
-
-    # payment_page page logic
-
+        #
+        # # payment_page page logic
+        # layout = BoxLayout(orientation='vertical')
+        #
+        # # Create a WebView to display the Razorpay payment page
+        # webview = WebView(url='payment_url', size_hint=(1, 1))
+        # layout.add_widget(webview)
+        #
+        # # Add a back button
+        # back_button = Button(text='Back to App', size_hint=(1, 0.1))
+        # back_button.bind(on_press=self.back_to_app)
+        # layout.add_widget(back_button)
+        #
+        # return layout
     # logic for back button in payment_page
     def payment_page_backButton(self):
         # Extract the username from menu_profile
