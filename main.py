@@ -2,6 +2,10 @@ import base64
 import json
 import re
 
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.textinput import TextInput
 from kivymd.uix.navigationdrawer import MDNavigationLayout
 
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
@@ -32,7 +36,7 @@ import anvil.server
 from anvil.tables import app_tables
 import requests
 # from google_auth_oauthlib.flow import InstalledAppFlow
-import webbrowser
+# import webbrowser
 # from google.auth.credentials import Credentials
 
 import razorpay
@@ -86,6 +90,7 @@ class LoginApp(MDApp):
     #     client_id = "749362207551-tdoq2d8787csqqnbvpdgcc3m2sdtsnd1.apps.googleusercontent.com"
     #     client_secret = "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"
     #     redirect_uri = "https://oxivive.com/oauth/callback"
+    #     redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
     #
     #     # Set up the Google OAuth flow
     #     flow = InstalledAppFlow.from_client_secrets_file(
@@ -114,22 +119,22 @@ class LoginApp(MDApp):
     #     # Example: print the user's email address
     #     user_email = credentials.id_token["email"]
     #     print(f"User email: {user_email}")
-
-    def exchange_code_for_tokens(self, authorization_code):
-        token_url = "https://oauth2.googleapis.com/token"
-
-        params = {
-            "code": authorization_code,
-            "client_id": "your_client_id",
-            "client_secret": "your_client_secret",
-            "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
-            "grant_type": "authorization_code"
-        }
-
-        response = requests.post(token_url, data=params)
-        token_data = response.json()
-
-        return token_data
+    #
+    # def exchange_code_for_tokens(self, authorization_code):
+    #     token_url = "https://oauth2.googleapis.com/token"
+    #
+    #     params = {
+    #         "code": authorization_code,
+    #         "client_id": "your_client_id",
+    #         "client_secret": "your_client_secret",
+    #         "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+    #         "grant_type": "authorization_code"
+    #     }
+    #
+    #     response = requests.post(token_url, data=params)
+    #     token_data = response.json()
+    #
+    #     return token_data
 
     # Check internet
     def is_connected(self):
@@ -341,10 +346,9 @@ class LoginApp(MDApp):
     def build(self):
         screen_manager = ScreenManager()
 
-
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
         screen_manager.add_widget(Builder.load_file("client_services.kv"))
         screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
         screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
@@ -509,6 +513,17 @@ class LoginApp(MDApp):
 
 
     # Slot_Booking pagelogic
+
+    def slot_booking_back_button(self, instance):
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen = self.root.current_screen
+        screen.ids.date_choosed.text = "Choose a date"
+        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+        for slots in time_slots:
+            screen.ids[slots].disabled = False
+
+        self.root.transition = SlideTransition(direction='right')
+        self.root.current = 'hospital_book'
     def select_timings(self, button, label_text):
         self.session_time = label_text
         print(self.session_time)
@@ -636,6 +651,7 @@ class LoginApp(MDApp):
         conn.commit()
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
+
 
 
 # Run the app
