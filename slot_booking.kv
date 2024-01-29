@@ -11,8 +11,9 @@ MDScreen:
             theme_text_color: "Custom"
             text_color: rgba(71, 92, 119, 255)
             on_release:
-                root.manager.transition.direction = "right"
-                root.manager.current = "hospital_book"
+                app.slot_booking_back_button(self)
+#                root.manager.transition.direction = "right"
+#                root.manager.current = "hospital_book"
 
         ScrollView:
             GridLayout:
@@ -135,8 +136,7 @@ MDScreen:
                                 size: dp(110), dp(58) # Adjusted size
                                 halign: "left"
                                 md_bg_color: 0, 0, 0, 0
-                                on_release:
-                                    app.select_timings(self,FirstSlot.text)
+                                on_release: app.select_timings(self,FirstSlot.text)
 
                                 canvas:
                                     Color:

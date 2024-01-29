@@ -342,27 +342,27 @@ class LoginApp(MDApp):
         screen_manager = ScreenManager()
 
 
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(ServiceProvider("service_provider"))
-        # screen_manager.add_widget(ServiceRegister("service_register_form"))
-        # screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        # screen_manager.add_widget(Builder.load_file("payment_page.kv"))
-        # screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
-        # screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
+        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
+        screen_manager.add_widget(Builder.load_file("payment_page.kv"))
+        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
+        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
         screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
         screen_manager.add_widget(ServiceProfile(name="service_profile"))
         screen_manager.add_widget(ServiceNotification(name="service_notification"))
@@ -509,6 +509,17 @@ class LoginApp(MDApp):
 
 
     # Slot_Booking pagelogic
+
+    def slot_booking_back_button(self, instance):
+        self.screen = Builder.load_file("slot_booking.kv")
+        screen = self.root.current_screen
+        screen.ids.date_choosed.text = "Choose a date"
+        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
+        for slots in time_slots:
+            screen.ids[slots].disabled = False
+
+        self.root.transition = SlideTransition(direction='right')
+        self.root.current = 'hospital_book'
     def select_timings(self, button, label_text):
         self.session_time = label_text
         print(self.session_time)
@@ -633,6 +644,7 @@ class LoginApp(MDApp):
         conn.commit()
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'slot_booking'
+
 
 
 # Run the app
