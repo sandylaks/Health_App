@@ -2,6 +2,10 @@ import base64
 import json
 import re
 
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
+from kivy.uix.textinput import TextInput
 from kivymd.uix.navigationdrawer import MDNavigationLayout
 
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
@@ -81,55 +85,55 @@ class MDNavigationLayout(MDNavigationLayout):
 # Create the main app class
 class LoginApp(MDApp):
 
-    def google_sign_in(self):
-        # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
-        client_id = "749362207551-tdoq2d8787csqqnbvpdgcc3m2sdtsnd1.apps.googleusercontent.com"
-        client_secret = "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"
-        redirect_uri = "https://oxivive.com/oauth/callback"
-
-        # Set up the Google OAuth flow
-        flow = InstalledAppFlow.from_client_secrets_file(
-            "client_secret.json",
-            scopes=["https://www.googleapis.com/auth/userinfo.email"],
-            redirect_uri=redirect_uri
-        )
-
-        # Get the authorization URL
-        auth_url, _ = flow.authorization_url(prompt="select_account")
-        print(f"Authorization URL: {auth_url}")
-
-        # Open a web browser to the authorization URL
-        webbrowser.open(auth_url)
-
-        # Get the authorization code from the user
-        authorization_code = input("Enter the authorization code: ")
-
-        # Exchange the authorization code for credentials
-        credentials = flow.fetch_token(
-            token_uri="https://oauth2.googleapis.com/token",
-            authorization_response=authorization_code
-        )
-
-        # Use the obtained credentials for further Google API requests
-        # Example: print the user's email address
-        user_email = credentials.id_token["email"]
-        print(f"User email: {user_email}")
-
-    def exchange_code_for_tokens(self, authorization_code):
-        token_url = "https://oauth2.googleapis.com/token"
-
-        params = {
-            "code": authorization_code,
-            "client_id": "your_client_id",
-            "client_secret": "your_client_secret",
-            "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
-            "grant_type": "authorization_code"
-        }
-
-        response = requests.post(token_url, data=params)
-        token_data = response.json()
-
-        return token_data
+    # def google_sign_in(self):
+    #     # Set up the OAuth 2.0 client ID and client secret obtained from the Google Cloud Console
+    #     client_id = "749362207551-tdoq2d8787csqqnbvpdgcc3m2sdtsnd1.apps.googleusercontent.com"
+    #     client_secret = "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"
+    #     redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+    #
+    #     # Set up the Google OAuth flow
+    #     flow = InstalledAppFlow.from_client_secrets_file(
+    #         "client_secret.json",
+    #         scopes=["https://www.googleapis.com/auth/userinfo.email"],
+    #         redirect_uri=redirect_uri
+    #     )
+    #
+    #     # Get the authorization URL
+    #     auth_url, _ = flow.authorization_url(prompt="select_account")
+    #     print(f"Authorization URL: {auth_url}")
+    #
+    #     # Open a web browser to the authorization URL
+    #     webbrowser.open(auth_url)
+    #
+    #     # Get the authorization code from the user
+    #     authorization_code = input("Enter the authorization code: ")
+    #
+    #     # Exchange the authorization code for credentials
+    #     credentials = flow.fetch_token(
+    #         token_uri="https://oauth2.googleapis.com/token",
+    #         authorization_response=authorization_code
+    #     )
+    #
+    #     # Use the obtained credentials for further Google API requests
+    #     # Example: print the user's email address
+    #     user_email = credentials.id_token["email"]
+    #     print(f"User email: {user_email}")
+    #
+    # def exchange_code_for_tokens(self, authorization_code):
+    #     token_url = "https://oauth2.googleapis.com/token"
+    #
+    #     params = {
+    #         "code": authorization_code,
+    #         "client_id": "your_client_id",
+    #         "client_secret": "your_client_secret",
+    #         "redirect_uri": "urn:ietf:wg:oauth:2.0:oob",
+    #         "grant_type": "authorization_code"
+    #     }
+    #
+    #     response = requests.post(token_url, data=params)
+    #     token_data = response.json()
+    #
+    #     return token_data
 
     # Check internet
     def is_connected(self):
@@ -342,27 +346,27 @@ class LoginApp(MDApp):
         screen_manager = ScreenManager()
 
 
-        # screen_manager.add_widget(Builder.load_file("main_sc.kv"))
-        # screen_manager.add_widget(Builder.load_file("login.kv"))
-        # screen_manager.add_widget(Builder.load_file("signup.kv"))
-        # screen_manager.add_widget(Builder.load_file("client_services.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
-        # screen_manager.add_widget(Builder.load_file("menu_support.kv"))
-        # screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        # screen_manager.add_widget(ServiceProvider("service_provider"))
-        # screen_manager.add_widget(ServiceRegister("service_register_form"))
-        # screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
-        # screen_manager.add_widget(Builder.load_file("payment_page.kv"))
-        # screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
-        # screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
+        screen_manager.add_widget(Builder.load_file("main_sc.kv"))
+        screen_manager.add_widget(Builder.load_file("login.kv"))
+        screen_manager.add_widget(Builder.load_file("signup.kv"))
+        screen_manager.add_widget(Builder.load_file("client_services.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_profile_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_notification_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_bookings_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
+        screen_manager.add_widget(Builder.load_file("menu_support.kv"))
+        screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
+        screen_manager.add_widget(ServiceProvider("service_provider"))
+        screen_manager.add_widget(ServiceRegister("service_register_form"))
+        screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
+        screen_manager.add_widget(Builder.load_file("payment_page.kv"))
+        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
+        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
         screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
         screen_manager.add_widget(ServiceProfile(name="service_profile"))
         screen_manager.add_widget(ServiceNotification(name="service_notification"))
