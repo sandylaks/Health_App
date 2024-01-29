@@ -585,14 +585,20 @@ class LoginApp(MDApp):
         row = app_tables.book_slot.search()
         slot_id = len(row)+1
         if len(session_date) == 10 and hasattr(self, 'session_time') and self.session_time:
-            print(session_date, self.session_time )
-            app_tables.book_slot.add_row(
-                slot_id=slot_id,
-                user_id=id,
-                username=username,
-                book_date=session_date,
-                book_time=self.session_time
-            )
+            print(username,session_date, self.session_time )
+            self.root.current = 'payment_page'
+            current_screen = self.root.current_screen
+            current_screen.ids.user_name.text = username
+            current_screen.ids.session_date.text = session_date
+            current_screen.ids.session_time.text = self.session_time
+
+            # app_tables.book_slot.add_row(
+            #     slot_id=slot_id,
+            #     user_id=id,
+            #     username=username,
+            #     book_date=session_date,
+            #     book_time=self.session_time
+            # )
             self.root.transition.direction = 'left'
             self.root.current = 'payment_page'
         elif len(session_date) == 13 and hasattr(self, 'session_time') and self.session_time:
