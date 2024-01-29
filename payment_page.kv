@@ -128,6 +128,8 @@ MDScreen:
             background_color: 0, 0, 0, 0
             font_name: "Roboto"
             bold: True
+            on_release:
+                app.razor_pay(self)
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)
