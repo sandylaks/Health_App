@@ -2,11 +2,7 @@ import base64
 import json
 import re
 
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.popup import Popup
-from kivy.uix.textinput import TextInput
+
 from kivymd.uix.navigationdrawer import MDNavigationLayout
 
 from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
@@ -393,27 +389,35 @@ class LoginApp(MDApp):
 
         return screen_manager
     def client_services1(self):
-        self.root.transition.direction = 'left'
+        self.root.transition.direction = 'right'
         self.root.current = 'client_services1'
+
     def show_dropdown_menu(self, widget):
-        menu_items = [{"text": "Get the current location", "on_release":self.menu_callback}]
-        self.menu = MDDropdownMenu(items=menu_items, width_mult=4)
-        # menu.bind(on_release=self.menu_callback)
+        menu_items = [{"text": "Get the current location", "on_release": self.menu_callback}]
+
+        if not hasattr(self, 'menu') or self.menu is None:
+            # If menu is not yet initialized or has been dismissed, create a new one
+            self.menu = MDDropdownMenu(items=menu_items, width_mult=4)
+
         self.menu.caller = widget
-        self.menu.open()
+        if self.menu.caller:
+            self.menu.open()
 
     def menu_callback(self):
-        import json
-        from urllib.request import urlopen
+        print("Before menu.open():", self.menu)
+        if self.menu:
+            import json
+            from urllib.request import urlopen
 
-        url = 'http://ipinfo.io/json'
-        response = urlopen(url)
-        data = json.load(response)
-        pincode = data["postal"]
-        self.screen = Builder.load_file("client_services1.kv")
-        screen = self.root.current_screen
-        screen.ids.pincode.text = pincode
-        self.menu.dismiss()
+            url = 'http://ipinfo.io/json'
+            response = urlopen(url)
+            data = json.load(response)
+            pincode = data["postal"]
+            self.screen = Builder.load_file("client_services1.kv")
+            screen = self.root.current_screen
+            screen.ids.pincode.text = pincode
+            self.menu.dismiss()
+        print("After menu.open():", self.menu)
 
     def logout(self):
         self.root.transition.direction = 'left'
