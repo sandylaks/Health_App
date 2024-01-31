@@ -37,16 +37,14 @@ import anvil.server
 import anvil.media
 import os
 import requests
-
-
-
-
+from kivymd.uix.scrollview import MDScrollView
 
 Builder.load_file("service_register_form.kv")
 Builder.load_file("service_provider.kv")
 Builder.load_file("service_provider_main_page.kv")
 Builder.load_file("ambulance_register_form.kv")
 Builder.load_file("gym_register_form.kv")
+Builder.load_file('service_register.kv')
 
 #----------------------Rigistration form--------------------
 class BaseRegistrationScreen(MDScreen):
@@ -593,4 +591,87 @@ class ServiceSlotAdding(MDScreen):
         Clock.schedule_once(deselect_rows)
 
 class ServiceSupport(MDScreen):
+
+    pass
+
+#-----------------service-register-form-2----------------------
+class ServiceRegisterForm(MDScreen):
+    dialog=None
+    def __init__(self, **kwargs):
+        super(ServiceRegisterForm, self).__init__(**kwargs)
+
+
+    def on_checkbox_active(self, checkbox, checkbox_value,add_branch_button):
+        if checkbox_value=='hospital_yes':
+            print(f"Selected service provider type: {checkbox_value}")
+            add_branch_button.disabled = not checkbox.active
+        elif checkbox_value=='mobileCare_yes':
+            print(f"Selected service provider type: {checkbox_value}")
+            add_branch_button.disabled = not checkbox.active
+        elif checkbox_value=='gym_yes':
+            print(f"Selected service provider type: {checkbox_value}")
+            add_branch_button.disabled = not checkbox.active
+        else:
+            print(f"Selected service provider type: {checkbox_value}")
+
+    def show_branch_dialog(self, content_type):
+        content = None
+
+        if content_type == "Hospital":
+            content = HospitalContent()
+        elif content_type == 'MobileCare':
+            content = MobileCareContent()
+        elif content_type == 'Gym':
+            content = GymContent()
+
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title='Add Hospital',
+                type="custom",
+                content_cls=content,
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        theme_text_color="Custom",
+                        on_release=self.cancel_dialog,
+                    ),
+                    MDFlatButton(
+                        text="OK",
+                        theme_text_color="Custom",
+                        on_release=self.ok_dialog,
+                    ),
+                ],
+                auto_dismiss=False,
+            )
+
+        self.dialog.open()
+
+    def cancel_dialog(self, instance):
+        print("CANCEL button clicked")
+        self.dialog.dismiss()
+
+    def ok_dialog(self, instance):
+        print("OK button clicked")
+        self.dialog.dismiss()
+
+    def dismiss_branch_dialog(self):
+        pass
+
+
+
+
+class HorizontalLineWidget(BoxLayout):
+    pass
+
+class HospitalContent(MDScrollView):
+    def __init__(self, **kwargs):
+        super(HospitalContent, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        self.size_hint_y = None
+        self.height = "300dp"
+
+class MobileCareContent(BoxLayout):
+    pass
+
+class GymContent(BoxLayout):
     pass

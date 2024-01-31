@@ -9,7 +9,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.textinput import TextInput
 from kivymd.uix.navigationdrawer import MDNavigationLayout
 
-from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
+from ServiceProvider import ServiceProviderMain, ServiceProfile, ServiceNotification, ServiceSupport, ServiceSlotAdding, \
+    ServiceRegisterForm
 
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
 
@@ -390,6 +391,7 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceNotification(name="service_notification"))
         screen_manager.add_widget(ServiceSlotAdding(name="service_slot_adding"))
         screen_manager.add_widget(ServiceSupport(name="service_support"))
+        screen_manager.add_widget(ServiceRegisterForm())
 
         return screen_manager
     def client_services1(self):
