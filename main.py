@@ -1,6 +1,7 @@
 import base64
 import json
 import re
+import webbrowser
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -655,9 +656,10 @@ class LoginApp(MDApp):
         client = razorpay.Client(auth=('rzp_test_kOpS7Ythlfb1Ho', 'OzPZyPbsOV0AlADilk4wkgv9'))
 
         # Create an order
-        order_amount = 1000  # Amount in paise (e.g., 50000 paise = 500 INR)
+        order_amount = 5000  # Amount in paise (e.g., 50000 paise = 500 INR)
         order_currency = 'INR'
-        order_receipt = 'order_rcptid_11'
+        order_receipt = 'order_rcptid_12'
+
         order_data = {
             'amount': order_amount,
             'currency': order_currency,
@@ -670,6 +672,7 @@ class LoginApp(MDApp):
 
             # Get the order ID
             order_id = order['id']
+            # client.payment.launch(order_id)
 
             # Construct the payment URL
             payment_url = f"https://rzp_test_kOpS7Ythlfb1Ho.api.razorpay.com/v1/checkout/{order_id}"
@@ -681,6 +684,13 @@ class LoginApp(MDApp):
     def open_payment_gateway(self, payment_url):
         # Replace this with actual code to open the payment gateway URL
         print(f"Opening Razorpay payment gateway: {payment_url}")
+        # # Create the Razorpay checkout URL
+        # razorpay_key_id = 'rzp_test_kOpS7Ythlfb1Ho'
+        # razorpay_checkout_url = f'https://checkout.razorpay.com/v1/checkout.js?key={razorpay_key_id}'
+        # webbrowser(razorpay_checkout_url)
+
+        # Open the Razorpay checkout in a WebView
+        # webbrowser.create_window('Razorpay Checkout', razorpay_checkout_url, width=800, height=600, resizable=True)
         #
         # # payment_page page logic
         # layout = BoxLayout(orientation='vertical')
@@ -695,6 +705,20 @@ class LoginApp(MDApp):
         # layout.add_widget(back_button)
         #
         # return layout
+
+    # def on_pay_button_pressed(self, instance):
+    #     client = razorpay.Client(api_key="YOUR_API_KEY", api_secret="YOUR_API_SECRET")
+    #
+    #     order = client.order.create(amount=10000, currency="INR")
+    #
+    #     client.payment.launch(order_id=order["id"])
+    #
+    #     client.payment.on("success", self.on_payment_success)
+    #
+    # def on_payment_success(self, payment):
+    #     self.label.text = "Payment successful!"
+
+
     # logic for back button in payment_page
     def payment_page_backButton(self):
         # Extract the username from menu_profile
