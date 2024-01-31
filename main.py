@@ -32,6 +32,10 @@ from datetime import datetime
 import anvil.server
 from anvil.tables import app_tables
 import requests
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+
+# from kivy.uix.webview import WebView
 # from google_auth_oauthlib.flow import InstalledAppFlow
 # import webbrowser
 # from google.auth.credentials import Credentials
@@ -559,13 +563,14 @@ class LoginApp(MDApp):
 
     # Slot_Booking pagelogic
 
+    time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
     def slot_booking_back_button(self, instance):
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
         screen.ids.date_choosed.text = "Choose a date"
-        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
-        for slots in time_slots:
+        for slots in LoginApp.time_slots:
             screen.ids[slots].disabled = False
+            screen.ids[slots].md_bg_color = (1, 1, 1, 1)
 
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'hospital_book'
@@ -574,9 +579,8 @@ class LoginApp(MDApp):
         print(self.session_time)
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
-        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
         selected_slot = label_text
-        for slot in time_slots:
+        for slot in LoginApp.time_slots:
             if slot == selected_slot:
                 screen.ids[slot].md_bg_color = (0, 1, 0, 1)
             else:
@@ -592,13 +596,11 @@ class LoginApp(MDApp):
         book_slot = app_tables.book_slot.search(book_date=formatted_date)
         book_times = [row['book_time'] for row in book_slot]
         print(formatted_date, book_times)
-        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
-        for slots in time_slots:
+        for slots in LoginApp.time_slots:
                 screen.ids[slots].disabled = False
                 if not book_times:
                     print(book_times)
-                    time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
-                    for slots in time_slots:
+                    for slots in LoginApp.time_slots:
                         screen.ids[slots].disabled = False
                 elif book_times:
                     for slots in book_times:
@@ -682,22 +684,22 @@ class LoginApp(MDApp):
         except Exception as e:
             print("An error occurred while creating the order:", str(e))
 
-    def open_payment_gateway(self, payment_url):
-        # Replace this with actual code to open the payment gateway URL
-        print(f"Opening Razorpay payment gateway: {payment_url}")
-        #
-        # # payment_page page logic
-        # layout = BoxLayout(orientation='vertical')
-        #
-        # # Create a WebView to display the Razorpay payment page
-        # webview = WebView(url='payment_url', size_hint=(1, 1))
-        # layout.add_widget(webview)
-        #
-        # # Add a back button
-        # back_button = Button(text='Back to App', size_hint=(1, 0.1))
-        # back_button.bind(on_press=self.back_to_app)
-        # layout.add_widget(back_button)
-        #
+    # def open_payment_gateway(self, payment_url):
+    #     # Replace this with actual code to open the payment gateway URL
+    #     print(f"Opening Razorpay payment gateway: {payment_url}")
+    #
+    #     # payment_page page logic
+    #     layout = BoxLayout(orientation='vertical')
+    #
+    #     # Create a WebView to display the Razorpay payment page
+    #     webview = WebView(url='payment_url', size_hint=(1, 1))
+    #     layout.add_widget(webview)
+    #
+    #     # Add a back button
+    #     back_button = Button(text='Back to App', size_hint=(1, 0.1))
+    #     back_button.bind(on_press=self.back_to_app)
+    #     layout.add_widget(back_button)
+
         # return layout
     # logic for back button in payment_page
     def payment_page_backButton(self):
