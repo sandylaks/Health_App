@@ -141,6 +141,7 @@ class LoginApp(MDApp):
     def get_database_connection(self):
         if self.is_connected():
             # Use Anvil's database connection
+            return anvil.server.connect("server_LIKW73GHKNLPAT3SJ7KLHJAN-TID26NJ4VTG2O42H")
 
             return anvil.server.connect(server)
 
@@ -200,9 +201,9 @@ class LoginApp(MDApp):
 
             # If validation is successful, insert into the database
 
-
             try:
                 if self.is_connected():
+                    anvil.server.connect("server_LIKW73GHKNLPAT3SJ7KLHJAN-TID26NJ4VTG2O42H")
 
                  
                     anvil.server.connect(server)
@@ -555,7 +556,7 @@ class LoginApp(MDApp):
         selected_slot = label_text
         for slot in LoginApp.time_slots:
             if slot == selected_slot:
-                screen.ids[slot].md_bg_color = (0, 1, 0, 1)
+                screen.ids[slot].md_bg_color = (0, 0, 0, 0)
             else:
                 screen.ids[slot].md_bg_color = (1, 0, 0, 1)
 
@@ -572,7 +573,6 @@ class LoginApp(MDApp):
         for slots in LoginApp.time_slots:
                 screen.ids[slots].disabled = False
                 if not book_times:
-                    print(book_times)
                     for slots in LoginApp.time_slots:
                         screen.ids[slots].disabled = False
                 elif book_times:
@@ -599,11 +599,6 @@ class LoginApp(MDApp):
         self.screen = Builder.load_file("client_services.kv")
         screen2 = self.root.get_screen('client_services')
         username = screen2.ids.username.text
-        email = screen2.ids.email.text
-        user = app_tables.users.get(email=email)
-        id = user['id']
-        row = app_tables.book_slot.search()
-        slot_id = len(row)+1
         if len(session_date) == 10 and hasattr(self, 'session_time') and self.session_time:
             print(username,session_date, self.session_time )
             self.root.current = 'payment_page'
@@ -611,14 +606,6 @@ class LoginApp(MDApp):
             current_screen.ids.user_name.text = username
             current_screen.ids.session_date.text = session_date
             current_screen.ids.session_time.text = self.session_time
-
-            # app_tables.book_slot.add_row(
-            #     slot_id=slot_id,
-            #     user_id=id,
-            #     username=username,
-            #     book_date=session_date,
-            #     book_time=self.session_time
-            # )
             self.root.transition.direction = 'left'
             self.root.current = 'payment_page'
         elif len(session_date) == 13 and hasattr(self, 'session_time') and self.session_time:
@@ -630,7 +617,28 @@ class LoginApp(MDApp):
 
 #-------------------------------Razorpay-flow------------------------------------
 
-    def razor_pay(self, instance):
+    def razor_pay(self, instance, *args):
+        self.root.current = 'payment_page'
+        current_screen = self.root.current_screen
+        username = current_screen.ids.user_name.text
+        session_date = current_screen.ids.session_date.text
+        self.session_time = current_screen.ids.session_time.text
+        # Extract the username from menu_profile
+        self.screen = Builder.load_file("client_services.kv")
+        screen2 = self.root.get_screen('client_services')
+        # username = screen2.ids.username.text
+        email = screen2.ids.email.text
+        user = app_tables.users.get(email=email)
+        id = user['id']
+        row = app_tables.book_slot.search()
+        slot_id = len(row) + 1
+        app_tables.book_slot.add_row(
+            slot_id=slot_id,
+            user_id=id,
+            username=username,
+            book_date=session_date,
+            book_time=self.session_time
+        )
         client = razorpay.Client(auth=('rzp_test_kOpS7Ythlfb1Ho', 'OzPZyPbsOV0AlADilk4wkgv9'))
 
         # Create an order
