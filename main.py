@@ -1,11 +1,13 @@
 import base64
 import json
 import re
+import webbrowser
 
 
 from kivymd.uix.navigationdrawer import MDNavigationLayout
 
-from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
+from ServiceProvider import ServiceProviderMain, ServiceProfile, ServiceNotification, ServiceSupport, ServiceSlotAdding, \
+    ServiceRegisterForm
 
 from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
 
@@ -32,6 +34,10 @@ from datetime import datetime
 import anvil.server
 from anvil.tables import app_tables
 import requests
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+
+# from kivy.uix.webview import WebView
 # from google_auth_oauthlib.flow import InstalledAppFlow
 # import webbrowser
 # from google.auth.credentials import Credentials
@@ -146,7 +152,7 @@ class LoginApp(MDApp):
     def get_database_connection(self):
         if self.is_connected():
             # Use Anvil's database connection
-            return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+            return anvil.server.connect("server_5A3KARKYEQYWILR6V65KWJU2-YRPGRW5ZQBBQXWYJ")
         else:
             # Use SQLite database connection
             return sqlite3.connect('users.db')
@@ -159,12 +165,6 @@ class LoginApp(MDApp):
         password = screen.ids.signup_password.text
         phone = screen.ids.signup_phone.text
         pincode = screen.ids.signup_pincode.text
-        # print(username)
-        # print(email)
-        # print(password)
-        # print(phone)
-        # print(pincode)
-
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -212,7 +212,7 @@ class LoginApp(MDApp):
 
             try:
                 if self.is_connected():
-                    anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                    anvil.server.connect("server_5A3KARKYEQYWILR6V65KWJU2-YRPGRW5ZQBBQXWYJ")
                     rows = app_tables.users.search()
                     # Get the number of rows
                     id = len(rows) + 1
@@ -386,38 +386,24 @@ class LoginApp(MDApp):
         screen_manager.add_widget(ServiceNotification(name="service_notification"))
         screen_manager.add_widget(ServiceSlotAdding(name="service_slot_adding"))
         screen_manager.add_widget(ServiceSupport(name="service_support"))
+        screen_manager.add_widget(ServiceRegisterForm())
 
         return screen_manager
     def client_services1(self):
-        self.root.transition.direction = 'right'
+        self.root.transition.direction = 'left'
         self.root.current = 'client_services1'
 
-    def show_dropdown_menu(self, widget):
-        menu_items = [{"text": "Get the current location", "on_release": self.menu_callback}]
+    def get_location(self):
+        import json
+        from urllib.request import urlopen
 
-        if not hasattr(self, 'menu') or self.menu is None:
-            # If menu is not yet initialized or has been dismissed, create a new one
-            self.menu = MDDropdownMenu(items=menu_items, width_mult=4)
-
-        self.menu.caller = widget
-        if self.menu.caller:
-            self.menu.open()
-
-    def menu_callback(self):
-        print("Before menu.open():", self.menu)
-        if self.menu:
-            import json
-            from urllib.request import urlopen
-
-            url = 'http://ipinfo.io/json'
-            response = urlopen(url)
-            data = json.load(response)
-            pincode = data["postal"]
-            self.screen = Builder.load_file("client_services1.kv")
-            screen = self.root.current_screen
-            screen.ids.pincode.text = pincode
-            self.menu.dismiss()
-        print("After menu.open():", self.menu)
+        url = 'http://ipinfo.io/json'
+        response = urlopen(url)
+        data = json.load(response)
+        pincode = data["postal"]
+        self.screen = Builder.load_file("client_services1.kv")
+        screen = self.root.current_screen
+        screen.ids.pincode.text = pincode
 
     def logout(self):
         self.root.transition.direction = 'left'
@@ -559,13 +545,14 @@ class LoginApp(MDApp):
 
     # Slot_Booking pagelogic
 
+    time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
     def slot_booking_back_button(self, instance):
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
         screen.ids.date_choosed.text = "Choose a date"
-        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
-        for slots in time_slots:
+        for slots in LoginApp.time_slots:
             screen.ids[slots].disabled = False
+            screen.ids[slots].md_bg_color = (1, 1, 1, 1)
 
         self.root.transition = SlideTransition(direction='right')
         self.root.current = 'hospital_book'
@@ -574,9 +561,8 @@ class LoginApp(MDApp):
         print(self.session_time)
         self.screen = Builder.load_file("slot_booking.kv")
         screen = self.root.current_screen
-        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
         selected_slot = label_text
-        for slot in time_slots:
+        for slot in LoginApp.time_slots:
             if slot == selected_slot:
                 screen.ids[slot].md_bg_color = (0, 1, 0, 1)
             else:
@@ -592,13 +578,11 @@ class LoginApp(MDApp):
         book_slot = app_tables.book_slot.search(book_date=formatted_date)
         book_times = [row['book_time'] for row in book_slot]
         print(formatted_date, book_times)
-        time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
-        for slots in time_slots:
+        for slots in LoginApp.time_slots:
                 screen.ids[slots].disabled = False
                 if not book_times:
                     print(book_times)
-                    time_slots = ['9am - 11am', '11am - 1pm', '1pm - 3pm', '3pm - 5pm', '5pm - 7pm', '7pm - 9pm']
-                    for slots in time_slots:
+                    for slots in LoginApp.time_slots:
                         screen.ids[slots].disabled = False
                 elif book_times:
                     for slots in book_times:
@@ -659,9 +643,10 @@ class LoginApp(MDApp):
         client = razorpay.Client(auth=('rzp_test_kOpS7Ythlfb1Ho', 'OzPZyPbsOV0AlADilk4wkgv9'))
 
         # Create an order
-        order_amount = 1000  # Amount in paise (e.g., 50000 paise = 500 INR)
+        order_amount = 5000  # Amount in paise (e.g., 50000 paise = 500 INR)
         order_currency = 'INR'
-        order_receipt = 'order_rcptid_11'
+        order_receipt = 'order_rcptid_12'
+
         order_data = {
             'amount': order_amount,
             'currency': order_currency,
@@ -674,6 +659,7 @@ class LoginApp(MDApp):
 
             # Get the order ID
             order_id = order['id']
+            # client.payment.launch(order_id)
 
             # Construct the payment URL
             payment_url = f"https://rzp_test_kOpS7Ythlfb1Ho.api.razorpay.com/v1/checkout/{order_id}"
@@ -685,6 +671,13 @@ class LoginApp(MDApp):
     def open_payment_gateway(self, payment_url):
         # Replace this with actual code to open the payment gateway URL
         print(f"Opening Razorpay payment gateway: {payment_url}")
+        # # Create the Razorpay checkout URL
+        # razorpay_key_id = 'rzp_test_kOpS7Ythlfb1Ho'
+        # razorpay_checkout_url = f'https://checkout.razorpay.com/v1/checkout.js?key={razorpay_key_id}'
+        # webbrowser(razorpay_checkout_url)
+
+        # Open the Razorpay checkout in a WebView
+        # webbrowser.create_window('Razorpay Checkout', razorpay_checkout_url, width=800, height=600, resizable=True)
         #
         # # payment_page page logic
         # layout = BoxLayout(orientation='vertical')
@@ -698,7 +691,37 @@ class LoginApp(MDApp):
         # back_button.bind(on_press=self.back_to_app)
         # layout.add_widget(back_button)
         #
+    # def open_payment_gateway(self, payment_url):
+    #     # Replace this with actual code to open the payment gateway URL
+    #     print(f"Opening Razorpay payment gateway: {payment_url}")
+    #
+    #     # payment_page page logic
+    #     layout = BoxLayout(orientation='vertical')
+    #
+    #     # Create a WebView to display the Razorpay payment page
+    #     webview = WebView(url='payment_url', size_hint=(1, 1))
+    #     layout.add_widget(webview)
+    #
+    #     # Add a back button
+    #     back_button = Button(text='Back to App', size_hint=(1, 0.1))
+    #     back_button.bind(on_press=self.back_to_app)
+    #     layout.add_widget(back_button)
+
         # return layout
+
+    # def on_pay_button_pressed(self, instance):
+    #     client = razorpay.Client(api_key="YOUR_API_KEY", api_secret="YOUR_API_SECRET")
+    #
+    #     order = client.order.create(amount=10000, currency="INR")
+    #
+    #     client.payment.launch(order_id=order["id"])
+    #
+    #     client.payment.on("success", self.on_payment_success)
+    #
+    # def on_payment_success(self, payment):
+    #     self.label.text = "Payment successful!"
+
+
     # logic for back button in payment_page
     def payment_page_backButton(self):
         # Extract the username from menu_profile
