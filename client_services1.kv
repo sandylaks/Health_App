@@ -23,9 +23,9 @@ MDScreen:
                             md_bg_color: 1, 1, 1, 1
                             pos_hint:{'center_x': 0.5,'center_y': 0.7}
                             IconRightWidget:
-                                icon: "menu-down"
+                                icon: "crosshairs-gps"
                                 pos_hint:{'center_x': 0.9,'center_y': 0.6}
-                                on_release: app.show_dropdown_menu(self)
+                                on_release: app.get_location()
                             MDBoxLayout:
                                 pos_hint: {'center_x': 0.55}
                                 background_color:(1,1,1,1)
@@ -40,6 +40,7 @@ MDScreen:
                                     write_tab: False
                                     size_hint_x: None
                                     width: dp(190)
+                                    hint_text_color:(1,1,1,1)
                         Button:
                             id: login_button
                             text: "Submit"
