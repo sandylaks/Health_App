@@ -5,20 +5,6 @@ import webbrowser
 
 
 from kivymd.uix.navigationdrawer import MDNavigationLayout
-
-from ServiceProvider import ServiceProviderMain, ServiceProfile, ServiceNotification, ServiceSupport, ServiceSlotAdding, \
-    ServiceRegisterForm
-
-from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym,ServiceProviderMain
-
-from ServiceProvider import ServiceRegister,ServiceProvider,ServiceRegisterAmbulance,ServiceRegisterGym
-from ServiceProvider import ServiceProviderMain,ServiceProfile,ServiceNotification,ServiceSupport,ServiceSlotAdding
-
-from kivymd.uix.pickers import MDDatePicker
-# from kivyauth.google_auth import initialize_google,login_google,logout_google
-from ServiceProvider import ServiceRegister, ServiceProvider, ServiceRegisterAmbulance, ServiceRegisterGym, ServiceProviderMain
-
-
 from kivy.lang import Builder
 from kivymd import app
 from kivymd.app import MDApp
@@ -47,6 +33,9 @@ import razorpay
 import sqlite3
 from kivymd.uix.floatlayout import MDFloatLayout
 
+from ServiceProvider import ServiceRegisterForm
+from ServiceProviderMainPage import ServiceProviderMain, ServiceProfile, ServiceNotification, ServiceSlotAdding, \
+    ServiceSupport
 
 Window.size = (320, 580)
 
@@ -84,7 +73,7 @@ class ProfileCard(MDFloatLayout, FakeRectangularElevationBehavior):
     pass
 class MDNavigationLayout(MDNavigationLayout):
     pass
-
+server="server_VL2UZDSYOLIQMHPWT2MEQGTG-3VWJQYM6QFUZ2UGR"
 # Create the main app class
 class LoginApp(MDApp):
 
@@ -152,7 +141,7 @@ class LoginApp(MDApp):
     def get_database_connection(self):
         if self.is_connected():
             # Use Anvil's database connection
-            return anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+            return anvil.server.connect(server)
         else:
             # Use SQLite database connection
             return sqlite3.connect('users.db')
@@ -218,7 +207,8 @@ class LoginApp(MDApp):
 
             try:
                 if self.is_connected():
-                    anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                    self.server
+                    anvil.server.connect(server)
                     rows = app_tables.users.search()
                     # Get the number of rows
                     id = len(rows) + 1
@@ -381,18 +371,15 @@ class LoginApp(MDApp):
         screen_manager.add_widget(Builder.load_file("menu_reports_second.kv"))
         screen_manager.add_widget(Builder.load_file("menu_support.kv"))
         screen_manager.add_widget(Builder.load_file("hospital_book.kv"))
-        screen_manager.add_widget(ServiceProvider("service_provider"))
-        screen_manager.add_widget(ServiceRegister("service_register_form"))
         screen_manager.add_widget(Builder.load_file("slot_booking.kv"))
         screen_manager.add_widget(Builder.load_file("payment_page.kv"))
-        screen_manager.add_widget(ServiceRegisterGym("gym_register_form"))
-        screen_manager.add_widget(ServiceRegisterAmbulance("ambulance_register_form"))
         screen_manager.add_widget(ServiceProviderMain(name="service_provider_main_page"))
         screen_manager.add_widget(ServiceProfile(name="service_profile"))
         screen_manager.add_widget(ServiceNotification(name="service_notification"))
         screen_manager.add_widget(ServiceSlotAdding(name="service_slot_adding"))
         screen_manager.add_widget(ServiceSupport(name="service_support"))
         screen_manager.add_widget(ServiceRegisterForm())
+
 
         return screen_manager
     def client_services1(self):

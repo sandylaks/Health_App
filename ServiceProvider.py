@@ -1,52 +1,28 @@
-import io
 
-import kivy
 import re
-
 from anvil import BlobMedia
 from anvil.tables import app_tables
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDRaisedButton, MDFlatButton
-from kivymd.uix.datatables import MDDataTable
+from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
 from kivy.properties import ObjectProperty
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.image import Image
-from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.animation import Animation
 from kivy.metrics import dp
-from kivy.uix.popup import Popup
-from kivy.uix.filechooser import FileChooserListView
-from kivy.uix.button import Button
 from kivymd.uix.filemanager import MDFileManager
-import sqlite3
-from kivy.uix.image import AsyncImage
-from kivy.uix.image import Image
 from kivymd.app import MDApp
 from kivy.clock import Clock
-from kivymd.uix.behaviors import CommonElevationBehavior
 import anvil.server
-# anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
 import anvil.media
 import os
 import requests
 from kivymd.uix.scrollview import MDScrollView
 
-Builder.load_file("service_register_form.kv")
-Builder.load_file("service_provider.kv")
-Builder.load_file("service_provider_main_page.kv")
-Builder.load_file("ambulance_register_form.kv")
-Builder.load_file("gym_register_form.kv")
 Builder.load_file('service_register.kv')
 
-#----------------------Rigistration form--------------------
 class BaseRegistrationScreen(MDScreen):
 
 
@@ -276,7 +252,7 @@ class BaseRegistrationScreen(MDScreen):
                     media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
                                        content=self.file_data2)
                     if self.is_connected():
-                        anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                        anvil.server.connect("server_VL2UZDSYOLIQMHPWT2MEQGTG-3VWJQYM6QFUZ2UGR")
                         rows = app_tables.hospital_register_form.search()
                         # Get the number of rows
                         num = len(rows) + 1
@@ -313,7 +289,7 @@ class BaseRegistrationScreen(MDScreen):
                     media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
                                        content=self.file_data2)
                     if self.is_connected():
-                        anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                        anvil.server.connect("server_VL2UZDSYOLIQMHPWT2MEQGTG-3VWJQYM6QFUZ2UGR")
                         rows = app_tables.ambulance_register_form.search()
                         # Get the number of rows
                         num = len(rows) + 1
@@ -350,7 +326,7 @@ class BaseRegistrationScreen(MDScreen):
                     media2 = BlobMedia(content_type="application/octet-stream", name=self.file_name2,
                                        content=self.file_data2)
                     if self.is_connected():
-                        anvil.server.connect("server_42NNKDLPGUOK3E7FTS3LKXZR-2KOMXZYBNO22QB25")
+                        anvil.server.connect("server_VL2UZDSYOLIQMHPWT2MEQGTG-3VWJQYM6QFUZ2UGR")
                         rows = app_tables.gym_register_form.search()
                         # Get the number of rows
                         num = len(rows) + 1
@@ -415,185 +391,6 @@ class BaseRegistrationScreen(MDScreen):
         # All checks passed; the password is valid
         return True, "Password is valid"
 
-
-class ServiceRegister(BaseRegistrationScreen):
-    # Additional functionalities specific to ServiceRegister
-    pass
-
-class ServiceRegisterGym(BaseRegistrationScreen):
-    # Additional functionalities specific to ServiceRegisterGym
-    pass
-
-class ServiceRegisterAmbulance(BaseRegistrationScreen):
-    # Additional functionalities specific to ServiceRegisterAmbulance
-    pass
-
-#------------------------ServiceProvider--------------------
-
-class ServiceProvider(MDScreen):
-
-    def animate_button(self, button_id):
-        original_button_size = (dp(290), dp(150))
-        original_image_size = (dp(290), dp(150))
-
-        # Create animation for the button size
-        anim_button = Animation(size=(dp(280), dp(140)),  duration=0.2, transition="linear")
-        anim_button += Animation(size=original_button_size,duration=0.2)
-
-        # Create animation for the image size
-        anim_image = Animation( size=(dp(280), dp(140)),duration=0.2, transition="linear")
-        anim_image += Animation(size=original_image_size, duration=0.2)
-
-        anim_button.start(self.ids[button_id])
-        anim_image.start(self.ids[button_id].children[0])
-
-        self.ids[button_id].elevation_normal = 0
-
-        Clock.schedule_once(lambda dt: self.transition_to_service_register_form(button_id), 0.5)
-
-    def transition_to_service_register_form(self, button_id):
-        app = MDApp.get_running_app()
-        app.root.transition.direction = "left"
-
-        if button_id == 'hospital_button':
-            app.root.current = "service_register_form"
-        elif button_id == 'ambulance_button':
-            app.root.current = "ambulance_register_form"
-        elif button_id == 'gym_button':
-            app.root.current = "gym_register_form"
-        # Add more conditions as needed for other buttons
-
-#-------------------service provider main-----------------------
-class ServiceProviderMain(MDScreen):
-    menu = ObjectProperty(None)
-    def service_button(self,button):
-        if not self.menu:
-            cities = ["Settings", "Notification"]
-            items = [
-                {
-                    "text": city,
-                    "viewclass": "OneLineListItem",
-                    "on_release": lambda x=city: self.select_city(x),
-                } for city in cities
-            ]
-
-            # Use the first button from right_action_items as the caller
-
-
-
-            self.menu = MDDropdownMenu(
-                caller=button,
-                items=items,
-                width_mult=3,
-                elevation=2,
-
-                max_height = dp(100),
-
-            )
-        else:
-            self.menu.dismiss()
-
-        self.menu.open()
-
-    def select_city(self, option):
-        # Callback function when a city is selected
-        if option == 'Settings':
-            self.settings()
-        elif option == 'Notification':
-            self.notification_button_action()
-
-        self.menu.dismiss()
-
-    def settings(self):
-        print("Settings")
-
-    def notification_button_action(self):
-        print("Notification")
-
-
-    def sign_out_button_action(self):
-        app = MDApp.get_running_app()
-        app.root.transition.direction = "left"
-        app.root.current = "login"
-class ServiceProfile(MDScreen):
-    pass
-
-class ServiceNotification(MDScreen):
-    pass
-
-
-
-class ServiceSlotAdding(MDScreen):
-    def __init__(self, **kwargs):
-        super(ServiceSlotAdding, self).__init__(**kwargs)
-        self.data_tables = MDDataTable(
-            pos_hint={"center_y": 0.5, "center_x": 0.5},
-            size_hint=(0.9, 0.6),
-            use_pagination=True,
-            check=True,
-            column_data=[
-                ("No.", dp(30)),
-                ("Slot No", dp(40)),
-                ("Applied Date", dp(40)),
-                ("Status", dp(40)),
-            ],
-            row_data=[("1", "A1", "01-01-2024", ([1, 0, 0, 1],'pedding'))],
-        )
-
-        # Creating control buttons.
-        button_box = MDBoxLayout(
-            pos_hint={"center_x": 0.5},
-            adaptive_size=True,
-            padding="24dp",
-            spacing="24dp",
-        )
-
-        for button_text in ["Add Slot",  "Delete Checked Slots"]:
-            button_box.add_widget(
-                MDRaisedButton(
-                    text=button_text, on_release=self.on_button_press
-                )
-            )
-
-        layout = MDFloatLayout()  # root layout
-        layout.add_widget(self.data_tables)
-        layout.add_widget(button_box)
-        self.add_widget(layout)
-
-    def on_button_press(self, instance_button):
-        try:
-            {
-                "Add Slot": self.add_row,
-                "Delete Checked Slots": self.delete_checked_rows,
-            }[instance_button.text]()
-        except KeyError:
-            pass
-
-    def add_row(self):
-        last_num_row = int(self.data_tables.row_data[-1][0])
-        new_row_data = (
-            str(last_num_row + 1),
-            "C1",
-            "03-03-2024",
-            ([1, 1, 0, 0], 'in progress')
-        )
-        self.data_tables.row_data.append(list(new_row_data))
-
-    def delete_checked_rows(self):
-        def deselect_rows(*args):
-            self.data_tables.table_data.select_all("normal")
-
-        checked_rows = self.data_tables.get_row_checks()
-        for checked_row in checked_rows:
-            if checked_row in self.data_tables.row_data:
-                self.data_tables.row_data.remove(checked_row)
-
-        Clock.schedule_once(deselect_rows)
-
-class ServiceSupport(MDScreen):
-
-    pass
-
 #-----------------service-register-form-2----------------------
 class ServiceRegisterForm(MDScreen):
     dialog=None
@@ -602,33 +399,24 @@ class ServiceRegisterForm(MDScreen):
 
 
     def on_checkbox_active(self, checkbox, checkbox_value,add_branch_button):
-        if checkbox_value=='hospital_yes':
+        if checkbox_value=='Hospital':
             print(f"Selected service provider type: {checkbox_value}")
             add_branch_button.disabled = not checkbox.active
-        elif checkbox_value=='mobileCare_yes':
+        elif checkbox_value=='Mobile-Hospital':
             print(f"Selected service provider type: {checkbox_value}")
             add_branch_button.disabled = not checkbox.active
-        elif checkbox_value=='gym_yes':
+        elif checkbox_value=='Gym':
             print(f"Selected service provider type: {checkbox_value}")
             add_branch_button.disabled = not checkbox.active
         else:
             print(f"Selected service provider type: {checkbox_value}")
 
     def show_branch_dialog(self, content_type):
-        content = None
-
-        if content_type == "Hospital":
-            content = HospitalContent()
-        elif content_type == 'MobileCare':
-            content = MobileCareContent()
-        elif content_type == 'Gym':
-            content = GymContent()
-
         if not self.dialog:
             self.dialog = MDDialog(
                 title='Add Hospital',
                 type="custom",
-                content_cls=content,
+                content_cls=HospitalContent(),
                 buttons=[
                     MDFlatButton(
                         text="CANCEL",
@@ -670,8 +458,8 @@ class HospitalContent(MDScrollView):
         self.size_hint_y = None
         self.height = "300dp"
 
-class MobileCareContent(BoxLayout):
+class MobileCareContent(MDScrollView):
     pass
 
-class GymContent(BoxLayout):
+class GymContent(MDScrollView):
     pass
