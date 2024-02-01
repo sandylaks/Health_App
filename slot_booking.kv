@@ -1,6 +1,5 @@
-MDScreen:
+<Slot_Booking>:
     name: 'slot_booking'
-
     BoxLayout:
         orientation: 'vertical'
 
@@ -11,7 +10,9 @@ MDScreen:
             theme_text_color: "Custom"
             text_color: rgba(71, 92, 119, 255)
             on_release:
-                app.slot_booking_back_button(self)
+                root.slot_booking_back_button(self)
+#                root.manager.transition.direction = "right"
+#                root.manager.current = "hospital_book"
 
         ScrollView:
             GridLayout:
@@ -54,7 +55,7 @@ MDScreen:
                             size: dp(150), dp(35)  # Adjusted size
                             halign: "left"
                             md_bg_color: 0, 0, 0, 0
-                            on_release: app.slot_date_picker()
+                            on_release: root.slot_date_picker()
 
                             BoxLayout:
                                 orientation: 'horizontal'
@@ -132,7 +133,7 @@ MDScreen:
                                 size: dp(110), dp(58) # Adjusted size
                                 halign: "left"
                                 md_bg_color: 0, 0, 0, 0
-                                on_release: app.select_timings(self,FirstSlot.text)
+                                on_release: root.select_timings(self,FirstSlot.text)
 
                                 canvas:
                                     Color:
@@ -166,7 +167,7 @@ MDScreen:
                                 halign: "left"
                                 md_bg_color: 0, 0, 0, 0
                                 on_release:
-                                    app.select_timings(self,SecondSlot.text)
+                                    root.select_timings(self,SecondSlot.text)
 
                                 canvas:
                                     Color:
@@ -201,7 +202,7 @@ MDScreen:
                                 halign: "left"
                                 md_bg_color: 0, 0, 0, 0
                                 on_release:
-                                    app.select_timings(self,ThirdSlot.text)
+                                    root.select_timings(self,ThirdSlot.text)
                                 canvas:
                                     Color:
                                         rgba: 1, 0, 0, 1  # Red color with RGBA values
@@ -234,7 +235,7 @@ MDScreen:
                                 halign: "left"
                                 md_bg_color: 0, 0, 0, 0
                                 on_release:
-                                    app.select_timings(self,ForthSlot.text)
+                                    root.select_timings(self,ForthSlot.text)
                                 canvas:
                                     Color:
                                         rgba: 1, 0, 0, 1  # Red color with RGBA values
@@ -269,7 +270,7 @@ MDScreen:
                                 halign: "left"
                                 md_bg_color: 0, 0, 0, 0
                                 on_release:
-                                    app.select_timings(self,FifthSlot.text)
+                                    root.select_timings(self,FifthSlot.text)
                                 canvas:
                                     Color:
                                         rgba: 1, 0, 0, 1  # Red color with RGBA values
@@ -302,7 +303,7 @@ MDScreen:
                                 halign: "left"
                                 md_bg_color: 0, 0, 0, 0
                                 on_release:
-                                    app.select_timings(self,SixthSlot.text)
+                                    root.select_timings(self,SixthSlot.text)
                                 canvas:
                                     Color:
                                         rgba: 1, 0, 0, 1  # Red color with RGBA values
@@ -336,7 +337,7 @@ MDScreen:
             font_name: "Roboto"
             bold: True
             on_release:
-                app.pay_now(self)
+                root.pay_now(self)
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)

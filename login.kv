@@ -1,4 +1,4 @@
-MDScreen:
+<Login>:
     name: "login"
     MDFloatLayout:
         id:main
@@ -90,7 +90,7 @@ MDScreen:
             background_color: 0, 0, 0, 0
             font_name:"Roboto"
             on_release:
-                app.login_page(self)
+                root.login_page(self)
             canvas.before:
                 Color:
                     rgb: rgba(255, 0, 0, 255)

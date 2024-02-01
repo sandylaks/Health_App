@@ -1,4 +1,3 @@
-
 import re
 from anvil import BlobMedia
 from anvil.tables import app_tables
@@ -10,11 +9,8 @@ from kivymd.uix.screen import MDScreen
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.pickers import MDDatePicker
 from kivy.properties import ObjectProperty
-from kivy.animation import Animation
-from kivy.metrics import dp
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.app import MDApp
-from kivy.clock import Clock
 import anvil.server
 import anvil.media
 import os
@@ -22,13 +18,14 @@ import requests
 from kivymd.uix.scrollview import MDScrollView
 
 Builder.load_file('service_register.kv')
+Builder.load_file('content_class.kv')
 
-class BaseRegistrationScreen(MDScreen):
 
-
-    #------------------dropdowns---------------
+class BaseRegistrationScreen:
+    # ------------------dropdowns---------------
     menu = ObjectProperty(None)
     menu2 = ObjectProperty(None)
+
     def open_dropdown(self, widget):
         if not self.menu:
             # Dropdown items
@@ -57,20 +54,21 @@ class BaseRegistrationScreen(MDScreen):
         # Callback function when a city is selected
         self.ids.Nation.text = selected_city  # Update the text field
         self.menu.dismiss()
-    def open_dropdown2(self,widget):
+
+    def open_dropdown2(self, widget):
 
         if not self.menu2:
             # Dropdown items
             cities = [
-                        "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
-                        "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
-                        "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
-                        "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan",
-                        "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
-                        "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands",
-                        "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
-                        "Lakshadweep", "Delhi", "Puducherry"
-                    ]
+                "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+                "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand",
+                "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur",
+                "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan",
+                "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+                "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands",
+                "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+                "Lakshadweep", "Delhi", "Puducherry"
+            ]
             items = [
                 {
                     "text": city,
@@ -83,7 +81,7 @@ class BaseRegistrationScreen(MDScreen):
                 items=items,
                 width_mult=6,
                 max_height=400,
-                pos_hint={'center_x':.1,'center_y':.9}
+                pos_hint={'center_x': .1, 'center_y': .9}
             )
         else:
             self.menu2.dismiss()  # Dismiss if already open
@@ -94,26 +92,27 @@ class BaseRegistrationScreen(MDScreen):
 
     def select_state(self, select_state):
         # Callback function when a city is selected
-        #print(select_state)
+        # print(select_state)
         self.ids.State.text = select_state  # Update the text field
         self.menu2.dismiss()  # Dismiss the menu
-
 
     def on_save(self, instance, value, date_range):
         self.ids.extra_info2.text = str(value)
 
     # click Cancel
     def on_cancel(self, instance, value):
-        #print("cancel")
+        # print("cancel")
         instance.dismiss()
 
-    def show_date_picker(self,arg):
-        date_dialog = MDDatePicker( size_hint=(None, None), size=(150, 150))
+    def show_date_picker(self, arg):
+        date_dialog = MDDatePicker(size_hint=(None, None), size=(150, 150))
         date_dialog.bind(on_save=self.on_save, on_cancel=self.on_cancel)
         date_dialog.open()
-        self.ids.extra_info2.text=''
-#------------------------------upload--docs--------------------------
-    field_id=None
+        self.ids.extra_info2.text = ''
+
+    # ------------------------------upload--docs--------------------------
+    field_id = None
+
     def file_manager_open(self, field_id):
         self.field_id = getattr(self.ids, field_id)
         self.file_manager = MDFileManager(
@@ -157,6 +156,7 @@ class BaseRegistrationScreen(MDScreen):
         except:
             msg = "Please select a file."
             setattr(self.field_id, 'text', msg)
+
     def read_file(self, file_path):
         with open(file_path, 'rb') as file:
             return file.read()
@@ -164,8 +164,7 @@ class BaseRegistrationScreen(MDScreen):
     def exit_manager(self, *args):
         self.file_manager.close()
 
-
-#----------------------------------registration validation-------------
+    # ----------------------------------registration validation-------------
 
     def is_connected(self):
         try:
@@ -184,6 +183,7 @@ class BaseRegistrationScreen(MDScreen):
             buttons=[MDFlatButton(text="OK", on_release=lambda x: dialog.dismiss())],
         )
         dialog.open()
+
     def hospital_register_form(self, register_id):
 
         service_provider_name = self.ids.service_provider_name.text
@@ -191,11 +191,11 @@ class BaseRegistrationScreen(MDScreen):
         service_provider_password = self.ids.service_provider_password.text
         service_provider_phoneno = self.ids.service_provider_phoneno.text
         service_provider_address = self.ids.service_provider_address.text
-        Nation=self.ids.Nation.text
-        State=self.ids.State.text
-        service_provider_pincode=self.ids.service_provider_pincode.text
-        extra_info=self.ids.extra_info.text
-        extra_info2=self.ids.extra_info2.text
+        Nation = self.ids.Nation.text
+        State = self.ids.State.text
+        service_provider_pincode = self.ids.service_provider_pincode.text
+        extra_info = self.ids.extra_info.text
+        extra_info2 = self.ids.extra_info2.text
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -211,7 +211,7 @@ class BaseRegistrationScreen(MDScreen):
             self.ids.service_provider_email.required = True
         elif not is_valid_password:
             self.ids.service_provider_password.error = True
-            self.ids.service_provider_password.helper_text =  password_error_message
+            self.ids.service_provider_password.helper_text = password_error_message
             self.ids.service_provider_password.required = True
         elif not service_provider_phoneno or len(service_provider_phoneno) != 10:
             self.ids.service_provider_phoneno.error = True
@@ -244,7 +244,7 @@ class BaseRegistrationScreen(MDScreen):
 
         else:
             app = MDApp.get_running_app()
-            if app.root.current=="service_register_form":
+            if app.root.current == "service_register_form":
                 print("------------------hospital_manager--------------")
                 try:
                     media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
@@ -281,7 +281,7 @@ class BaseRegistrationScreen(MDScreen):
                     print(e)
                     self.show_validation_dialog("Select file")
 
-            elif app.root.current=="ambulance_register_form":
+            elif app.root.current == "ambulance_register_form":
                 print("----------------ambulance_manager--------------------")
                 try:
                     media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
@@ -318,7 +318,7 @@ class BaseRegistrationScreen(MDScreen):
                     print(e)
                     self.show_validation_dialog("Select file")
 
-            elif app.root.current=="gym_register_form":
+            elif app.root.current == "gym_register_form":
                 print("---------------------gym_manager---------------------------")
                 try:
                     media1 = BlobMedia(content_type="application/octet-stream", name=self.file_name1,
@@ -356,7 +356,7 @@ class BaseRegistrationScreen(MDScreen):
                     self.show_validation_dialog("Select file")
             self.ids.service_provider_name.text = ""
             self.ids.service_provider_email.text = ""
-            self.ids.service_provider_password.text =""
+            self.ids.service_provider_password.text = ""
             self.ids.service_provider_phoneno.text = ""
             self.ids.service_provider_address.text = ""
             self.ids.Nation.text = ""
@@ -391,46 +391,52 @@ class BaseRegistrationScreen(MDScreen):
         # All checks passed; the password is valid
         return True, "Password is valid"
 
-#-----------------service-register-form-2----------------------
+
+# -----------------service-register-form-2----------------------
 class ServiceRegisterForm(MDScreen):
-    dialog=None
+    dialog = None
     def __init__(self, **kwargs):
         super(ServiceRegisterForm, self).__init__(**kwargs)
 
-
-    def on_checkbox_active(self, checkbox, checkbox_value,add_branch_button):
-        if checkbox_value=='Hospital':
+    def on_checkbox_active(self, checkbox, checkbox_value, add_branch_button):
+        if checkbox_value == 'Hospital':
             print(f"Selected service provider type: {checkbox_value}")
             add_branch_button.disabled = not checkbox.active
-        elif checkbox_value=='Mobile-Hospital':
+        elif checkbox_value == 'Mobile-Hospital':
             print(f"Selected service provider type: {checkbox_value}")
             add_branch_button.disabled = not checkbox.active
-        elif checkbox_value=='Gym':
+        elif checkbox_value == 'Oxi-Gym':
             print(f"Selected service provider type: {checkbox_value}")
             add_branch_button.disabled = not checkbox.active
         else:
             print(f"Selected service provider type: {checkbox_value}")
 
     def show_branch_dialog(self, content_type):
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title='Add Hospital',
-                type="custom",
-                content_cls=HospitalContent(),
-                buttons=[
-                    MDFlatButton(
-                        text="CANCEL",
-                        theme_text_color="Custom",
-                        on_release=self.cancel_dialog,
-                    ),
-                    MDFlatButton(
-                        text="OK",
-                        theme_text_color="Custom",
-                        on_release=self.ok_dialog,
-                    ),
-                ],
-                auto_dismiss=False,
-            )
+
+        if content_type == 'Hospital':
+            content_cls=HospitalContent()
+        elif content_type == 'MobileCare':
+            content_cls = MobileCareContent()
+        elif content_type == 'Oxi-Gym':
+            content_cls = GymContent()
+        self.dialog = MDDialog(
+            title=f'Add {content_type}',
+            type="custom",
+            content_cls=content_cls,
+            buttons=[
+                MDFlatButton(
+                    text="CANCEL",
+                    theme_text_color="Custom",
+                    on_release=self.cancel_dialog,
+                ),
+                MDFlatButton(
+                    text="OK",
+                    theme_text_color="Custom",
+                    on_release=self.ok_dialog,
+                ),
+            ],
+            auto_dismiss=False,
+        )
 
         self.dialog.open()
 
@@ -446,20 +452,29 @@ class ServiceRegisterForm(MDScreen):
         pass
 
 
-
-
 class HorizontalLineWidget(BoxLayout):
     pass
 
-class HospitalContent(MDScrollView):
+
+class HospitalContent(MDScrollView,BaseRegistrationScreen):
     def __init__(self, **kwargs):
         super(HospitalContent, self).__init__(**kwargs)
         self.orientation = "vertical"
         self.size_hint_y = None
         self.height = "300dp"
 
-class MobileCareContent(MDScrollView):
-    pass
 
-class GymContent(MDScrollView):
-    pass
+class MobileCareContent(MDScrollView,BaseRegistrationScreen):
+    def __init__(self, **kwargs):
+        super(MobileCareContent, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        self.size_hint_y = None
+        self.height = "300dp"
+
+
+class GymContent(MDScrollView,BaseRegistrationScreen):
+    def __init__(self, **kwargs):
+        super(GymContent, self).__init__(**kwargs)
+        self.orientation = "vertical"
+        self.size_hint_y = None
+        self.height = "300dp"
