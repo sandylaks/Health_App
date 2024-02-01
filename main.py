@@ -141,7 +141,9 @@ class LoginApp(MDApp):
     def get_database_connection(self):
         if self.is_connected():
             # Use Anvil's database connection
+
             return anvil.server.connect(server)
+
         else:
             # Use SQLite database connection
             return sqlite3.connect('users.db')
@@ -154,12 +156,6 @@ class LoginApp(MDApp):
         password = screen.ids.signup_password.text
         phone = screen.ids.signup_phone.text
         pincode = screen.ids.signup_pincode.text
-        # print(username)
-        # print(email)
-        # print(password)
-        # print(phone)
-        # print(pincode)
-
 
         # Validation logic
         email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -207,8 +203,10 @@ class LoginApp(MDApp):
 
             try:
                 if self.is_connected():
-                    self.server
+
+                 
                     anvil.server.connect(server)
+
                     rows = app_tables.users.search()
                     # Get the number of rows
                     id = len(rows) + 1
@@ -383,35 +381,20 @@ class LoginApp(MDApp):
 
         return screen_manager
     def client_services1(self):
-        self.root.transition.direction = 'right'
+        self.root.transition.direction = 'left'
         self.root.current = 'client_services1'
 
-    def show_dropdown_menu(self, widget):
-        menu_items = [{"text": "Get the current location", "on_release": self.menu_callback}]
+    def get_location(self):
+        import json
+        from urllib.request import urlopen
 
-        if not hasattr(self, 'menu') or self.menu is None:
-            # If menu is not yet initialized or has been dismissed, create a new one
-            self.menu = MDDropdownMenu(items=menu_items, width_mult=4)
-
-        self.menu.caller = widget
-        if self.menu.caller:
-            self.menu.open()
-
-    def menu_callback(self):
-        print("Before menu.open():", self.menu)
-        if self.menu:
-            import json
-            from urllib.request import urlopen
-
-            url = 'http://ipinfo.io/json'
-            response = urlopen(url)
-            data = json.load(response)
-            pincode = data["postal"]
-            self.screen = Builder.load_file("client_services1.kv")
-            screen = self.root.current_screen
-            screen.ids.pincode.text = pincode
-            self.menu.dismiss()
-        print("After menu.open():", self.menu)
+        url = 'http://ipinfo.io/json'
+        response = urlopen(url)
+        data = json.load(response)
+        pincode = data["postal"]
+        self.screen = Builder.load_file("client_services1.kv")
+        screen = self.root.current_screen
+        screen.ids.pincode.text = pincode
 
     def logout(self):
         self.root.transition.direction = 'left'
